@@ -87,8 +87,8 @@ def build_output(start: date, end: date) -> dict:
         "end_date": end.isoformat(),
         "legacy_monthly_title": title,
         "legacy_monthly_title_candidates": [title],
-        "monthly_filename": f"{iso_month}.md",
-        "monthly_output_basename": iso_month,
+        "monthly_filename": f"{title}.md",
+        "monthly_output_basename": title,
         "days": days,
     }
 

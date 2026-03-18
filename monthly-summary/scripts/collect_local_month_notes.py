@@ -11,17 +11,37 @@ def parse_month(value: str) -> tuple[int, int]:
 
 
 def parse_week_file_range(path: Path) -> tuple[date, date] | None:
+    """Parse week file range from both legacy (M.DD～M.DD-YY) and ISO (YYYY-MM-DD～YYYY-MM-DD) formats."""
     stem = path.stem
     if "～" not in stem:
         return None
     start_text, end_text = stem.split("～", 1)
+
+    # Try ISO format first: YYYY-MM-DD～YYYY-MM-DD
     try:
         return (
             datetime.strptime(start_text, "%Y-%m-%d").date(),
             datetime.strptime(end_text, "%Y-%m-%d").date(),
         )
     except ValueError:
-        return None
+        pass
+
+    # Try legacy short format: M.DD～M.DD-YY
+    import re
+    legacy_match = re.fullmatch(
+        r"(\d{1,2})\.(\d{1,2})～(\d{1,2})\.(\d{1,2})-(\d{2})", stem
+    )
+    if legacy_match:
+        year = 2000 + int(legacy_match.group(5))
+        try:
+            return (
+                date(year, int(legacy_match.group(1)), int(legacy_match.group(2))),
+                date(year, int(legacy_match.group(3)), int(legacy_match.group(4))),
+            )
+        except ValueError:
+            return None
+
+    return None
 
 
 def month_range(year: int, month: int) -> tuple[date, date]:
@@ -108,8 +128,9 @@ def collect(root: Path, year: int, month: int, reference_count: int) -> dict:
         supplementary_weekly_files.append(str(weekly_path))
 
     monthly_dir = note_root / str(year) / "Monthly"
-    output_path = monthly_dir / f"{year:04d}-{month:02d}.md"
-    output_path_v2 = monthly_dir / f"{year:04d}-{month:02d}_v2.md"
+    legacy_name = f"{month}月-{year % 100:02d}"
+    output_path = monthly_dir / f"{legacy_name}.md"
+    output_path_v2 = monthly_dir / f"{legacy_name}_v2.md"
 
     return {
         "note_root": str(note_root),
