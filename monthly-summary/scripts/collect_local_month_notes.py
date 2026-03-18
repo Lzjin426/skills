@@ -57,12 +57,35 @@ def legacy_month_title(year: int, month: int) -> str:
     return f"{month}月-{year % 100:02d}"
 
 
+def _parse_monthly_sort_key(path: Path) -> tuple[int, int]:
+    """Extract (year, month) from monthly filename for correct sorting.
+
+    Supports both 'M月-YY.md' (e.g. '3月-26.md') and 'YYYY-MM.md' (e.g. '2026-03.md').
+    Returns (0, 0) if unparseable so it sorts first and gets skipped.
+    """
+    stem = path.stem
+    import re
+    legacy = re.fullmatch(r"(\d{1,2})月-(\d{2})", stem)
+    if legacy:
+        return 2000 + int(legacy.group(2)), int(legacy.group(1))
+    iso = re.fullmatch(r"(\d{4})-(\d{2})", stem)
+    if iso:
+        return int(iso.group(1)), int(iso.group(2))
+    return (0, 0)
+
+
 def list_style_references(
     note_root: Path, output_path: Path, month_end: date, limit: int
 ) -> list[str]:
-    monthly_files = sorted(note_root.glob("*/Monthly/*.md"))
+    monthly_files = sorted(
+        note_root.glob("*/Monthly/*.md"),
+        key=_parse_monthly_sort_key,
+    )
+    target_key = _parse_monthly_sort_key(output_path)
     older_monthly = [
-        path for path in monthly_files if path != output_path and path.name < output_path.name
+        path
+        for path in monthly_files
+        if path != output_path and _parse_monthly_sort_key(path) < target_key
     ]
     selected = list(reversed(older_monthly))[:limit]
     if len(selected) >= limit:
