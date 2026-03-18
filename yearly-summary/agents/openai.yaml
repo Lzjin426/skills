@@ -1,0 +1,4 @@
+interface:
+  display_name: "年总结"
+  short_description: "读取本地 05-note 月报并生成年度总结。"
+  default_prompt: "请根据本地 05-note 中的月报与日报生成年度总结，并写入对应 Yearly 目录。"
