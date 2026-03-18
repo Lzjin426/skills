@@ -51,7 +51,7 @@ python3 scripts/collect_local_notes.py --root . --start 2026-01-19 --end 2026-01
 
 4. 格式与风格规则
 - 默认保持本地周报格式：
-  - 文件名使用 ISO 区间：`YYYY-MM-DD～YYYY-MM-DD.md`
+  - 文件名统一使用短日期格式：`M.DD～M.DD-YY.md`（如 `3.09～3.15-26.md`）
   - **正文不再重复文件名/笔记标题**，frontmatter 之后直接从 `# 本周一句话` 开始
   - 保留本地 frontmatter：
 
@@ -166,7 +166,7 @@ pie title 本周精力分布
 
 1. 本地日报定位规则
 - 日报路径固定为：`05-note/<year>/Daily/YYYY-MM-DD.md`
-- 周报路径固定为：`05-note/<year>/Weekly/YYYY-MM-DD～YYYY-MM-DD.md`
+- 周报路径固定为：`05-note/<year>/Weekly/M.DD～M.DD-YY.md`（如 `3.09～3.15-26.md`）
 
 2. 时间规则
 - 默认周一为起始日，周日为结束日。
@@ -174,7 +174,7 @@ pie title 本周精力分布
 
 3. 兼容旧命名
 - 用户若提到 `1.19～1.25-26` 这类旧周标题，只作为输入解析格式。
-- 新生成的本地文件名一律使用 ISO 区间格式，正文标题仍使用旧标题格式以保持阅读连续性。
+- 新生成的本地文件名统一使用短日期格式 `M.DD～M.DD-YY.md`，与笔记标题保持一致。
 
 4. 缺失数据处理
 - 缺日报时仅标记缺失，不从其他来源补齐。

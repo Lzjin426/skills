@@ -86,8 +86,8 @@ def build_output(start: date, end: date) -> dict:
         "legacy_weekly_title_candidates": unique_keep_order(
             [legacy_title, legacy_title_alt]
         ),
-        "weekly_filename": f"{iso_title}.md",
-        "weekly_output_basename": iso_title,
+        "weekly_filename": f"{legacy_title}.md",
+        "weekly_output_basename": legacy_title,
         "days": days,
     }
 
