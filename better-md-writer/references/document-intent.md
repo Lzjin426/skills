@@ -72,7 +72,7 @@ Quick signals to skip illustrations:
 - The document is short (<~80 lines), a changelog, API reference, config doc, or similar text-and-code format.
 - The core content carrier is already code blocks or tables.
 
-For the full illustration workflow — image type selection, three-phase process, quantity guidance, and sub-agent delegation — see SKILL.md step 11.
+For the full illustration workflow — image type selection, three-phase process, quantity guidance, and sub-agent delegation — see SKILL.md step 11. For cognitive path design — anchor concept, cognitive arc, and inter-section progression — see SKILL.md step 6.
 
 ## 7. Anti-Fragmentation Check
 
@@ -84,7 +84,31 @@ For research, explanation, analysis, and principle-heavy writing, check whether 
 
 Use lists to compress information, not to replace thinking.
 
-## 8. Reader-Oriented Revision
+## 8. Cognitive Path Design
+
+For documents whose purpose is to teach, explain, or analyze, the structure must serve a cognitive journey, not just organize information.
+
+**Anchor concept:**
+- Identify the single mental model that makes the rest of the document click. This is not a summary — it is a structural idea the reader can use to derive or recall details.
+- If you cannot name the anchor in one sentence, the document may be covering too many unrelated ideas, or the central insight has not been found yet.
+- Mark the anchor explicitly in the text so the reader knows to hold onto it.
+
+**Cognitive arc:**
+- Orient the reader first (panoramic view, the "why"), then build detail (each section motivated by the previous), then close by returning to the opening frame.
+- The arc is not a rigid formula. Short documents may compress it. Long documents may nest sub-arcs. The point is intentional trajectory.
+
+**Inter-section progression:**
+- Each section should answer a question that naturally arises from the previous section. If sections can be freely reordered, the progression is missing.
+- Transitions between sections should carry meaning, not just signal topic change.
+
+**When to skip cognitive path design:**
+- Pure records (changelog, release notes, config steps)
+- Short procedural documents (runbooks, checklists under ~80 lines)
+- Documents where the reader will scan rather than read linearly (API references, parameter tables)
+
+For all other documents — especially knowledge-base articles, technical explanations, tutorials, and analysis — cognitive path design is not optional.
+
+## 9. Reader-Oriented Revision
 
 Before finalizing, ask:
 - Would the intended reader understand why this document exists?

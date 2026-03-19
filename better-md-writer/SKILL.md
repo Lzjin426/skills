@@ -117,7 +117,45 @@ Before drafting, decide what should carry the reader's understanding:
 
 Do not let lists replace explanation. Do not let tables replace judgment. Do not let diagrams replace definitions the reader still needs in prose.
 
-### 6. Build the structure before filling the prose
+### 6. Design the cognitive path
+
+Before arranging sections, decide how the reader's understanding should build. A document is not a collection of topics placed side by side — it is a guided journey from not-knowing to knowing.
+
+**6a. Extract the anchor concept**
+
+Find the single mental model that, once understood, makes every detail in the document click into place.
+
+- Ask: "If the reader can only remember one thing after closing this document, what should it be?"
+- The anchor is not a summary sentence. It is a structural idea — a framework, a metaphor, a diagram, a distinction — that the reader can use to derive or recall the rest.
+- State the anchor explicitly in the document. Mark its special status so the reader knows to hold onto it (e.g., "If you only remember one thing, remember this", or "This is the key that unlocks everything below").
+
+Examples of good anchors:
+- "Git has three spaces; almost every command moves data between them" (a structural model)
+- "React shifts your thinking from 'change the DOM' to 'describe the UI'" (a paradigm distinction)
+- "The entire authentication flow is a state machine with four states" (a framework)
+
+If the document is short or purely procedural (runbook, changelog, config steps), the anchor may be implicit or unnecessary. But for any document that teaches, explains, or analyzes, the anchor must exist and be explicit.
+
+**6b. Design the cognitive arc**
+
+Plan the reading experience as a trajectory, not a flat outline:
+
+1. **Orient** — Give the reader a panoramic view before any detail. What is the territory? What will they understand by the end? The anchor concept often appears here.
+2. **Build** — Introduce concepts in dependency order. Each section should answer a question raised (explicitly or implicitly) by the previous section. The reader should feel momentum, not topic-switching.
+3. **Close** — Return to the panoramic view. Now the reader can see everything they learned mapped back onto the opening frame. This callback is what turns information into understanding.
+
+Do not confuse the cognitive arc with a rigid template. The three phases can overlap. A long document may have nested arcs within major parts. The point is intentional trajectory, not a formula.
+
+**6c. Plan inter-section progression**
+
+For each pair of adjacent sections, write down in your outline:
+- What question does this section answer?
+- Why does this question arise naturally from the previous section?
+- What new question does this section leave, which the next section will pick up?
+
+If a section can be moved to a different position without the reader noticing, the progression is too weak. Strengthen it by adding a bridging insight or reordering.
+
+### 7. Build the structure before filling the prose
 
 Start from the section layout, not from sentence-level polishing.
 
@@ -146,7 +184,7 @@ For long documents, apply these structural rules:
 - In long documents, consider adding a "back to top" anchor at the end of major sections.
 - Open each major section with one sentence stating the problem or question it addresses.
 
-### 7. Draft section by section
+### 8. Draft section by section
 
 Decide the structure before writing:
 - Use headings for independent modules, clear sections, or content that will likely expand.
@@ -166,7 +204,20 @@ Do not create headings only to make the document look formal. If a heading would
 
 For research, explanation, and principle-heavy writing, each major section should usually begin with a continuous orienting paragraph before lists or tables appear.
 
-### 8. Apply Markdown rules
+**Connecting sections to the cognitive path (from step 6):**
+
+- Each major section should open by connecting to what came before — why this topic matters now, what question it answers, or what gap it fills. Do not drop the reader into a new topic without a bridge.
+- If the document has an anchor concept (step 6a), refer back to it when introducing new material. The reader should see how each new idea relates to the central model, not just to the previous section.
+- End major sections with a forward-pointing hook when natural — a question raised, a gap acknowledged, or a preview of what comes next. This creates momentum rather than a sequence of standalone blocks.
+
+**Using analogies and metaphors:**
+
+- A good analogy maps precisely to the technical concept. Every element in the analogy should correspond to something real. If parts of the analogy do not map, either trim the analogy or acknowledge the limits.
+- Avoid "atmosphere analogies" that sound approachable but do not actually help the reader think. "It's like building a house" is too vague. "The staging area is like a packing table — you lay out exactly which items go into the box before sealing it" is precise.
+- One strong, well-developed analogy per major concept is better than scattered metaphors. Let the analogy do real work, then move on.
+- If the document has a technical audience that does not need analogies, skip them. Analogies are teaching tools, not decoration.
+
+### 9. Apply Markdown rules
 
 See [markdown-style.md](references/markdown-style.md) for the complete reference.
 
@@ -182,7 +233,7 @@ See [markdown-style.md](references/markdown-style.md) for the complete reference
 - Use relative paths for internal links, `[text](URL)` for external links.
 - Store images in resource directories, use lowercase kebab-case filenames, add alt text when helpful.
 
-### 9. Write compactly, but not vaguely
+### 10. Write compactly, but not vaguely
 
 Keep the document tight:
 - Remove repetitive explanations.
@@ -191,53 +242,62 @@ Keep the document tight:
 
 Compactness must not remove definitions, assumptions, criteria, evidence, steps, interfaces, edge cases, or decisions that the reader depends on.
 
-### 10. Plan and produce illustrations
+### 11. Plan and produce illustrations
 
-**Skip illustrations entirely when any of these apply:**
-- The document is under ~80 lines and consists of pure text explanation, configuration notes, or checklists.
-- The document type rarely benefits from images: changelog, API reference, config doc, release notes, commit convention, short internal memo.
-- The core content carrier is code blocks or tables, with text serving only as glue.
-- The user explicitly says no images are needed.
+**Default: illustrations are expected.** For any document that teaches, explains, analyzes, or compares, plan illustrations proactively as part of the drafting process. Do not wait for the user to ask. A well-placed diagram often does more work than three paragraphs of prose.
 
-When any condition above is met, skip the collect/mark/produce workflow below. Do not evaluate illustrations section by section.
+**Mandatory illustration triggers — always produce at least one diagram when any of these apply:**
+- The document has an anchor concept (step 6a) — the anchor almost always deserves a visual representation. If the reader can "see" the model, it sticks.
+- The document has an orient phase (step 6b) — the panoramic opening view is a natural candidate for a diagram.
+- The document explains a process, flow, lifecycle, or multi-step sequence.
+- The document compares options, layers, or architectures.
+- The document describes relationships, dependencies, or hierarchies.
 
-For all other documents, every image must answer one question: would the reader understand this section faster with the image than without it? If the answer is "about the same", do not add the image.
+**Skip illustrations only when ALL of these apply:**
+- The document is under ~80 lines, AND
+- The document type is inherently text-and-code (changelog, API reference, config doc, release notes, commit convention, runbook, short internal memo), AND
+- The user has not asked for images.
+
+If you are unsure whether to include illustrations, include them. It is easier to remove an unnecessary diagram than to retroactively realize the document needed one.
 
 **Choose the image type by what it represents:**
 
-| Use web images | Use `excalidraw-diagram` | Use `obsidian-canvas-creator` |
-|---|---|---|
-| Real products, devices, UI screenshots | Free-form sketches, rough concepts, visual brainstorming | Knowledge maps, note relationships, idea networks |
-| Locations, scenes, environment photos | Architecture diagrams, flowcharts, process stages | Zettelkasten-style connections, concept clusters |
-| Style or mood references | Comparison maps, decision trees, dependency graphs | Hierarchical note structures, document organization |
-| Existing data visualizations or chart screenshots | System topology, layered structures, feedback loops | Bidirectional linking visualization, tag networks |
+| Use web images | Use `excalidraw-diagram` (default) | Use `mermaid-visualizer` (optional) | Use `obsidian-canvas-creator` |
+|---|---|---|---|
+| Real products, devices, UI screenshots | Free-form sketches, rough concepts, visual brainstorming | Inline diagrams that must live inside a single Markdown document | Knowledge maps, note relationships, idea networks |
+| Locations, scenes, environment photos | Architecture diagrams, flowcharts, process stages | Text-friendly flowcharts, sequence diagrams, quick structural views | Zettelkasten-style connections, concept clusters |
+| Style or mood references | Comparison maps, decision trees, dependency graphs | Cases where diff-friendly source control for diagrams matters | Hierarchical note structures, document organization |
+| Existing data visualizations or chart screenshots | System topology, layered structures, feedback loops | Lightweight diagrams when hand-drawn layout is not important | Bidirectional linking visualization, tag networks |
 
 Rule of thumb:
 - If the image shows a **real, concrete thing** → search web images
-- If the diagram explains **concepts, structures, flows, or relationships** → use `excalidraw-diagram`
+- If the diagram explains **concepts, structures, flows, or relationships** → use `excalidraw-diagram` by default
+- If the same concept diagram must stay **fully inline in one Markdown file** or benefits from **plain-text diagram source** → use `mermaid-visualizer`
 - If the diagram visualizes **knowledge relationships or note connections** → use `obsidian-canvas-creator`
 
 **Three-phase illustration workflow:**
 
 1. **Collect phase** (during step 3, source material gathering): when useful reference images appear during research, save the link or path immediately. Do not interrupt the research flow to process them.
-2. **Mark phase** (during step 7, section drafting): at each position that needs an image, insert a placeholder comment noting the image type and a short description, for example:
+2. **Mark phase** (during step 8, section drafting): at each position that needs an image, insert a placeholder comment noting the image type and a short description, for example:
    - `<!-- IMG: excalidraw-diagram — deployment flow with rollback branch -->`
+   - `<!-- IMG: mermaid-visualizer — inline request lifecycle overview -->`
    - `<!-- IMG: obsidian-canvas-creator — concept map linking related notes -->`
    - `<!-- IMG: web — screenshot of the dashboard settings panel -->`
-3. **Produce phase** (after the draft structure is stable): process all placeholders in batch. Search web images and generate diagrams with the appropriate skill (`excalidraw-diagram` or `obsidian-canvas-creator`) together, then insert them into the document.
+3. **Produce phase** (after the draft structure is stable): process all placeholders in batch. Search web images and generate diagrams with the appropriate skill (`excalidraw-diagram`, `mermaid-visualizer`, or `obsidian-canvas-creator`) together, then insert them into the document.
 
 **Quantity guidance:**
-- Not every section needs an image. Images should earn their place by reducing reading cost.
-- For a typical 200–300 line document, roughly 2–5 images is usually sufficient.
-- Too many images fragment reading rhythm, just like too many headings.
-- Diminishing returns apply: prefer one clear image over several overlapping ones.
+- For a teaching, explanation, or analysis document of 100–200 lines, plan at least 1–2 diagrams. For 200–400 lines, plan 3–6. These are minimums, not ceilings.
+- The anchor concept diagram and the panoramic overview diagram (if the document has an orient phase) count toward this minimum but should not be the only illustrations.
+- Not every section needs its own image, but a document with zero images almost always means the illustration step was skipped, not that no diagram was warranted.
+- Too many images fragment reading rhythm, just like too many headings. Diminishing returns apply: prefer one clear image over several overlapping ones.
 
 **Sub-agent delegation:**
 
 When sub-agents are available, illustration work is naturally parallelizable:
 - The main agent writes the document and produces the placeholder list.
 - A sub-agent searches the web for reference images based on the placeholder descriptions.
-- A sub-agent creates diagrams with `excalidraw-diagram` skill for flowcharts, architecture diagrams, and visual explanations.
+- A sub-agent creates diagrams with `excalidraw-diagram` skill for default flowcharts, architecture diagrams, and visual explanations.
+- A sub-agent uses `mermaid-visualizer` when a diagram should remain inline in Markdown or benefit from text-native version control.
 - A sub-agent builds knowledge maps with `obsidian-canvas-creator` skill for note relationships and concept networks.
 - The main agent reviews the results and inserts them into the final document.
 
@@ -251,17 +311,23 @@ If sub-agents are not available, handle the produce phase sequentially after the
 - Place the diagram where it reduces reading cost instead of duplicating the full text.
 
 *`excalidraw-diagram` specific:*
+- Treat this as the default diagram tool for explanatory documents unless a stronger reason points elsewhere.
 - Use for diagrams needing hand-drawn aesthetics or custom layouts.
 - Prefer when the visual style should feel informal or sketch-like.
 - Suitable for flowcharts, architecture diagrams, process stages, and system topology.
 - Keep elements aligned enough to read clearly, but loose enough to feel organic.
+
+*`mermaid-visualizer` specific:*
+- Use when the diagram should stay embedded in the Markdown source itself.
+- Prefer for simple-to-medium complexity flows, sequences, and structural overviews where text-native maintenance matters.
+- Avoid when the document needs loose spatial storytelling, sketch aesthetics, or heavily customized positioning.
 
 *`obsidian-canvas-creator` specific:*
 - Use when visualizing relationships between notes, concepts, or ideas.
 - Keep node labels concise; use the Markdown document for detailed explanations.
 - Leverage bidirectional linking to show connection strength and direction.
 
-### 11. Run a reader-oriented check before finishing
+### 12. Run a reader-oriented check before finishing
 
 Before finalizing, test whether the document works for a reader who does not share the author's context.
 
@@ -273,6 +339,13 @@ Check at least these questions:
 - Is any section generic filler that carries no real information?
 - Is the document actually advancing understanding, or only placing information into boxes?
 - Does the primary expression carrier fit the job, or is the document over-fragmented?
+
+**Cognitive arc verification (from step 6):**
+
+- After closing the document, what stays in the reader's head — a usable mental model, or a list of facts? If it is only facts, the anchor concept is missing or too weak.
+- Does the ending connect back to the opening frame? The reader should feel closure, not a trail-off. For teaching and explanation documents, the last section should let the reader verify their own understanding against the opening panorama.
+- Can any two adjacent sections be swapped without the reader noticing? If yes, the inter-section progression is too weak — add bridges or reorder.
+- Are analogies precise and load-bearing, or decorative? Remove any analogy that does not help the reader think about the concept differently.
 
 If sub-agents or fresh-agent testing are available, use them as a blind-reader check. If not, simulate the same review manually and tighten the weak sections.
 
@@ -289,5 +362,7 @@ Before finishing, verify:
 - Long documents have appropriate splitting, cross-references, and navigation aids.
 - Research and explanation sections are not fragmented into avoidable card-like chunks.
 - Headings, lists, tables, spacing, code blocks, links, images, and emphasis follow [markdown-style.md](references/markdown-style.md) conventions.
-- Illustrations were either deliberately planned or deliberately skipped, not overlooked.
+- Illustrations were proactively planned for teaching/explanation/analysis documents. If the document has zero diagrams, confirm that ALL skip conditions are met (under 80 lines AND inherently text-and-code type AND user did not ask for images). A missing illustration in a 200+ line explanation document is a defect, not a style choice.
 - The document can survive a reader-oriented check without relying on hidden context.
+- For teaching, explanation, and analysis documents: an anchor concept exists and is explicitly marked; the cognitive arc has orient → build → close phases; sections have inter-section progression (not interchangeable order); the ending connects back to the opening frame.
+- Analogies are precise and structurally mapped, not decorative. Any analogy that does not help the reader reason about the concept has been removed.
