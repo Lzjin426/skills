@@ -262,17 +262,16 @@ If you are unsure whether to include illustrations, include them. It is easier t
 
 **Choose the image type by what it represents:**
 
-| Use web images | Use `excalidraw-diagram` (default) | Use `mermaid-visualizer` (optional) | Use `obsidian-canvas-creator` |
-|---|---|---|---|
-| Real products, devices, UI screenshots | Free-form sketches, rough concepts, visual brainstorming | Inline diagrams that must live inside a single Markdown document | Knowledge maps, note relationships, idea networks |
-| Locations, scenes, environment photos | Architecture diagrams, flowcharts, process stages | Text-friendly flowcharts, sequence diagrams, quick structural views | Zettelkasten-style connections, concept clusters |
-| Style or mood references | Comparison maps, decision trees, dependency graphs | Cases where diff-friendly source control for diagrams matters | Hierarchical note structures, document organization |
-| Existing data visualizations or chart screenshots | System topology, layered structures, feedback loops | Lightweight diagrams when hand-drawn layout is not important | Bidirectional linking visualization, tag networks |
+| Use web images | Use `excalidraw-diagram` (default) | Use `obsidian-canvas-creator` |
+|---|---|---|
+| Real products, devices, UI screenshots | Free-form sketches, rough concepts, visual brainstorming | Knowledge maps, note relationships, idea networks |
+| Locations, scenes, environment photos | Architecture diagrams, flowcharts, process stages, sequence diagrams, structural views | Zettelkasten-style connections, concept clusters |
+| Style or mood references | Comparison maps, decision trees, dependency graphs | Hierarchical note structures, document organization |
+| Existing data visualizations or chart screenshots | System topology, layered structures, feedback loops | Bidirectional linking visualization, tag networks |
 
 Rule of thumb:
 - If the image shows a **real, concrete thing** → search web images
-- If the diagram explains **concepts, structures, flows, or relationships** → use `excalidraw-diagram` by default
-- If the same concept diagram must stay **fully inline in one Markdown file** or benefits from **plain-text diagram source** → use `mermaid-visualizer`
+- If the diagram explains **concepts, structures, flows, or relationships** → use `excalidraw-diagram`
 - If the diagram visualizes **knowledge relationships or note connections** → use `obsidian-canvas-creator`
 
 **Three-phase illustration workflow:**
@@ -280,10 +279,10 @@ Rule of thumb:
 1. **Collect phase** (during step 3, source material gathering): when useful reference images appear during research, save the link or path immediately. Do not interrupt the research flow to process them.
 2. **Mark phase** (during step 8, section drafting): at each position that needs an image, insert a placeholder comment noting the image type and a short description, for example:
    - `<!-- IMG: excalidraw-diagram — deployment flow with rollback branch -->`
-   - `<!-- IMG: mermaid-visualizer — inline request lifecycle overview -->`
+   - `<!-- IMG: excalidraw-diagram — request lifecycle overview -->`
    - `<!-- IMG: obsidian-canvas-creator — concept map linking related notes -->`
    - `<!-- IMG: web — screenshot of the dashboard settings panel -->`
-3. **Produce phase** (after the draft structure is stable): process all placeholders in batch. Search web images and generate diagrams with the appropriate skill (`excalidraw-diagram`, `mermaid-visualizer`, or `obsidian-canvas-creator`) together, then insert them into the document.
+3. **Produce phase** (after the draft structure is stable): process all placeholders in batch. Search web images and generate diagrams with `excalidraw-diagram` or `obsidian-canvas-creator` skill as needed, then insert them into the document.
 
 **Quantity guidance:**
 - For a teaching, explanation, or analysis document of 100–200 lines, plan at least 1–2 diagrams. For 200–400 lines, plan 3–6. These are minimums, not ceilings.
@@ -296,8 +295,7 @@ Rule of thumb:
 When sub-agents are available, illustration work is naturally parallelizable:
 - The main agent writes the document and produces the placeholder list.
 - A sub-agent searches the web for reference images based on the placeholder descriptions.
-- A sub-agent creates diagrams with `excalidraw-diagram` skill for default flowcharts, architecture diagrams, and visual explanations.
-- A sub-agent uses `mermaid-visualizer` when a diagram should remain inline in Markdown or benefit from text-native version control.
+- A sub-agent creates diagrams with `excalidraw-diagram` skill for flowcharts, architecture diagrams, and visual explanations.
 - A sub-agent builds knowledge maps with `obsidian-canvas-creator` skill for note relationships and concept networks.
 - The main agent reviews the results and inserts them into the final document.
 
@@ -311,16 +309,10 @@ If sub-agents are not available, handle the produce phase sequentially after the
 - Place the diagram where it reduces reading cost instead of duplicating the full text.
 
 *`excalidraw-diagram` specific:*
-- Treat this as the default diagram tool for explanatory documents unless a stronger reason points elsewhere.
+- Treat this as the default diagram tool for all explanatory documents.
 - Use for diagrams needing hand-drawn aesthetics or custom layouts.
-- Prefer when the visual style should feel informal or sketch-like.
-- Suitable for flowcharts, architecture diagrams, process stages, and system topology.
+- Suitable for flowcharts, architecture diagrams, process stages, sequence diagrams, system topology, and structural overviews.
 - Keep elements aligned enough to read clearly, but loose enough to feel organic.
-
-*`mermaid-visualizer` specific:*
-- Use when the diagram should stay embedded in the Markdown source itself.
-- Prefer for simple-to-medium complexity flows, sequences, and structural overviews where text-native maintenance matters.
-- Avoid when the document needs loose spatial storytelling, sketch aesthetics, or heavily customized positioning.
 
 *`obsidian-canvas-creator` specific:*
 - Use when visualizing relationships between notes, concepts, or ideas.
