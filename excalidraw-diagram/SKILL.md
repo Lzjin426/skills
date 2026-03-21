@@ -144,10 +144,13 @@ tags: [excalidraw]
   - 次要注释：14px（仅限不重要的辅助说明，慎用）
   - **绝对禁止低于 14px**
 - **行高**：所有文本使用 `lineHeight: 1.25`
-- **文字居中估算**：独立文本元素没有自动居中，需手动计算 x 坐标：
-  - 估算文字宽度：`estimatedWidth = text.length * fontSize * 0.5`（CJK 字符用 `* 1.0`）
+- **框内文字默认使用容器绑定**：凡是文字位于矩形、菱形、椭圆等容器内部，必须优先使用 `containerId` + 容器 `boundElements` 的绑定方式，不要把这类文字做成独立 text 元素手动估算位置
+- **独立文本只用于容器外内容**：标题、箭头旁短标签、角标、注释这类不在形状内部的文字，才使用独立 text 元素
+- **独立文本的居中估算仅作兜底**：仅当文字不在任何容器内时，才手动计算 `x`
+  - 估算文字宽度：英文/数字可用 `estimatedWidth = text.length * fontSize * 0.5`
+  - CJK 或中英混排优先按较宽情况估算：`estimatedWidth = text.length * fontSize * 0.8 ~ 1.0`
   - 居中公式：`x = centerX - estimatedWidth / 2`
-  - 示例：文字 "Hello"（5字符, fontSize 20）居中于 x=300 → `estimatedWidth = 5 * 20 * 0.5 = 50` → `x = 300 - 25 = 275`
+  - 若是多行文本，优先拆成容器绑定文本；不要依赖独立 text 的宽度估算去实现框内居中
 
 ### Layout & Design
 - **画布范围**：建议所有元素在 0-1200 x 0-800 区域内
@@ -224,7 +227,7 @@ tags: [excalidraw]
 
 ## Element Template
 
-Each element requires these fields (do NOT add extra fields like `frameId`, `index`, `versionNonce`, `rawText` -- they may cause issues on excalidraw.com. `boundElements` must be `null` not `[]`, `updated` must be `1` not timestamps):
+Each element requires these fields (do NOT add extra fields like `frameId`, `index`, `versionNonce`, `rawText` -- they may cause issues on excalidraw.com. `boundElements` must be `null` when there is no binding, otherwise use the correct binding array. `updated` must be `1` not timestamps):
 
 ```json
 {
@@ -269,6 +272,25 @@ Text elements add:
 }
 ```
 
+For text inside a shape, prefer container binding:
+```json
+{
+  "id": "box-1",
+  "type": "rectangle",
+  "boundElements": [{ "id": "box-1-text", "type": "text" }]
+}
+```
+
+```json
+{
+  "id": "box-1-text",
+  "type": "text",
+  "containerId": "box-1",
+  "textAlign": "center",
+  "verticalAlign": "middle"
+}
+```
+
 **Animated 模式额外添加** `customData` 字段：
 ```json
 {
@@ -302,7 +324,7 @@ See [references/excalidraw-schema.md](references/excalidraw-schema.md) for all e
 
 ### Required Fields for All Elements
 
-**IMPORTANT**: Do NOT include `frameId`, `index`, `versionNonce`, or `rawText` fields. Use `boundElements: null` (not `[]`), and `updated: 1` (not timestamps).
+**IMPORTANT**: Do NOT include `frameId`, `index`, `versionNonce`, or `rawText` fields. Use `boundElements: null` only when the element has no bindings; if text or arrows are bound to a shape, `boundElements` must contain the binding objects. `updated: 1` (not timestamps).
 
 ```json
 {
@@ -346,6 +368,69 @@ See [references/excalidraw-schema.md](references/excalidraw-schema.md) for all e
 }
 ```
 
+### Preferred Binding Strategy
+- **默认策略**：框内文字一律使用容器绑定，不要依赖独立 text 的 `x`/`y` 手算居中
+- **适用对象**：矩形、菱形、椭圆、圆角框中的标题、正文、多行说明
+- **仅以下情况使用独立文本**：总标题、箭头标签、分支上的「是 / 否」、角标、补充注释
+
+矩形内文字示例：
+```json
+{
+  "id": "rect-1",
+  "type": "rectangle",
+  "x": 100, "y": 100,
+  "width": 240, "height": 80,
+  "boundElements": [{ "id": "rect-1-text", "type": "text" }]
+}
+```
+
+```json
+{
+  "id": "rect-1-text",
+  "type": "text",
+  "x": 140, "y": 126,
+  "width": 160, "height": 28,
+  "text": "容器内文本",
+  "fontSize": 20,
+  "fontFamily": 5,
+  "textAlign": "center",
+  "verticalAlign": "middle",
+  "containerId": "rect-1",
+  "originalText": "容器内文本",
+  "autoResize": true,
+  "lineHeight": 1.25
+}
+```
+
+菱形决策节点示例：
+```json
+{
+  "id": "decision-1",
+  "type": "diamond",
+  "x": 420, "y": 180,
+  "width": 260, "height": 140,
+  "boundElements": [{ "id": "decision-1-text", "type": "text" }]
+}
+```
+
+```json
+{
+  "id": "decision-1-text",
+  "type": "text",
+  "x": 470, "y": 222,
+  "width": 160, "height": 56,
+  "text": "需要依赖运行中\\nObsidian 状态吗",
+  "fontSize": 20,
+  "fontFamily": 5,
+  "textAlign": "center",
+  "verticalAlign": "middle",
+  "containerId": "decision-1",
+  "originalText": "需要依赖运行中\\nObsidian 状态吗",
+  "autoResize": true,
+  "lineHeight": 1.25
+}
+```
+
 ### appState 配置
 ```json
 "appState": {
@@ -361,13 +446,14 @@ See [references/excalidraw-schema.md](references/excalidraw-schema.md) for all e
 
 ## Common Mistakes to Avoid
 
-- **文字偏移** — 独立 text 元素的 `x` 是左边缘，不是中心。必须用居中公式手动计算，否则文字会偏到一边
+- **文字偏移** — 框内文字如果做成独立 text 元素，容易因为字体、换行、中英混排而偏移。优先改用 `containerId` + `boundElements`
 - **元素重叠** — y 坐标相近的元素容易堆叠。放置新元素前检查与周围元素是否有至少 20px 间距
 - **画布留白不足** — 内容不要贴着画布边缘。在四周留 50-80px 的 padding
 - **标题没有居中于图表** — 标题应居中于下方图表的整体宽度，不是固定在 x=0
 - **箭头标签溢出** — 长文字标签（如 "ATP + NADPH"）会超出短箭头。保持标签简短或加大箭头长度
 - **对比度不够** — 浅色文字在白底上几乎不可见。文字颜色不低于 `#757575`，有色文字用深色变体
 - **字号太小** — 低于 14px 在正常缩放下不可读，正文最小 16px
+- **绑定信息缺失** — 容器内文字只写了 `containerId` 但容器没有对应 `boundElements`，或反过来只写了 `boundElements` 没有 `containerId`，都会导致布局和后续编辑不稳定
 
 ## Implementation Notes
 
