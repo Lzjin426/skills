@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/lzjin/**)",
+      "Read(//c/Users/Full stop/**)"
+    ]
+  }
+}
