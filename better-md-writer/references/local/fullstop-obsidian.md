@@ -25,6 +25,10 @@ These are Fullstop defaults, not hard rules for every document:
 - concept-oriented knowledge-base articles should also use numbered semantic headings unless the target document already has a conflicting house style
 - top-level `---` separators can be used when they improve readability in longer vault notes
 - images should use stable, readable names
+- frontmatter should store structural metadata, not mass link declarations
+- do not use frontmatter wiki-links such as `related: [[...]]` or long `related` lists to create graph edges
+- if relationship metadata is needed, prefer plain-text structural fields such as `note_type`, `layer`, `prerequisites`, and `next`
+- keep actual wiki-links in body content, and only add them when they express a meaningful semantic relationship for readers
 
 ## Excalidraw embed syntax
 

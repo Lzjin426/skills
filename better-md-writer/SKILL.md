@@ -73,6 +73,7 @@ This skill is not a single fixed pipeline. It should not force every document th
 6. **Apply local environment actions when relevant**
    - If the document is meant for Fullstop's knowledge base or Obsidian vault, apply [references/local/fullstop-obsidian.md](references/local/fullstop-obsidian.md).
    - Keep these local defaults out of the generic writing logic.
+   - When writing for Obsidian knowledge bases, do not use frontmatter wiki-links such as `related: [[...]]` to mass-create graph edges; keep structural metadata in frontmatter and reserve semantic links for body content.
 
 ## Profile Selection
 
@@ -96,6 +97,7 @@ For **kb-article**, default to:
 - reserve at least one visual anchor early in the draft
 - use semantic section titles, not conversational hooks
 - avoid lines such as "先记这一句", "先别管", "你只要记住", or similar spoken-style prompting unless the user explicitly wants a tutorial voice
+- for Obsidian targets, use frontmatter for structural fields such as note type, layer, prerequisites, or next steps, not for bulk wiki-link relationship lists that would pollute the graph
 
 ## Pass Selection
 
