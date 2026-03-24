@@ -1,0 +1,4 @@
+interface:
+  display_name: "中文综述引用"
+  short_description: "按中文工科论文样本改写文献综述并校正段内引用位置。"
+  default_prompt: "Use $zh-lit-review-citation to revise my Chinese literature review and place citations correctly without inventing references."
