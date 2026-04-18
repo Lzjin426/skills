@@ -25,6 +25,58 @@ def list_style_references(note_root: Path, output_path: Path, limit: int) -> lis
     return [str(path) for path in selected]
 
 
+def _parse_monthly_sort_key(path: Path) -> tuple[int, int]:
+    """Extract (year, month) from monthly filename for sorting."""
+    import re
+    stem = path.stem
+    legacy = re.fullmatch(r"(\d{1,2})月-(\d{2})", stem)
+    if legacy:
+        return 2000 + int(legacy.group(2)), int(legacy.group(1))
+    iso = re.fullmatch(r"(\d{4})-(\d{2})", stem)
+    if iso:
+        return int(iso.group(1)), int(iso.group(2))
+    return (0, 0)
+
+
+def list_historical_context(
+    note_root: Path,
+    output_path: Path,
+    end_date: date,
+    weekly_limit: int = 8,
+    monthly_limit: int = 2,
+) -> dict:
+    """Return older weekly and monthly files for content-level context analysis.
+
+    Unlike style_reference_files (which are only read for tone),
+    these files are read for actual content to detect trends, blind spots,
+    and cross-period connections.
+    """
+    # Older weekly summaries (up to weekly_limit)
+    weekly_files = sorted(note_root.glob("*/Weekly/*.md"))
+    older_weekly = [
+        path for path in weekly_files
+        if path != output_path and path.name < output_path.name
+    ]
+    context_weekly = [str(p) for p in reversed(older_weekly)][:weekly_limit]
+
+    # Recent monthly summaries (up to monthly_limit)
+    monthly_files = sorted(
+        note_root.glob("*/Monthly/*.md"),
+        key=_parse_monthly_sort_key,
+    )
+    target_ym = (end_date.year, end_date.month)
+    older_monthly = [
+        path for path in monthly_files
+        if _parse_monthly_sort_key(path) < target_ym
+    ]
+    context_monthly = [str(p) for p in reversed(older_monthly)][:monthly_limit]
+
+    return {
+        "weekly_files": context_weekly,
+        "monthly_files": context_monthly,
+    }
+
+
 def collect(root: Path, start: date, end: date, reference_count: int) -> dict:
     note_root = root / "05-note"
     if not note_root.exists():
@@ -68,6 +120,9 @@ def collect(root: Path, start: date, end: date, reference_count: int) -> dict:
         "days": days,
         "style_reference_files": list_style_references(
             note_root, weekly_output_path, reference_count
+        ),
+        "historical_context_files": list_historical_context(
+            note_root, weekly_output_path, end,
         ),
     }
 

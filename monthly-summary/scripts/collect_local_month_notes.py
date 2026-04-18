@@ -110,6 +110,35 @@ def list_style_references(
     return [str(path) for path in selected]
 
 
+def list_historical_context(
+    note_root: Path,
+    output_path: Path,
+    year: int,
+    month: int,
+    monthly_limit: int = 6,
+) -> dict:
+    """Return older monthly files for content-level context analysis.
+
+    Unlike style_reference_files (which are only read for tone),
+    these files are read for actual content to detect trends, blind spots,
+    and cross-period connections.
+    """
+    monthly_files = sorted(
+        note_root.glob("*/Monthly/*.md"),
+        key=_parse_monthly_sort_key,
+    )
+    target_key = (year, month)
+    older_monthly = [
+        path for path in monthly_files
+        if path != output_path and _parse_monthly_sort_key(path) < target_key
+    ]
+    context_monthly = [str(p) for p in reversed(older_monthly)][:monthly_limit]
+
+    return {
+        "monthly_files": context_monthly,
+    }
+
+
 def collect(root: Path, year: int, month: int, reference_count: int) -> dict:
     note_root = root / "05-note"
     if not note_root.exists():
@@ -170,6 +199,9 @@ def collect(root: Path, year: int, month: int, reference_count: int) -> dict:
         "supplementary_weekly_files": supplementary_weekly_files,
         "style_reference_files": list_style_references(
             note_root, output_path, end, reference_count
+        ),
+        "historical_context_files": list_historical_context(
+            note_root, output_path, year, month,
         ),
     }
 
