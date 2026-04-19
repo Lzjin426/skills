@@ -1,113 +1,6 @@
 {
   "version": 2,
   "skills": {
-    "doc": {
-      "tags": [
-        "tools"
-      ],
-      "translation": "当任务涉及读取、创建或编辑`.docx`文档，特别是对格式或版式保真度有要求时使用；建议采用`python-docx`并结合内置的`scripts/render_docx.py`进行视觉检查。",
-      "dependencies": [
-        "python-docx",
-        "pdf2image",
-        "libreoffice",
-        "poppler"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774272297
-    },
-    "mermaid-visualizer": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "frontend-ui-animator": {
-      "tags": [
-        "UI&UX"
-      ],
-      "translation": "分析与实现针对 Next.js + Tailwind + React 项目的有目的性 UI 动画。当用户提出添加动画、增强 UI 动效、为页面/组件添加动画或改进视觉反馈时使用。触发关键词包括“添加动画”、“UI 动画”、“动效设计”、“悬停效果”、“滚动动画”、“页面过渡”、“微交互”。",
-      "dependencies": [
-        "framer-motion",
-        "react-intersection-observer",
-        "gsap"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773918422
-    },
-    "monthly-summary": {
-      "tags": [
-        "write"
-      ],
-      "translation": "当用户要求\"月总结\"\"本月总结\"\"上月总结\"\"月报\"\"月度复盘\"等任务时使用。本技能会在本地 `05-note` 文档库中按月检索每日 Markdown 文档，必要时参考同月周报与历史月报风格，生成新的本地月总结并写入对应 `Monthly` 目录。",
-      "dependencies": [
-        "python3",
-        "mermaid-visualizer"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776002336
-    },
-    "ui-animation": {
-      "tags": [
-        "UI"
-      ],
-      "translation": "创建、评审和调试用户界面动效与动画实现。涵盖弹簧动画、手势交互、拖拽操作、剪切路径展示、缓动效果、时间控制及动画评审。适用于设计、实现或评审动效、CSS过渡、关键帧动画、framer-motion库、弹簧动画时使用，或当提出以下需求时参考：“添加动画效果”、“让交互更流畅”、“评审我的动画”、“此处是否需要动画”或“添加滑动手势”。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773917432
-    },
-    "remotion-best-practices": {
-      "tags": [
-        "video"
-      ],
-      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
-      "dependencies": [
-        "@remotion/captions"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "frontend-design": {
-      "tags": [
-        "UI&UX"
-      ],
-      "translation": "打造独特、生产级的前端界面，具备卓越的设计品质。当用户要求构建网页组件、页面、设计稿、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与界面设计，避免千篇一律的AI美学风格。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "obsidian-canvas-creator": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "从文本内容创建 Obsidian Canvas 文件，支持思维导图与自由布局两种模式。当用户希望将内容可视化为交互式画布、创建思维导图，或在 Obsidian 中以空间形式组织信息时，可使用此技能。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "weekly-summary": {
-      "tags": [
-        "write"
-      ],
-      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
-      "dependencies": [
-        "python3",
-        "mermaid-visualizer"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776002336
-    },
     "find-skills": {
       "tags": [
         "system"
@@ -118,40 +11,99 @@
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
+      "last_analyzed_mtime": 1776592301
     },
-    "yearly-summary": {
+    "weekly-summary": {
       "tags": [
         "write"
       ],
-      "translation": "当用户要求\"年总结\"\"年度总结\"\"年度复盘\"\"年报\"等任务时使用。本技能会在本地 `05-note` 文档库中按年检索月报、周报与日报，生成富可视化的年度总结并写入对应 Yearly 目录。",
+      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
       "dependencies": [
         "python3",
+        "scripts/week_window.py",
+        "scripts/collect_local_notes.py",
+        "references/weekly-summary-template.md",
         "mermaid-visualizer"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
+      "last_analyzed_mtime": 1776592301
+    },
+    "doc": {
+      "tags": [
+        "tools"
+      ],
+      "translation": "在涉及读取、创建或编辑 `.docx` 文档的任务时使用，特别是当格式或布局保真度很重要时；优先选择 `python-docx` 并配合内置的 `scripts/render_docx.py` 进行视觉检查。",
+      "dependencies": [
+        "soffice",
+        "pdftoppm",
+        "libreoffice",
+        "poppler",
+        "poppler-utils",
+        "python-docx",
+        "pdf2image"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
     },
     "humanizer-zh": {
       "tags": [
         "write"
       ],
-      "translation": "|",
+      "translation": "去除文本中的 AI 生成痕迹。适用于编辑或审阅文本，使其听起来更自然、更像人类书写。\n基于维基百科的\"AI 写作特征\"综合指南。检测并修复以下模式：夸大的象征意义、\n宣传性语言、以 -ing 结尾的肤浅分析、模糊的归因、破折号过度使用、三段式法则、\nAI 词汇、否定式排比、过多的连接性短语。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774270265
+      "last_analyzed_mtime": 1776592301
     },
-    "ask-questions-if-underspecified": {
+    "mermaid-visualizer": {
       "tags": [
-        "system"
+        "obsidian/draw"
       ],
-      "translation": "实施前先明确要求。当出现严重疑虑时使用。",
+      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
+      "last_analyzed_mtime": 1776592301
+    },
+    "frontend-ui-animator": {
+      "tags": [
+        "UI&UX"
+      ],
+      "translation": "分析与实现针对 Next.js + Tailwind + React 项目的有目的性 UI 动画。当用户提出添加动画、增强 UI 动效、为页面/组件添加动画或改进视觉反馈时使用。触发关键词包括“添加动画”、“UI 动画”、“动效设计”、“悬停效果”、“滚动动画”、“页面过渡”、“微交互”。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "multi-agent-deliberation-skill": {
+      "tags": [
+        "create"
+      ],
+      "translation": "当任务存在可争议的替代方案、可测试的评估标准以及可证伪的证据链时，运行多智能体审议。通过提议者/批评者/检查者/裁决者的工作流程，结合结构化裁决、置信度、证据图谱、残余风险及验证步骤，运用此技能以提升最终答案的质量与稳健性。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "save-solution-workspace": {
+      "tags": [],
+      "translation": "",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1775995327
+    },
+    "ui-animation": {
+      "tags": [
+        "UI"
+      ],
+      "translation": "创建、评审和调试用户界面动效与动画实现。涵盖弹簧动画、手势交互、拖拽操作、剪切路径展示、缓动效果、时间控制及动画评审。适用于设计、实现或评审动效、CSS过渡、关键帧动画、framer-motion库、弹簧动画时使用，或当提出以下需求时参考：“添加动画效果”、“让交互更流畅”、“评审我的动画”、“此处是否需要动画”或“添加滑动手势”。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
     },
     "save-solution": {
       "tags": [
@@ -163,89 +115,38 @@
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776567326
+      "last_analyzed_mtime": 1776592301
     },
-    "slides": {
+    "obsidian-bases": {
       "tags": [
-        "Work"
+        "obsidian",
+        "draw"
       ],
-      "translation": "使用PptxGenJS、捆绑的布局辅助工具以及渲染/验证工具来创建和编辑演示文稿幻灯片（`.pptx`）。适用于以下任务：构建新的PowerPoint演示文稿、根据截图/PDF/参考演示文稿重新创建幻灯片、在保持输出可编辑的同时修改幻灯片内容、添加图表/图示/视觉元素，或诊断布局问题（如内容溢出、元素重叠和字体替换）。",
-      "dependencies": [
-        "lark-cli",
-        "docker"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774271476
-    },
-    "taste-skill": {
-      "tags": [
-        "UI"
-      ],
-      "translation": "高级UI/UX工程师。负责构建数字界面，以覆盖默认LLM偏见。推行基于指标的规则、严格的组件架构、CSS硬件加速以及平衡的设计工程。",
-      "dependencies": [
-        "framer-motion",
-        "@phosphor-icons/react",
-        "@radix-ui/react-icons",
-        "tailwindcss",
-        "@tailwindcss/postcss",
-        "zustand",
-        "lucide-react"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "zh-paper-referee": {
-      "tags": [
-        "paper",
-        "write"
-      ],
-      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
+      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774354583
+      "last_analyzed_mtime": 1776592301
     },
     "better-md-writer": {
       "tags": [
         "write"
       ],
-      "translation": "以轻量级默认流程撰写、重写并润色文档。首先选择文档模板，仅当明显能提升草稿质量时，才启用更高成本的修改环节。",
+      "translation": "使用轻量级的默认工作流程撰写、重写和润色文档。首先选择一个文档配置，仅当高级处理步骤能明显提升草稿质量时，才启用这些成本较高的步骤。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774336116
+      "last_analyzed_mtime": 1776592301
     },
-    "multi-agent-deliberation-skill": {
+    "frontend-design": {
       "tags": [
-        "create"
+        "UI&UX"
       ],
-      "translation": "当任务存在可争议的替代方案、可测试的评估标准以及可证伪的证据链时，运行多智能体审议。通过提议者/批评者/检查者/裁决者的工作流程，结合结构化裁决、置信度、证据图谱、残余风险及验证步骤，运用此技能以提升最终答案的质量与稳健性。",
+      "translation": "打造独特、生产级的前端界面，具备高设计品质。当用户要求构建网页组件、页面、设计作品、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与UI设计，避免千篇一律的AI美学风格。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "skill-vetter": {
-      "tags": [
-        "system"
-      ],
-      "translation": "面向AI代理的安全优先技能审查。在从ClawdHub、GitHub或其他来源安装任何技能前使用。检查危险信号、权限范围及可疑模式。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "excalidraw-diagram": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "根据文本内容生成Excalidraw图表。支持三种输出模式——Obsidian（.md格式）、标准（.excalidraw格式）以及动画（带动画顺序的.excalidraw格式）。触发关键词包括：“Excalidraw”、“画图”、“流程图”、“思维导图”、“可视化”、“diagram”、“标准Excalidraw”、“standard excalidraw”、“Excalidraw动画”、“动画图”、“animate”。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774097006
+      "last_analyzed_mtime": 1776592301
     },
     "screenshot": {
       "tags": [
@@ -259,26 +160,105 @@
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774271567
+      "last_analyzed_mtime": 1776592301
     },
-    "save-solution-workspace": {
-      "tags": [],
-      "translation": "",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1775995327
-    },
-    "obsidian-bases": {
+    "monthly-summary": {
       "tags": [
-        "obsidian",
-        "draw"
+        "write"
       ],
-      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
+      "translation": "当用户要求\"月总结\"\"本月总结\"\"上月总结\"\"月报\"\"月度复盘\"等任务时使用。本技能会在本地 `05-note` 文档库中按月检索每日 Markdown 文档，必要时参考同月周报与历史月报风格，生成新的本地月总结并写入对应 `Monthly` 目录。",
+      "dependencies": [
+        "python3",
+        "mermaid-visualizer"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "taste-skill": {
+      "tags": [
+        "UI"
+      ],
+      "translation": "高级UI/UX工程师。负责构建数字界面，以覆盖默认LLM偏见。推行基于指标的规则、严格的组件架构、CSS硬件加速以及平衡的设计工程。",
+      "dependencies": [
+        "framer-motion",
+        "@phosphor-icons/react",
+        "@radix-ui/react-icons",
+        "tailwindcss",
+        "@tailwindcss/postcss",
+        "zustand",
+        "lucide-react",
+        "shadcn/ui",
+        "gsap",
+        "three"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "yearly-summary": {
+      "tags": [
+        "write"
+      ],
+      "translation": "当用户要求\"年总结\"\"年度总结\"\"年度复盘\"\"年报\"等任务时使用。本技能会在本地 `05-note` 文档库中按年检索月报、周报与日报，生成富可视化的年度总结并写入对应 Yearly 目录。",
+      "dependencies": [
+        "python3",
+        "mermaid-visualizer"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "zh-paper-referee": {
+      "tags": [
+        "paper",
+        "write"
+      ],
+      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
+      "last_analyzed_mtime": 1776592301
+    },
+    "remotion-best-practices": {
+      "tags": [
+        "video"
+      ],
+      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "skill-vetter": {
+      "tags": [
+        "system"
+      ],
+      "translation": "面向AI代理的安全优先技能审查。在从ClawdHub、GitHub或其他来源安装任何技能前使用。检查危险信号、权限范围及可疑模式。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "obsidian-canvas-creator": {
+      "tags": [
+        "obsidian/draw"
+      ],
+      "translation": "从文本内容创建 Obsidian Canvas 文件，支持思维导图与自由布局两种模式。当用户希望将内容可视化为交互式画布、创建思维导图，或在 Obsidian 格式中按空间组织信息时，可使用此技能。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "ask-questions-if-underspecified": {
+      "tags": [
+        "system"
+      ],
+      "translation": "在实施前明确需求。当出现严重疑虑时使用。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
     },
     "chief-architect": {
       "tags": [],
@@ -287,6 +267,29 @@
       "dependencies_scanned": false,
       "file_translations": {},
       "last_analyzed_mtime": 0
+    },
+    "slides": {
+      "tags": [
+        "Work"
+      ],
+      "translation": "使用PptxGenJS、捆绑的布局辅助工具以及渲染/验证工具来创建和编辑演示文稿幻灯片（`.pptx`）。适用于以下任务：构建新的PowerPoint演示文稿、根据截图/PDF/参考演示文稿重新创建幻灯片、在保持输出可编辑的同时修改幻灯片内容、添加图表/图示/视觉元素，或诊断布局问题（如内容溢出、元素重叠和字体替换）。",
+      "dependencies": [
+        "python3",
+        "libreoffice"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
+    },
+    "excalidraw-diagram": {
+      "tags": [
+        "obsidian/draw"
+      ],
+      "translation": "根据文本内容生成 Excalidraw 图表。支持三种输出模式——Obsidian（.md）、标准（.excalidraw）和动画（带动画顺序的 .excalidraw）。触发词包括“Excalidraw”、“画图”、“流程图”、“思维导图”、“可视化”、“diagram”、“标准Excalidraw”、“standard excalidraw”、“Excalidraw动画”、“动画图”、“animate”。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592301
     }
   },
   "settings": {

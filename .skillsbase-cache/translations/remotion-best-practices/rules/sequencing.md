@@ -1,6 +1,6 @@
 ---
 name: sequencing
-description: Remotion 的序列模式——延迟、修剪、限制元素时长
+description: Remotion 的序列模式——延迟、修剪、限制项目时长
 metadata:
   tags: 序列, 系列, 时序, 延迟, 修剪
 ---
@@ -32,7 +32,7 @@ const {fps} = useVideoConfig();
 ## 预加载
 
 这会在组件实际播放前将其加载到时间轴中。  
-始终为任何 `<Sequence>` 启用预加载！
+务必为所有 `<Sequence>` 启用预加载！
 
 ```tsx
 <Sequence premountFor={1 * fps}>
@@ -60,7 +60,7 @@ import {Series} from 'remotion';
 </Series>;
 ```
 
-与 `<Sequence>` 类似，使用 `<Series.Sequence>` 时，默认会将元素包裹在绝对填充元素中，除非将 `layout` 属性设为 `none`。
+与 `<Sequence>` 类似，使用 `<Series.Sequence>` 时，除非将 `layout` 属性设为 `none`，否则项目默认会被包裹在绝对填充元素中。
 
 ### 带重叠的系列
 
@@ -91,7 +91,7 @@ import {Series} from 'remotion';
 
 ## 嵌套序列
 
-可以通过嵌套序列来实现复杂的时序控制：
+序列可以嵌套以实现复杂的时序控制：
 
 ```tsx
 <Sequence from={0} durationInFrames={120}>

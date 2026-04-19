@@ -24,7 +24,7 @@ export const getVideoDimensions = async (src: string) => {
 
   const videoTrack = await input.getPrimaryVideoTrack();
   if (!videoTrack) {
-    throw new Error("未找到视频轨道");
+    throw new Error("No video track found");
   }
 
   return {
@@ -34,7 +34,7 @@ export const getVideoDimensions = async (src: string) => {
 };
 ```
 
-## 使用示例
+## 使用方法
 
 ```tsx
 const dimensions = await getVideoDimensions("https://remotion.media/video.mp4");

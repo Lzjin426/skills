@@ -1,13 +1,13 @@
 ---
 name: calculate-metadata
-description: 动态设置合成时长、尺寸与属性
+description: 动态设置合成时长、尺寸和属性
 metadata:
   tags: calculateMetadata, duration, dimensions, props, dynamic
 ---
 
 # 使用 calculateMetadata
 
-在 `<Composition>` 上使用 `calculateMetadata`，可在渲染前动态设置时长、尺寸并转换属性。
+在 `<Composition>` 上使用 `calculateMetadata`，可在渲染前动态设置时长、尺寸和转换属性。
 
 ```tsx
 <Composition id="MyComp" component={MyComponent} durationInFrames={300} fps={30} width={1920} height={1080} defaultProps={{videoSrc: 'https://remotion.media/video.mp4'}} calculateMetadata={calculateMetadata} />
@@ -93,7 +93,7 @@ const calculateMetadata: CalculateMetadataFunction<Props> = async ({props, abort
 
 ## 返回值
 
-所有字段均为可选。返回值将覆盖 `<Composition>` 的属性：
+所有字段均为可选。返回的值将覆盖 `<Composition>` 的属性：
 
 - `durationInFrames`: 帧数
 - `width`: 合成宽度（像素）

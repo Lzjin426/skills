@@ -91,13 +91,13 @@ return (
 
 ## 音量
 
-设置静态音量（0 到 1 之间）：
+设置静态音量（0 到 1）：
 
 ```tsx
 <Video src={staticFile("video.mp4")} volume={0.5} />
 ```
 
-或者使用回调函数根据当前帧动态调整音量：
+或使用回调函数根据当前帧动态调整音量：
 
 ```tsx
 import { interpolate } from "remotion";
@@ -120,7 +120,7 @@ return (
 <Video src={staticFile("video.mp4")} muted />
 ```
 
-## 速度
+## 播放速度
 
 使用 `playbackRate` 来改变播放速度：
 
@@ -131,7 +131,7 @@ return (
 
 不支持反向播放。
 
-## 循环
+## 循环播放
 
 使用 `loop` 属性让视频无限循环：
 
@@ -153,7 +153,7 @@ return (
 />
 ```
 
-## 音高
+## 音高调整
 
 使用 `toneFrequency` 来调整音高而不影响速度。取值范围为 0.01 到 2：
 

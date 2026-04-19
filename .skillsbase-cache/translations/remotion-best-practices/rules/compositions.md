@@ -54,7 +54,7 @@ export const RemotionRoot = () => {
 };
 ```
 
-为确保 `defaultProps` 的类型安全，请使用 `type` 而非 `interface` 来声明属性类型。
+为确保 `defaultProps` 的类型安全，请使用 `type` 而非 `interface` 来声明属性。
 
 ## 文件夹
 
@@ -84,7 +84,7 @@ export const RemotionRoot = () => {
 
 ## 静态图
 
-使用 `<Still>` 创建单帧图像。它不需要 `durationInFrames` 或 `fps`。
+使用 `<Still>` 定义单帧图像。它不需要 `durationInFrames` 或 `fps`。
 
 ```tsx
 import { Still } from "remotion";

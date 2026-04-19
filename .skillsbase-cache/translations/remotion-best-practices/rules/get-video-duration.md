@@ -7,7 +7,7 @@ metadata:
 
 # 使用 Mediabunny 获取视频时长
 
-Mediabunny 可以提取视频文件的时长。它适用于浏览器、Node.js 和 Bun 环境。
+Mediabunny 可以提取视频文件的时长。它支持浏览器、Node.js 和 Bun 环境。
 
 ## 获取视频时长
 
@@ -27,7 +27,7 @@ export const getVideoDuration = async (src: string) => {
 };
 ```
 
-## 使用方法
+## 使用示例
 
 ```tsx
 const duration = await getVideoDuration("https://remotion.media/video.mp4");

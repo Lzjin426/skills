@@ -7,13 +7,13 @@ metadata:
 
 # 在 Remotion 中导入资源
 
-## public 文件夹
+## 公共文件夹
 
-将资源文件放置在项目根目录的 `public/` 文件夹中。
+将资源放置在项目根目录的 `public/` 文件夹中。
 
 ## 使用 staticFile()
 
-引用 `public/` 文件夹中的文件时，**必须**使用 `staticFile()` 函数：
+引用 `public/` 文件夹中的文件时，**必须**使用 `staticFile()`：
 
 ```tsx
 import {Img, staticFile} from 'remotion';
@@ -74,5 +74,5 @@ document.fonts.add(fontFamily);
 
 ## 重要注意事项
 
-- Remotion 组件（`<Img>`、`<Video>`、`<Audio>`）会确保资源在渲染前完全加载
+- Remotion 组件（`<Img>`、`<Video>`、`<Audio>`）确保资源在渲染前完全加载
 - 文件名中的特殊字符（`#`、`?`、`&`）会自动编码

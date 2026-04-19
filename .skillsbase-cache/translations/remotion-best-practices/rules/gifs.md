@@ -2,10 +2,10 @@
 name: gif
 description: 在 Remotion 中显示 GIF、APNG、AVIF 和 WebP 图像
 metadata:
-  tags: gif, animation, images, animated, apng, avif, webp
+  tags: gif, 动画, 图像, 动态图, apng, avif, webp
 ---
 
-# 在 Remotion 中使用动画图像
+# 在 Remotion 中使用动态图像
 
 ## 基本用法
 
@@ -117,7 +117,7 @@ const calculateMetadata: CalculateMetadataFunction = async () => {
 
 ## 替代方案
 
-如果 `<AnimatedImage>` 无法工作（仅支持 Chrome 和 Firefox），可以使用 `@remotion/gif` 中的 `<Gif>` 组件替代。
+如果 `<AnimatedImage>` 无法工作（仅支持 Chrome 和 Firefox），可以使用 `@remotion/gif` 中的 `<Gif>` 组件。
 
 ```bash
 npx remotion add @remotion/gif # 如果项目使用 npm

@@ -1,6 +1,6 @@
 ---
 name: measuring-text
-description: 测量文本尺寸、适配文本到容器以及检查溢出
+description: 测量文本尺寸、适配文本到容器以及检查溢出情况
 metadata:
   tags: measure, text, layout, dimensions, fitText, fillTextBox
 ---
@@ -52,7 +52,7 @@ const { fontSize } = fitText({
 return (
   <div
     style={{
-      fontSize: Math.min(fontSize, 80), // 限制在 80px
+      fontSize: Math.min(fontSize, 80), // 上限为 80px
       fontFamily: "Inter",
       fontWeight: "bold",
     }}
@@ -98,7 +98,7 @@ const { fontFamily, waitUntilDone } = loadFont("normal", {
 });
 
 waitUntilDone().then(() => {
-  // 此时可以安全测量
+  // 现在可以安全测量
   const { width } = measureText({
     text: "Hello",
     fontFamily,
@@ -136,7 +136,7 @@ const { width } = measureText({
 return <div style={fontStyle}>Hello</div>;
 ```
 
-**避免使用内边距和边框：** 使用 `outline` 替代 `border` 以防止布局差异：
+**避免内边距和边框：** 使用 `outline` 替代 `border` 以防止布局差异：
 
 ```tsx
 <div style={{ outline: "2px solid red" }}>Text</div>

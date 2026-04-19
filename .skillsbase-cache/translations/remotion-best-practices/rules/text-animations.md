@@ -11,10 +11,10 @@ metadata:
 
 ## 打字机效果
 
-查看 [Typewriter](assets/text-animations-typewriter.tsx) 获取一个包含闪烁光标和首句后暂停的高级示例。
+查看 [Typewriter](assets/text-animations-typewriter.tsx) 获取一个包含闪烁光标及首句后暂停的高级示例。
 
-始终使用字符串切片来实现打字机效果。切勿使用逐字符透明度。
+始终使用字符串切片实现打字机效果，切勿使用逐字符透明度。
 
 ## 单词高亮
 
-查看 [Word Highlight](assets/text-animations-word-highlight.tsx) 获取单词高亮动画的示例，例如使用荧光笔效果。
+查看 [Word Highlight](assets/text-animations-word-highlight.tsx) 获取单词高亮动画示例，例如使用荧光笔效果。

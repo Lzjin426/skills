@@ -2,14 +2,14 @@
 name: fonts
 description: 在 Remotion 中加载 Google 字体与本地字体
 metadata:
-  tags: 字体, google-fonts, 排版, 文本
+  tags: fonts, google-fonts, typography, text
 ---
 
 # 在 Remotion 中使用字体
 
 ## 通过 @remotion/google-fonts 使用 Google 字体
 
-这是使用 Google 字体的推荐方式。它具有类型安全性，并会自动阻塞渲染直到字体准备就绪。
+这是使用 Google 字体的推荐方式。它具有类型安全性，并会自动阻止渲染直到字体准备就绪。
 
 ### 前提条件
 
@@ -33,7 +33,7 @@ export const MyComposition = () => {
 };
 ```
 
-建议仅指定需要的字重和子集以减小文件大小：
+建议仅指定所需的字重和子集以减小文件大小：
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Roboto";
@@ -46,7 +46,7 @@ const { fontFamily } = loadFont("normal", {
 
 ### 等待字体加载完成
 
-如果需要知道字体何时准备就绪，可使用 `waitUntilDone()`：
+如果需要知道字体何时准备就绪，请使用 `waitUntilDone()`：
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Lobster";
@@ -126,7 +126,7 @@ loadFont({
 
 ## 在组件中使用
 
-在组件顶层或提前导入的单独文件中调用 `loadFont()`：
+在组件的顶层或提前导入的单独文件中调用 `loadFont()`：
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/Montserrat";

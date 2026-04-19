@@ -2,7 +2,7 @@
 name: audio
 description: 在 Remotion 中使用音频和声音 - 导入、裁剪、音量、速度、音高
 metadata:
-  tags: audio, media, trim, volume, speed, loop, pitch, mute, sound, sfx
+  tags: 音频, 媒体, 裁剪, 音量, 速度, 循环, 音高, 静音, 声音, 音效
 ---
 
 # 在 Remotion 中使用音频
@@ -43,7 +43,7 @@ export const MyComposition = () => {
 
 ## 裁剪
 
-使用 `trimBefore` 和 `trimAfter` 来移除音频的部分片段。值以帧为单位。
+使用 `trimBefore` 和 `trimAfter` 来裁剪音频的部分内容。值以帧为单位。
 
 ```tsx
 const { fps } = useVideoConfig();
@@ -86,7 +86,7 @@ return (
 <Audio src={staticFile("audio.mp3")} volume={0.5} />
 ```
 
-或使用回调函数根据当前帧动态调整音量：
+或者使用回调函数根据当前帧动态调整音量：
 
 ```tsx
 import { interpolate } from "remotion";
@@ -156,7 +156,7 @@ return (
 
 ## 音高
 
-使用 `toneFrequency` 来调整音高而不影响速度。值范围为 0.01 到 2：
+使用 `toneFrequency` 来调整音高而不影响速度。值范围从 0.01 到 2：
 
 ```tsx
 <Audio

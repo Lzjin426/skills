@@ -1,17 +1,17 @@
 ---
 name: can-decode
-description: 使用 Mediabunny 检查浏览器是否能够解码视频
+description: 使用 Mediabunny 检查浏览器能否解码视频
 metadata:
-  tags: 解码, 验证, 视频, 音频, 兼容性, 浏览器
+  tags: decode, validation, video, audio, compatibility, browser
 ---
 
-# 检查视频是否可被解码
+# 检查视频能否被解码
 
 在尝试播放视频之前，使用 Mediabunny 检查浏览器是否能够解码该视频。
 
 ## `canDecode()` 函数
 
-此函数可直接复制粘贴到任何项目中。
+此函数可直接复制到任何项目中使用。
 
 ```tsx
 import { Input, ALL_FORMATS, UrlSource } from "mediabunny";
@@ -57,7 +57,7 @@ if (isDecodable) {
 }
 ```
 
-## 与 Blob 结合使用
+## 与 Blob 一起使用
 
 对于文件上传或拖放操作，使用 `BlobSource`：
 

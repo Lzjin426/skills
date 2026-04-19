@@ -2,7 +2,7 @@
 name: images
 description: 在 Remotion 中使用 <Img> 组件嵌入图像
 metadata:
-  tags: 图像, img, staticFile, png, jpg, svg, webp
+  tags: images, img, staticFile, png, jpg, svg, webp
 ---
 
 # 在 Remotion 中使用图像
@@ -27,9 +27,9 @@ export const MyComposition = () => {
 - Next.js `<Image>` 组件
 - CSS `background-image`
 
-`<Img>` 组件确保图像在渲染前完全加载，防止视频导出时出现闪烁或空白帧。
+`<Img>` 组件确保图像在渲染前完全加载，防止视频导出时出现闪烁和空白帧。
 
-## 使用 staticFile() 引用本地图像
+## 使用 staticFile() 加载本地图像
 
 将图像放置在 `public/` 文件夹中，并使用 `staticFile()` 引用它们：
 
@@ -61,7 +61,7 @@ import { Img, staticFile } from "remotion";
 
 对于动画 GIF，请改用 `@remotion/gif` 中的 `<Gif>` 组件。
 
-## 尺寸与定位
+## 尺寸和定位
 
 使用 `style` 属性来控制尺寸和位置：
 
@@ -115,7 +115,7 @@ import { getImageDimensions, staticFile } from "remotion";
 const { width, height } = await getImageDimensions(staticFile("photo.png"));
 ```
 
-这对于计算宽高比或调整合成尺寸非常有用：
+这对于计算宽高比或调整合成尺寸很有用：
 
 ```tsx
 import { getImageDimensions, staticFile, CalculateMetadataFunction } from "remotion";

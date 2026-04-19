@@ -13,10 +13,10 @@ import {interpolate} from 'remotion';
 const opacity = interpolate(frame, [0, 100], [0, 1]);
 ```
 
-默认情况下，数值不会被限制在 [0, 1] 范围内，因此可能超出该区间。  
-以下是如何限制数值范围的方法：
+默认情况下，数值不会被限制，因此值可能超出 [0, 1] 的范围。  
+以下是如何限制数值范围：
 
-```ts title="在 100 帧内从 0 过渡到 1，并限制外推范围"
+```ts title="在 100 帧内从 0 过渡到 1，并限制外插值"
 const opacity = interpolate(frame, [0, 100], [0, 1], {
   extrapolateRight: 'clamp',
   extrapolateLeft: 'clamp',
@@ -43,7 +43,7 @@ const scale = spring({
 ### 物理属性
 
 默认配置为：`mass: 1, damping: 10, stiffness: 100`。  
-这会使动画在稳定前带有轻微的弹跳效果。
+这会导致动画在稳定前略有弹跳效果。
 
 可按如下方式覆盖配置：
 
@@ -55,13 +55,13 @@ const scale = spring({
 });
 ```
 
-推荐的无弹跳自然运动配置为：`{ damping: 200 }`。
+推荐用于无弹跳自然运动的配置是：`{ damping: 200 }`。
 
 以下是一些常见配置：
 
 ```tsx
 const smooth = {damping: 200}; // 平滑，无弹跳（用于微妙的揭示效果）
-const snappy = {damping: 20, stiffness: 200}; // 敏捷，轻微弹跳（用于 UI 元素）
+const snappy = {damping: 20, stiffness: 200}; // 灵敏，轻微弹跳（用于 UI 元素）
 const bouncy = {damping: 8}; // 弹跳式入场（用于活泼的动画）
 const heavy = {damping: 15, stiffness: 80, mass: 2}; // 沉重、缓慢、轻微弹跳
 ```
@@ -110,7 +110,7 @@ const rotation = interpolate(springProgress, [0, 1], [0, 360]);
 
 ### 叠加弹簧效果
 
-弹簧函数返回数值，因此可进行数学运算：
+弹簧函数返回的是数值，因此可以进行数学运算：
 
 ```tsx
 const frame = useCurrentFrame();
@@ -145,20 +145,20 @@ const value1 = interpolate(frame, [0, 100], [0, 1], {
 ```
 
 默认缓动函数为 `Easing.linear`。  
-其他凸度类型包括：
+还有其他多种凸度类型：
 
-- `Easing.in`：启动缓慢，逐渐加速
-- `Easing.out`：启动快速，逐渐减速
+- `Easing.in`：缓慢开始并加速
+- `Easing.out`：快速开始并减速
 - `Easing.inOut`
 
-以及曲线类型（按从最线性到最弯曲排序）：
+以及曲线类型（从最线性到最弯曲排序）：
 
 - `Easing.quad`
 - `Easing.sin`
 - `Easing.exp`
 - `Easing.circle`
 
-缓动函数需结合凸度与曲线类型：
+缓动函数需要结合凸度与曲线类型：
 
 ```ts
 const value1 = interpolate(frame, [0, 100], [0, 1], {

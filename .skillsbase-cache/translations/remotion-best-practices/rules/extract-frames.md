@@ -11,7 +11,7 @@ metadata:
 
 ## `extractFrames()` 函数
 
-此函数可直接复制到任何项目中使用。
+此函数可直接复制粘贴到任何项目中。
 
 ```tsx
 import {

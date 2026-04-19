@@ -1,17 +1,17 @@
 ---
 name: display-captions
-description: 在 Remotion 中显示字幕，支持 TikTok 风格分页和单词高亮
+description: 在 Remotion 中显示字幕，采用 TikTok 风格分页与单词高亮
 metadata:
-  tags: 字幕, 字幕显示, 显示, tiktok, 高亮
+  tags: captions, subtitles, display, tiktok, highlight
 ---
 
 # 在 Remotion 中显示字幕
 
-本指南介绍如何在 Remotion 中显示字幕，假设你已经拥有 `Caption` 格式的字幕数据。
+本指南介绍如何在 Remotion 中显示字幕，假设你已经拥有 `Caption` 格式的字幕。
 
 ## 前提条件
 
-首先需要安装 @remotion/captions 包。
+首先，需要安装 @remotion/captions 包。
 如果尚未安装，请使用以下命令：
 
 ```bash
@@ -23,15 +23,15 @@ pnpm exec remotion add @remotion/captions # 如果项目使用 pnpm
 
 ## 创建分页
 
-使用 `createTikTokStyleCaptions()` 将字幕分组为页面。`combineTokensWithinMilliseconds` 选项控制一次显示多少个单词：
+使用 `createTikTokStyleCaptions()` 将字幕分组为多个页面。`combineTokensWithinMilliseconds` 选项控制一次显示多少个单词：
 
 ```tsx
 import {useMemo} from 'react';
 import {createTikTokStyleCaptions} from '@remotion/captions';
 import type {Caption} from '@remotion/captions';
 
-// 字幕切换间隔（毫秒）
-// 数值越大 = 每页单词越多
+// 字幕切换的频率（以毫秒为单位）
+// 数值越大 = 每页显示的单词越多
 // 数值越小 = 单词越少（更接近逐词显示）
 const SWITCH_CAPTIONS_EVERY_MS = 1200;
 
@@ -45,7 +45,7 @@ const {pages} = useMemo(() => {
 
 ## 使用序列渲染
 
-遍历页面并在 `<Sequence>` 中渲染每一页。根据页面时间计算起始帧和持续时间：
+遍历页面并在 `<Sequence>` 中渲染每个页面。根据页面时间计算起始帧和持续时间：
 
 ```tsx
 import {Sequence, useVideoConfig, AbsoluteFill} from 'remotion';
@@ -100,7 +100,7 @@ const CaptionPage: React.FC<{page: TikTokPage}> = ({page}) => {
 
   // 相对于序列起始的当前时间
   const currentTimeMs = (frame / fps) * 1000;
-  // 加上页面起始时间转换为绝对时间
+  // 加上页面起始时间，转换为绝对时间
   const absoluteTimeMs = page.startMs + currentTimeMs;
 
   return (

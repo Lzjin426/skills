@@ -2,11 +2,11 @@
 name: animations
 description: Remotion 基础动画技能
 metadata:
-  tags: 动画, 过渡, 帧, useCurrentFrame
+  tags: animations, transitions, frames, useCurrentFrame
 ---
 
 所有动画**必须**由 `useCurrentFrame()` 钩子驱动。  
-以秒为单位编写动画，并乘以 `useVideoConfig()` 中的 `fps` 值。
+请以秒为单位编写动画，并乘以 `useVideoConfig()` 中的 `fps` 值。
 
 ```tsx
 import { useCurrentFrame } from "remotion";

@@ -1,15 +1,15 @@
 ---
 name: trimming
-description: Remotion 剪辑模式 - 裁剪动画的开头或结尾
+description: Remotion 的裁剪模式 - 裁剪动画的开头或结尾
 metadata:
   tags: sequence, trim, clip, cut, offset
 ---
 
-使用带负值 `from` 的 `<Sequence>` 来裁剪动画的开头。
+使用带有负值 `from` 的 `<Sequence>` 来裁剪动画的开头。
 
 ## 裁剪开头
 
-负值的 `from` 会将时间向前推移，使动画从中间开始播放：
+负值的 `from` 会将时间向后推移，使动画从中间开始播放：
 
 ```tsx
 import { Sequence, useVideoConfig } from "remotion";
@@ -21,8 +21,8 @@ const fps = useVideoConfig();
 </Sequence>
 ```
 
-动画从第 15 帧开始出现——前 15 帧被裁剪掉。
-在 `<MyAnimation>` 内部，`useCurrentFrame()` 从 15 开始计数，而不是 0。
+动画从其进度的第 15 帧开始出现——前 15 帧被裁剪掉了。
+在 `<MyAnimation>` 内部，`useCurrentFrame()` 从 15 开始，而不是 0。
 
 ## 裁剪结尾
 
@@ -35,11 +35,11 @@ const fps = useVideoConfig();
 </Sequence>
 ```
 
-动画播放 45 帧后，组件将被卸载。
+动画播放 45 帧，然后组件卸载。
 
 ## 裁剪与延迟
 
-嵌套序列可以同时裁剪开头并延迟显示时机：
+嵌套序列可以同时裁剪开头并延迟其出现时间：
 
 ```tsx
 <Sequence from={30}>
@@ -49,4 +49,4 @@ const fps = useVideoConfig();
 </Sequence>
 ```
 
-内层序列裁剪开头的 15 帧，外层序列将结果延迟 30 帧显示。
+内部序列裁剪掉开头的 15 帧，外部序列将结果延迟 30 帧。
