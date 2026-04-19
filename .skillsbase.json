@@ -1,6 +1,34 @@
 {
   "version": 2,
   "skills": {
+    "lark-base": {
+      "tags": [],
+      "translation": "当需要用 lark-cli 操作飞书多维表格（Base）时调用：适用于建表、字段管理、记录读写、视图配置、历史查询，以及角色/表单/仪表盘管理/工作流；也适用于把旧的 +table / +field / +record 写法改成当前命令写法。涉及字段设计、公式字段、查找引用、跨表计算、行级派生指标、数据分析需求时也必须使用本 skill。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "chief-architect": {
+      "tags": [],
+      "translation": ">",
+      "dependencies": [],
+      "dependencies_scanned": false,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "lark-calendar": {
+      "tags": [],
+      "translation": "飞书日历（calendar）：提供日历与日程（会议）的全面管理能力。核心场景包括：查看/搜索日程、创建/更新日程、管理参会人、查询忙闲状态及推荐空闲时段、查询/搜索与预定会议室。注意：涉及【预约日程/会议】或【查询/预定会议室】时，必须先读取 references/lark-calendar-schedule-meeting.md 工作流！高频操作请优先使用 Shortcuts：+agenda（快速概览今日/近期行程）、+create（创建日程并按需邀请参会人及预定会议室）、+freebusy（查询用户主日历的忙闲信息和rsvp的状态）、+rsvp（回复日程邀请）",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
     "doc": {
       "tags": [
         "tools"
@@ -16,16 +44,6 @@
       "file_translations": {},
       "last_analyzed_mtime": 1774272297
     },
-    "mermaid-visualizer": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
     "frontend-ui-animator": {
       "tags": [
         "UI&UX"
@@ -40,82 +58,13 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773918422
     },
-    "monthly-summary": {
+    "obsidian-bases": {
       "tags": [
-        "write"
+        "obsidian",
+        "draw"
       ],
-      "translation": "当用户要求\"月总结\"\"本月总结\"\"上月总结\"\"月报\"\"月度复盘\"等任务时使用。本技能会在本地 `05-note` 文档库中按月检索每日 Markdown 文档，必要时参考同月周报与历史月报风格，生成新的本地月总结并写入对应 `Monthly` 目录。",
-      "dependencies": [
-        "python3",
-        "mermaid-visualizer"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776002336
-    },
-    "ui-animation": {
-      "tags": [
-        "UI"
-      ],
-      "translation": "创建、评审和调试用户界面动效与动画实现。涵盖弹簧动画、手势交互、拖拽操作、剪切路径展示、缓动效果、时间控制及动画评审。适用于设计、实现或评审动效、CSS过渡、关键帧动画、framer-motion库、弹簧动画时使用，或当提出以下需求时参考：“添加动画效果”、“让交互更流畅”、“评审我的动画”、“此处是否需要动画”或“添加滑动手势”。",
+      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
       "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773917432
-    },
-    "remotion-best-practices": {
-      "tags": [
-        "video"
-      ],
-      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
-      "dependencies": [
-        "@remotion/captions"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "frontend-design": {
-      "tags": [
-        "UI&UX"
-      ],
-      "translation": "打造独特、生产级的前端界面，具备卓越的设计品质。当用户要求构建网页组件、页面、设计稿、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与界面设计，避免千篇一律的AI美学风格。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "obsidian-canvas-creator": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "从文本内容创建 Obsidian Canvas 文件，支持思维导图与自由布局两种模式。当用户希望将内容可视化为交互式画布、创建思维导图，或在 Obsidian 中以空间形式组织信息时，可使用此技能。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "weekly-summary": {
-      "tags": [
-        "write"
-      ],
-      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
-      "dependencies": [
-        "python3",
-        "mermaid-visualizer"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776002336
-    },
-    "find-skills": {
-      "tags": [
-        "system"
-      ],
-      "translation": "当用户提出诸如“如何做X”、“查找用于X的技能”、“有没有能……的技能”等问题，或表达出扩展能力的兴趣时，帮助用户发现并安装智能体技能。此技能应在用户寻找可能以可安装技能形式存在的功能时使用。",
-      "dependencies": [
-        "npx skills"
-      ],
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
@@ -133,21 +82,45 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "humanizer-zh": {
+    "monthly-summary": {
       "tags": [
         "write"
       ],
-      "translation": "|",
+      "translation": "当用户要求\"月总结\"\"本月总结\"\"上月总结\"\"月报\"\"月度复盘\"等任务时使用。本技能会在本地 `05-note` 文档库中按月检索每日 Markdown 文档，必要时参考同月周报与历史月报风格，生成新的本地月总结并写入对应 `Monthly` 目录。",
+      "dependencies": [
+        "python3",
+        "mermaid-visualizer"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776002336
+    },
+    "zh-paper-referee": {
+      "tags": [
+        "paper",
+        "write"
+      ],
+      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774270265
+      "last_analyzed_mtime": 1774354583
     },
-    "ask-questions-if-underspecified": {
+    "excalidraw-diagram": {
       "tags": [
-        "system"
+        "obsidian/draw"
       ],
-      "translation": "实施前先明确要求。当出现严重疑虑时使用。",
+      "translation": "根据文本内容生成Excalidraw图表。支持三种输出模式——Obsidian（.md格式）、标准（.excalidraw格式）以及动画（带动画顺序的.excalidraw格式）。触发关键词包括：“Excalidraw”、“画图”、“流程图”、“思维导图”、“可视化”、“diagram”、“标准Excalidraw”、“standard excalidraw”、“Excalidraw动画”、“动画图”、“animate”。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774097006
+    },
+    "obsidian-canvas-creator": {
+      "tags": [
+        "obsidian/draw"
+      ],
+      "translation": "从文本内容创建 Obsidian Canvas 文件，支持思维导图与自由布局两种模式。当用户希望将内容可视化为交互式画布、创建思维导图，或在 Obsidian 中以空间形式组织信息时，可使用此技能。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
@@ -165,18 +138,38 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776567326
     },
-    "slides": {
+    "ask-questions-if-underspecified": {
       "tags": [
-        "Work"
+        "system"
       ],
-      "translation": "使用PptxGenJS、捆绑的布局辅助工具以及渲染/验证工具来创建和编辑演示文稿幻灯片（`.pptx`）。适用于以下任务：构建新的PowerPoint演示文稿、根据截图/PDF/参考演示文稿重新创建幻灯片、在保持输出可编辑的同时修改幻灯片内容、添加图表/图示/视觉元素，或诊断布局问题（如内容溢出、元素重叠和字体替换）。",
+      "translation": "实施前先明确要求。当出现严重疑虑时使用。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "humanizer-zh": {
+      "tags": [
+        "write"
+      ],
+      "translation": "|",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774270265
+    },
+    "weekly-summary": {
+      "tags": [
+        "write"
+      ],
+      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
       "dependencies": [
-        "lark-cli",
-        "docker"
+        "python3",
+        "mermaid-visualizer"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774271476
+      "last_analyzed_mtime": 1776002336
     },
     "taste-skill": {
       "tags": [
@@ -196,26 +189,47 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "zh-paper-referee": {
+    "mermaid-visualizer": {
       "tags": [
-        "paper",
-        "write"
+        "obsidian/draw"
       ],
-      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
+      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774354583
+      "last_analyzed_mtime": 1773888698
     },
-    "better-md-writer": {
+    "frontend-design": {
       "tags": [
-        "write"
+        "UI&UX"
       ],
-      "translation": "以轻量级默认流程撰写、重写并润色文档。首先选择文档模板，仅当明显能提升草稿质量时，才启用更高成本的修改环节。",
+      "translation": "打造独特、生产级的前端界面，具备卓越的设计品质。当用户要求构建网页组件、页面、设计稿、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与界面设计，避免千篇一律的AI美学风格。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774336116
+      "last_analyzed_mtime": 1773888698
+    },
+    "save-solution-workspace": {
+      "tags": [],
+      "translation": "",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1775995327
+    },
+    "screenshot": {
+      "tags": [
+        "tools"
+      ],
+      "translation": "当用户明确要求获取桌面或系统截图（全屏、特定应用或窗口、或指定像素区域）时，或当工具特定的捕获功能不可用且需要操作系统级别的捕获时使用。",
+      "dependencies": [
+        "scrot",
+        "gnome-screenshot",
+        "imagemagick"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774271567
     },
     "multi-agent-deliberation-skill": {
       "tags": [
@@ -237,56 +251,92 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "excalidraw-diagram": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "根据文本内容生成Excalidraw图表。支持三种输出模式——Obsidian（.md格式）、标准（.excalidraw格式）以及动画（带动画顺序的.excalidraw格式）。触发关键词包括：“Excalidraw”、“画图”、“流程图”、“思维导图”、“可视化”、“diagram”、“标准Excalidraw”、“standard excalidraw”、“Excalidraw动画”、“动画图”、“animate”。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774097006
-    },
-    "screenshot": {
-      "tags": [
-        "tools"
-      ],
-      "translation": "当用户明确要求获取桌面或系统截图（全屏、特定应用或窗口、或指定像素区域）时，或当工具特定的捕获功能不可用且需要操作系统级别的捕获时使用。",
-      "dependencies": [
-        "scrot",
-        "gnome-screenshot",
-        "imagemagick"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774271567
-    },
-    "save-solution-workspace": {
+    "lark-attendance": {
       "tags": [],
-      "translation": "",
+      "translation": "飞书考勤打卡：查询自己的考勤打卡记录",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "ui-animation": {
+      "tags": [
+        "UI"
+      ],
+      "translation": "创建、评审和调试用户界面动效与动画实现。涵盖弹簧动画、手势交互、拖拽操作、剪切路径展示、缓动效果、时间控制及动画评审。适用于设计、实现或评审动效、CSS过渡、关键帧动画、framer-motion库、弹簧动画时使用，或当提出以下需求时参考：“添加动画效果”、“让交互更流畅”、“评审我的动画”、“此处是否需要动画”或“添加滑动手势”。",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1775995327
+      "last_analyzed_mtime": 1773917432
     },
-    "obsidian-bases": {
-      "tags": [
-        "obsidian",
-        "draw"
+    "lark-approval": {
+      "tags": [],
+      "translation": "飞书审批 API：审批实例、审批任务管理。",
+      "dependencies": [
+        "lark-cli"
       ],
-      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "lark-contact": {
+      "tags": [],
+      "translation": "飞书通讯录：查询组织架构、人员信息和搜索员工。获取当前用户或指定用户的详细信息、通过关键词搜索员工（姓名/邮箱/手机号）。当用户需要查看个人信息、查找同事 open_id 或联系方式、按姓名搜索员工、查询部门结构时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "slides": {
+      "tags": [
+        "Work"
+      ],
+      "translation": "使用PptxGenJS、捆绑的布局辅助工具以及渲染/验证工具来创建和编辑演示文稿幻灯片（`.pptx`）。适用于以下任务：构建新的PowerPoint演示文稿、根据截图/PDF/参考演示文稿重新创建幻灯片、在保持输出可编辑的同时修改幻灯片内容、添加图表/图示/视觉元素，或诊断布局问题（如内容溢出、元素重叠和字体替换）。",
+      "dependencies": [
+        "lark-cli",
+        "docker"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774271476
+    },
+    "better-md-writer": {
+      "tags": [
+        "write"
+      ],
+      "translation": "以轻量级默认流程撰写、重写并润色文档。首先选择文档模板，仅当明显能提升草稿质量时，才启用更高成本的修改环节。",
       "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774336116
+    },
+    "find-skills": {
+      "tags": [
+        "system"
+      ],
+      "translation": "当用户提出诸如“如何做X”、“查找用于X的技能”、“有没有能……的技能”等问题，或表达出扩展能力的兴趣时，帮助用户发现并安装智能体技能。此技能应在用户寻找可能以可安装技能形式存在的功能时使用。",
+      "dependencies": [
+        "npx skills"
+      ],
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "chief-architect": {
-      "tags": [],
-      "translation": ">",
-      "dependencies": [],
-      "dependencies_scanned": false,
+    "remotion-best-practices": {
+      "tags": [
+        "video"
+      ],
+      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
+      "dependencies": [
+        "@remotion/captions"
+      ],
+      "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 0
+      "last_analyzed_mtime": 1773888698
     }
   },
   "settings": {
