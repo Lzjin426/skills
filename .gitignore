@@ -1,3 +1,4 @@
 .system/
 .claude/__pycache__/
 .obsidian/
+.skillsbase-cache/
