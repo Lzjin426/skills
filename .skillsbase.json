@@ -1,26 +1,6 @@
 {
   "version": 2,
   "skills": {
-    "lark-im": {
-      "tags": [],
-      "translation": "飞书即时通讯：收发消息和管理群聊。发送和回复消息、搜索聊天记录、管理群聊成员、上传下载图片和文件（支持大文件分片下载）、管理表情回复。当用户需要发消息、查看或搜索聊天记录、下载聊天中的文件、查看群成员时使用。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "ask-questions-if-underspecified": {
-      "tags": [
-        "system"
-      ],
-      "translation": "实施前先明确要求。当出现严重疑虑时使用。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
     "excalidraw-diagram": {
       "tags": [
         "obsidian/draw"
@@ -30,54 +10,6 @@
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1774097006
-    },
-    "lark-calendar": {
-      "tags": [],
-      "translation": "飞书日历（calendar）：提供日历与日程（会议）的全面管理能力。核心场景包括：查看/搜索日程、创建/更新日程、管理参会人、查询忙闲状态及推荐空闲时段、查询/搜索与预定会议室。注意：涉及【预约日程/会议】或【查询/预定会议室】时，必须先读取 references/lark-calendar-schedule-meeting.md 工作流！高频操作请优先使用 Shortcuts：+agenda（快速概览今日/近期行程）、+create（创建日程并按需邀请参会人及预定会议室）、+freebusy（查询用户主日历的忙闲信息和rsvp的状态）、+rsvp（回复日程邀请）",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "lark-sheets": {
-      "tags": [],
-      "translation": "飞书电子表格：创建和操作电子表格。创建表格并写入表头和数据、读取和写入单元格、追加行数据、在已知电子表格中查找单元格内容、导出表格文件。当用户需要创建电子表格、批量读写数据、在已知表格中查找内容、导出或下载表格时使用。若用户是想按名称或关键词搜索云空间里的表格文件，请改用 lark-doc 的 docs +search 先定位资源。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592758
-    },
-    "save-solution-workspace": {
-      "tags": [],
-      "translation": "",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1775995327
-    },
-    "lark-approval": {
-      "tags": [],
-      "translation": "飞书审批 API：审批实例、审批任务管理。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "lark-drive": {
-      "tags": [],
-      "translation": "飞书云空间：管理云空间中的文件和文件夹。上传和下载文件、创建文件夹、复制/移动/删除文件、查看文件元数据、管理文档评论、管理文档权限、订阅用户评论变更事件、修改文件标题（docx、sheet、bitable、file、folder、wiki）；也负责把本地 Word/Markdown/Excel/CSV 导入为飞书在线云文档（docx、sheet、bitable）。当用户需要上传或下载文件、整理云空间目录、查看文件详情、管理评论、管理文档权限、修改文件标题、订阅用户评论变更事件，或要把本地文件导入成新版文档、电子表格、多维表格/Base 时使用。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
     },
     "monthly-summary": {
       "tags": [
@@ -92,19 +24,30 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776002336
     },
-    "better-md-writer": {
-      "tags": [
-        "write"
-      ],
-      "translation": "以轻量级默认流程撰写、重写并润色文档。首先选择文档模板，仅当明显能提升草稿质量时，才启用更高成本的修改环节。",
+    "save-solution-workspace": {
+      "tags": [],
+      "translation": "",
       "dependencies": [],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1774336116
+      "last_analyzed_mtime": 1775995327
     },
-    "lark-doc": {
+    "yearly-summary": {
+      "tags": [
+        "write"
+      ],
+      "translation": "当用户要求\"年总结\"\"年度总结\"\"年度复盘\"\"年报\"等任务时使用。本技能会在本地 `05-note` 文档库中按年检索月报、周报与日报，生成富可视化的年度总结并写入对应 Yearly 目录。",
+      "dependencies": [
+        "python3",
+        "mermaid-visualizer"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "lark-minutes": {
       "tags": [],
-      "translation": "飞书云文档：创建和编辑飞书文档。从 Markdown 创建文档、获取文档内容、更新文档（追加/覆盖/替换/插入/删除）、上传和下载文档中的图片和文件、搜索云空间文档。当用户需要创建或编辑飞书文档、读取文档内容、在文档中插入图片、搜索云空间文档时使用；如果用户是想按名称或关键词先定位电子表格、报表等云空间对象，也优先使用本 skill 的 docs +search 做资源发现。",
+      "translation": "飞书妙记：妙记相关基本功能。1.查询妙记列表（按关键词/所有者/参与者/时间范围）；2.获取妙记基础信息（标题、封面、时长 等）；3.下载妙记音视频文件；4.获取妙记相关 AI 产物（总结、待办、章节）。飞书妙记 URL 格式: http(s)://<host>/minutes/<minute-token>",
       "dependencies": [
         "lark-cli"
       ],
@@ -112,15 +55,70 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776592757
     },
-    "lark-workflow-standup-report": {
+    "lark-event": {
       "tags": [],
-      "translation": "日程待办摘要：编排 calendar +agenda 和 task +get-my-tasks，生成指定日期的日程与未完成任务摘要。适用于了解今天/明天/本周的安排。",
+      "translation": "飞书事件订阅：通过 WebSocket 长连接实时监听飞书事件（消息、通讯录变更、日历变更等），输出 NDJSON 到 stdout，支持 compact Agent 友好格式、正则路由、文件输出。当用户需要实时监听飞书事件、构建事件驱动管道时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "lark-workflow-meeting-summary": {
+      "tags": [],
+      "translation": "会议纪要整理工作流：汇总指定时间范围内的会议纪要并生成结构化报告。当用户需要整理会议纪要、生成会议周报、回顾一段时间内的会议内容时使用。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1776592758
+    },
+    "lark-shared": {
+      "tags": [],
+      "translation": "飞书/Lark CLI 共享基础：应用配置初始化、认证登录（auth login）、身份切换（--as user/bot）、权限与 scope 管理、Permission denied 错误处理、安全规则。当用户需要第一次配置(`lark-cli config init`)、使用登录授权(`lark-cli auth login`)、遇到权限不足、切换 user/bot 身份、配置 scope、或首次使用 lark-cli 时触发。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "doc": {
+      "tags": [
+        "tools"
+      ],
+      "translation": "当任务涉及读取、创建或编辑`.docx`文档，特别是对格式或版式保真度有要求时使用；建议采用`python-docx`并结合内置的`scripts/render_docx.py`进行视觉检查。",
+      "dependencies": [
+        "python-docx",
+        "pdf2image",
+        "libreoffice",
+        "poppler"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774272297
+    },
+    "lark-calendar": {
+      "tags": [],
+      "translation": "飞书日历（calendar）：提供日历与日程（会议）的全面管理能力。核心场景包括：查看/搜索日程、创建/更新日程、管理参会人、查询忙闲状态及推荐空闲时段、查询/搜索与预定会议室。注意：涉及【预约日程/会议】或【查询/预定会议室】时，必须先读取 references/lark-calendar-schedule-meeting.md 工作流！高频操作请优先使用 Shortcuts：+agenda（快速概览今日/近期行程）、+create（创建日程并按需邀请参会人及预定会议室）、+freebusy（查询用户主日历的忙闲信息和rsvp的状态）、+rsvp（回复日程邀请）",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "lark-okr": {
+      "tags": [],
+      "translation": "飞书 OKR：管理目标与关键结果。查看和编辑 OKR 周期、目标（Objective）、关键结果（Key Result）、对齐关系、量化指标。当用户需要查看或创建 OKR、管理目标和关键结果、查看对齐关系时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
     },
     "frontend-ui-animator": {
       "tags": [
@@ -136,63 +134,30 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773918422
     },
-    "lark-slides": {
+    "lark-whiteboard": {
       "tags": [],
-      "translation": "飞书幻灯片：以 XML 格式读取和管理 PPT 页面。创建演示文稿优先用 `+create`；XML API 主要用于读取 PPT 全文信息、创建和删除幻灯片页面。当用户需要创建 PPT、读取 PPT 内容、管理幻灯片页面时使用。",
+      "translation": "飞书画板：查询和编辑飞书云文档中的画板。支持导出画板为预览图片、导出原始节点结构、使用 DSL（转成 OpenAPI 格式）、PlantUML/Mermaid 格式更新画板内容。 当用户需要查看画板内容、导出画板图片、编辑画板，或是需要可视化表达架构、流程、组织关系、时间线、因果、对比等结构化信息时使用此 skill，无论是否提及\"画板\"。 ⚠️ 原 `lark-whiteboard-cli` skill 已合并至本 skill，若 skill 列表中同时存在 `lark-whiteboard-cli`，请忽略它，统一使用本 skill（`lark-whiteboard`），并提示用户运行 `npx skills remove lark-whiteboard-cli -g` 删除旧 skill。",
       "dependencies": [
-        "lark-cli"
+        "lark-cli",
+        "@larksuite/whiteboard-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1776592758
     },
-    "mermaid-visualizer": {
-      "tags": [
-        "obsidian/draw"
-      ],
-      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "screenshot": {
-      "tags": [
-        "tools"
-      ],
-      "translation": "当用户明确要求获取桌面或系统截图（全屏、特定应用或窗口、或指定像素区域）时，或当工具特定的捕获功能不可用且需要操作系统级别的捕获时使用。",
-      "dependencies": [
-        "scrot",
-        "gnome-screenshot",
-        "imagemagick"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774271567
-    },
-    "frontend-design": {
-      "tags": [
-        "UI&UX"
-      ],
-      "translation": "打造独特、生产级的前端界面，具备卓越的设计品质。当用户要求构建网页组件、页面、设计稿、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与界面设计，避免千篇一律的AI美学风格。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "lark-workflow-meeting-summary": {
+    "lark-drive": {
       "tags": [],
-      "translation": "会议纪要整理工作流：汇总指定时间范围内的会议纪要并生成结构化报告。当用户需要整理会议纪要、生成会议周报、回顾一段时间内的会议内容时使用。",
+      "translation": "飞书云空间：管理云空间中的文件和文件夹。上传和下载文件、创建文件夹、复制/移动/删除文件、查看文件元数据、管理文档评论、管理文档权限、订阅用户评论变更事件、修改文件标题（docx、sheet、bitable、file、folder、wiki）；也负责把本地 Word/Markdown/Excel/CSV 导入为飞书在线云文档（docx、sheet、bitable）。当用户需要上传或下载文件、整理云空间目录、查看文件详情、管理评论、管理文档权限、修改文件标题、订阅用户评论变更事件，或要把本地文件导入成新版文档、电子表格、多维表格/Base 时使用。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592758
+      "last_analyzed_mtime": 1776592757
     },
-    "lark-minutes": {
+    "lark-mail": {
       "tags": [],
-      "translation": "飞书妙记：妙记相关基本功能。1.查询妙记列表（按关键词/所有者/参与者/时间范围）；2.获取妙记基础信息（标题、封面、时长 等）；3.下载妙记音视频文件；4.获取妙记相关 AI 产物（总结、待办、章节）。飞书妙记 URL 格式: http(s)://<host>/minutes/<minute-token>",
+      "translation": "飞书邮箱 — 起草、撰写、发送、回复、转发、阅读和搜索邮件；管理草稿、文件夹、标签、联系人、附件和邮件规则。适用于用户提及以下场景时：起草邮件、写一封邮件、拟邮件、草稿、发通知邮件、发送邮件、发邮件、回复邮件、转发邮件、查看邮件、看邮件、读邮件、搜索邮件、查邮件、收件箱、邮件会话、编辑草稿、管理草稿、下载附件、邮件文件夹、邮件标签、邮件联系人、监听新邮件、收信规则、邮件规则、draft、compose、send email、reply、forward、inbox、mail thread、mail rules。",
       "dependencies": [
         "lark-cli"
       ],
@@ -213,6 +178,26 @@
       "file_translations": {},
       "last_analyzed_mtime": 1774271476
     },
+    "frontend-design": {
+      "tags": [
+        "UI&UX"
+      ],
+      "translation": "打造独特、生产级的前端界面，具备卓越的设计品质。当用户要求构建网页组件、页面、设计稿、海报或应用程序时（例如网站、落地页、仪表板、React组件、HTML/CSS布局，或任何需要美化/风格化的网页界面），请运用此技能。生成富有创意、精致的代码与界面设计，避免千篇一律的AI美学风格。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "ruanzhu-dehumanize": {
+      "tags": [],
+      "translation": "为中国软件著作权（软著）申请准备材料时，去除 Python 代码和中文技术文档里的\"AI 生成痕迹\"，\n让成果看起来像人工书写，并顺手清理软著硬红线（版权声明、作者信息、日期、copyright 字样、\n块注释等）。触发场景：用户提到软著、软件著作权、版权局、著作权登记、源代码文档、用户手册、\n设计说明书、AI 查重、去 AI 味、降 AI 率、代码注水、材料造假、AI 痕迹、humanize code、\ncode originality 等关键词；或用户把一段 Python 代码 / 技术文档丢过来说\"这看起来太像 AI 写的\n帮我改改\"。即使用户没明说\"软著\"，只要意图是让 AI 生成的代码或中文技术文档看起来更像人写的，\n就应使用本 skill。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776696268
+    },
     "obsidian-canvas-creator": {
       "tags": [
         "obsidian/draw"
@@ -222,17 +207,6 @@
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
-    },
-    "zh-paper-referee": {
-      "tags": [
-        "paper",
-        "write"
-      ],
-      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774354583
     },
     "taste-skill": {
       "tags": [
@@ -252,9 +226,19 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "lark-attendance": {
+    "mermaid-visualizer": {
+      "tags": [
+        "obsidian/draw"
+      ],
+      "translation": "将文本内容转换为专业的Mermaid图表，用于演示和文档。当用户要求可视化概念、创建流程图或根据文本制作图表时使用。支持流程、系统架构、比较、思维导图等，并具备内置语法错误预防功能。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "lark-im": {
       "tags": [],
-      "translation": "飞书考勤打卡：查询自己的考勤打卡记录",
+      "translation": "飞书即时通讯：收发消息和管理群聊。发送和回复消息、搜索聊天记录、管理群聊成员、上传下载图片和文件（支持大文件分片下载）、管理表情回复。当用户需要发消息、查看或搜索聊天记录、下载聊天中的文件、查看群成员时使用。",
       "dependencies": [
         "lark-cli"
       ],
@@ -262,104 +246,57 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776592757
     },
-    "lark-whiteboard": {
-      "tags": [],
-      "translation": "飞书画板：查询和编辑飞书云文档中的画板。支持导出画板为预览图片、导出原始节点结构、使用 DSL（转成 OpenAPI 格式）、PlantUML/Mermaid 格式更新画板内容。 当用户需要查看画板内容、导出画板图片、编辑画板，或是需要可视化表达架构、流程、组织关系、时间线、因果、对比等结构化信息时使用此 skill，无论是否提及\"画板\"。 ⚠️ 原 `lark-whiteboard-cli` skill 已合并至本 skill，若 skill 列表中同时存在 `lark-whiteboard-cli`，请忽略它，统一使用本 skill（`lark-whiteboard`），并提示用户运行 `npx skills remove lark-whiteboard-cli -g` 删除旧 skill。",
+    "remotion-best-practices": {
+      "tags": [
+        "video"
+      ],
+      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
       "dependencies": [
-        "lark-cli",
-        "@larksuite/whiteboard-cli"
+        "@remotion/captions"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "ask-questions-if-underspecified": {
+      "tags": [
+        "system"
+      ],
+      "translation": "实施前先明确要求。当出现严重疑虑时使用。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "lark-sheets": {
+      "tags": [],
+      "translation": "飞书电子表格：创建和操作电子表格。创建表格并写入表头和数据、读取和写入单元格、追加行数据、在已知电子表格中查找单元格内容、导出表格文件。当用户需要创建电子表格、批量读写数据、在已知表格中查找内容、导出或下载表格时使用。若用户是想按名称或关键词搜索云空间里的表格文件，请改用 lark-doc 的 docs +search 先定位资源。",
+      "dependencies": [
+        "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
       "last_analyzed_mtime": 1776592758
     },
-    "doc": {
-      "tags": [
-        "tools"
-      ],
-      "translation": "当任务涉及读取、创建或编辑`.docx`文档，特别是对格式或版式保真度有要求时使用；建议采用`python-docx`并结合内置的`scripts/render_docx.py`进行视觉检查。",
-      "dependencies": [
-        "python-docx",
-        "pdf2image",
-        "libreoffice",
-        "poppler"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774272297
-    },
-    "lark-base": {
+    "lark-skill-maker": {
       "tags": [],
-      "translation": "当需要用 lark-cli 操作飞书多维表格（Base）时调用：适用于建表、字段管理、记录读写、视图配置、历史查询，以及角色/表单/仪表盘管理/工作流；也适用于把旧的 +table / +field / +record 写法改成当前命令写法。涉及字段设计、公式字段、查找引用、跨表计算、行级派生指标、数据分析需求时也必须使用本 skill。",
+      "translation": "创建 lark-cli 的自定义 Skill。当用户需要把飞书 API 操作封装成可复用的 Skill（包装原子 API 或编排多步流程）时使用。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592757
+      "last_analyzed_mtime": 1776592758
     },
-    "lark-contact": {
+    "lark-task": {
       "tags": [],
-      "translation": "飞书通讯录：查询组织架构、人员信息和搜索员工。获取当前用户或指定用户的详细信息、通过关键词搜索员工（姓名/邮箱/手机号）。当用户需要查看个人信息、查找同事 open_id 或联系方式、按姓名搜索员工、查询部门结构时使用。",
+      "translation": "飞书任务：管理任务和清单。创建待办任务、查看和更新任务状态、拆分子任务、组织任务清单、分配协作成员。当用户需要创建待办事项、查看任务列表、跟踪任务进度、管理项目清单或给他人分配任务时使用。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "find-skills": {
-      "tags": [
-        "system"
-      ],
-      "translation": "当用户提出诸如“如何做X”、“查找用于X的技能”、“有没有能……的技能”等问题，或表达出扩展能力的兴趣时，帮助用户发现并安装智能体技能。此技能应在用户寻找可能以可安装技能形式存在的功能时使用。",
-      "dependencies": [
-        "npx skills"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "lark-event": {
-      "tags": [],
-      "translation": "飞书事件订阅：通过 WebSocket 长连接实时监听飞书事件（消息、通讯录变更、日历变更等），输出 NDJSON 到 stdout，支持 compact Agent 友好格式、正则路由、文件输出。当用户需要实时监听飞书事件、构建事件驱动管道时使用。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "lark-openapi-explorer": {
-      "tags": [],
-      "translation": "飞书/Lark 原生 OpenAPI 探索：从官方文档库中挖掘未经 CLI 封装的原生 OpenAPI 接口。当用户的需求无法被现有 lark-* skill 或 lark-cli 已注册命令满足，需要查找并调用原生飞书 OpenAPI 时使用。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "lark-shared": {
-      "tags": [],
-      "translation": "飞书/Lark CLI 共享基础：应用配置初始化、认证登录（auth login）、身份切换（--as user/bot）、权限与 scope 管理、Permission denied 错误处理、安全规则。当用户需要第一次配置(`lark-cli config init`)、使用登录授权(`lark-cli auth login`)、遇到权限不足、切换 user/bot 身份、配置 scope、或首次使用 lark-cli 时触发。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
-    },
-    "obsidian-bases": {
-      "tags": [
-        "obsidian",
-        "draw"
-      ],
-      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
+      "last_analyzed_mtime": 1776592758
     },
     "multi-agent-deliberation-skill": {
       "tags": [
@@ -383,81 +320,29 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776567326
     },
-    "weekly-summary": {
-      "tags": [
-        "write"
-      ],
-      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
-      "dependencies": [
-        "python3",
-        "mermaid-visualizer"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776002336
-    },
-    "lark-okr": {
+    "lark-slides": {
       "tags": [],
-      "translation": "飞书 OKR：管理目标与关键结果。查看和编辑 OKR 周期、目标（Objective）、关键结果（Key Result）、对齐关系、量化指标。当用户需要查看或创建 OKR、管理目标和关键结果、查看对齐关系时使用。",
+      "translation": "飞书幻灯片：以 XML 格式读取和管理 PPT 页面。创建演示文稿优先用 `+create`；XML API 主要用于读取 PPT 全文信息、创建和删除幻灯片页面。当用户需要创建 PPT、读取 PPT 内容、管理幻灯片页面时使用。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592757
+      "last_analyzed_mtime": 1776592758
     },
-    "humanizer-zh": {
+    "screenshot": {
       "tags": [
-        "write"
+        "tools"
       ],
-      "translation": "|",
-      "dependencies": [],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1774270265
-    },
-    "yearly-summary": {
-      "tags": [
-        "write"
-      ],
-      "translation": "当用户要求\"年总结\"\"年度总结\"\"年度复盘\"\"年报\"等任务时使用。本技能会在本地 `05-note` 文档库中按年检索月报、周报与日报，生成富可视化的年度总结并写入对应 Yearly 目录。",
+      "translation": "当用户明确要求获取桌面或系统截图（全屏、特定应用或窗口、或指定像素区域）时，或当工具特定的捕获功能不可用且需要操作系统级别的捕获时使用。",
       "dependencies": [
-        "python3",
-        "mermaid-visualizer"
+        "scrot",
+        "gnome-screenshot",
+        "imagemagick"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "remotion-best-practices": {
-      "tags": [
-        "video"
-      ],
-      "translation": "Remotion 最佳实践 - 在 React 中创建视频",
-      "dependencies": [
-        "@remotion/captions"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1773888698
-    },
-    "chief-architect": {
-      "tags": [],
-      "translation": ">",
-      "dependencies": [],
-      "dependencies_scanned": false,
-      "file_translations": {},
-      "last_analyzed_mtime": 0
-    },
-    "lark-mail": {
-      "tags": [],
-      "translation": "飞书邮箱 — 起草、撰写、发送、回复、转发、阅读和搜索邮件；管理草稿、文件夹、标签、联系人、附件和邮件规则。适用于用户提及以下场景时：起草邮件、写一封邮件、拟邮件、草稿、发通知邮件、发送邮件、发邮件、回复邮件、转发邮件、查看邮件、看邮件、读邮件、搜索邮件、查邮件、收件箱、邮件会话、编辑草稿、管理草稿、下载附件、邮件文件夹、邮件标签、邮件联系人、监听新邮件、收信规则、邮件规则、draft、compose、send email、reply、forward、inbox、mail thread、mail rules。",
-      "dependencies": [
-        "lark-cli"
-      ],
-      "dependencies_scanned": true,
-      "file_translations": {},
-      "last_analyzed_mtime": 1776592757
+      "last_analyzed_mtime": 1774271567
     },
     "lark-vc": {
       "tags": [],
@@ -469,9 +354,30 @@
       "file_translations": {},
       "last_analyzed_mtime": 1776592758
     },
-    "lark-wiki": {
+    "zh-paper-referee": {
+      "tags": [
+        "paper",
+        "write"
+      ],
+      "translation": "审查与润色中文工科论文，侧重机械、控制、材料、制造、检测、算法建模等方法-实验型稿件。适用于用户要求审阅中文工程论文、查找逻辑漏洞、检查论证闭环、评估摘要/引言/方法/实验/结论质量，或将现有中文稿件润色至可投稿水平。亦适用于用户需要期刊风格的中文学术表达、增强审稿人视角的严谨性，或诊断论点是否得到方法与结果的实际支持。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774354583
+    },
+    "lark-base": {
       "tags": [],
-      "translation": "飞书知识库：管理知识空间、空间成员和文档节点。创建和查询知识空间、查看和管理空间成员、管理节点层级结构、在知识库中组织文档和快捷方式。当用户需要在知识库中查找或创建文档、浏览知识空间结构、查看或管理空间成员、移动或复制节点时使用。",
+      "translation": "当需要用 lark-cli 操作飞书多维表格（Base）时调用：适用于建表、字段管理、记录读写、视图配置、历史查询，以及角色/表单/仪表盘管理/工作流；也适用于把旧的 +table / +field / +record 写法改成当前命令写法。涉及字段设计、公式字段、查找引用、跨表计算、行级派生指标、数据分析需求时也必须使用本 skill。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "lark-workflow-standup-report": {
+      "tags": [],
+      "translation": "日程待办摘要：编排 calendar +agenda 和 task +get-my-tasks，生成指定日期的日程与未完成任务摘要。适用于了解今天/明天/本周的安排。",
       "dependencies": [
         "lark-cli"
       ],
@@ -489,6 +395,116 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773917432
     },
+    "better-md-writer": {
+      "tags": [
+        "write"
+      ],
+      "translation": "以轻量级默认流程撰写、重写并润色文档。首先选择文档模板，仅当明显能提升草稿质量时，才启用更高成本的修改环节。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774336116
+    },
+    "lark-openapi-explorer": {
+      "tags": [],
+      "translation": "飞书/Lark 原生 OpenAPI 探索：从官方文档库中挖掘未经 CLI 封装的原生 OpenAPI 接口。当用户的需求无法被现有 lark-* skill 或 lark-cli 已注册命令满足，需要查找并调用原生飞书 OpenAPI 时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "chief-architect": {
+      "tags": [],
+      "translation": ">",
+      "dependencies": [],
+      "dependencies_scanned": false,
+      "file_translations": {},
+      "last_analyzed_mtime": 0
+    },
+    "lark-wiki": {
+      "tags": [],
+      "translation": "飞书知识库：管理知识空间、空间成员和文档节点。创建和查询知识空间、查看和管理空间成员、管理节点层级结构、在知识库中组织文档和快捷方式。当用户需要在知识库中查找或创建文档、浏览知识空间结构、查看或管理空间成员、移动或复制节点时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592758
+    },
+    "weekly-summary": {
+      "tags": [
+        "write"
+      ],
+      "translation": "当用户要求“周总结”“本周总结”“上周总结”“整理周报”等任务时使用。本技能会在本地 `05-note` 文档库中按周检索每日 Markdown 文档，参考既有周报风格，生成新的本地周总结并写入对应 `Weekly` 目录。",
+      "dependencies": [
+        "python3",
+        "mermaid-visualizer"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776002336
+    },
+    "ruanzhu-dehumanize-workspace": {
+      "tags": [],
+      "translation": "",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776696398
+    },
+    "humanizer-zh": {
+      "tags": [
+        "write"
+      ],
+      "translation": "|",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1774270265
+    },
+    "obsidian-bases": {
+      "tags": [
+        "obsidian",
+        "draw"
+      ],
+      "translation": "创建和编辑 Obsidian 基础文件（.base 文件），包含视图、过滤器、公式和摘要。适用于处理 .base 文件、创建类似数据库的笔记视图，或当用户提及 Obsidian 中的基础文件、表格视图、卡片视图、过滤器或公式时使用。",
+      "dependencies": [],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1773888698
+    },
+    "lark-doc": {
+      "tags": [],
+      "translation": "飞书云文档：创建和编辑飞书文档。从 Markdown 创建文档、获取文档内容、更新文档（追加/覆盖/替换/插入/删除）、上传和下载文档中的图片和文件、搜索云空间文档。当用户需要创建或编辑飞书文档、读取文档内容、在文档中插入图片、搜索云空间文档时使用；如果用户是想按名称或关键词先定位电子表格、报表等云空间对象，也优先使用本 skill 的 docs +search 做资源发现。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "lark-approval": {
+      "tags": [],
+      "translation": "飞书审批 API：审批实例、审批任务管理。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
+    "lark-contact": {
+      "tags": [],
+      "translation": "飞书通讯录：查询组织架构、人员信息和搜索员工。获取当前用户或指定用户的详细信息、通过关键词搜索员工（姓名/邮箱/手机号）。当用户需要查看个人信息、查找同事 open_id 或联系方式、按姓名搜索员工、查询部门结构时使用。",
+      "dependencies": [
+        "lark-cli"
+      ],
+      "dependencies_scanned": true,
+      "file_translations": {},
+      "last_analyzed_mtime": 1776592757
+    },
     "skill-vetter": {
       "tags": [
         "system"
@@ -499,25 +515,27 @@
       "file_translations": {},
       "last_analyzed_mtime": 1773888698
     },
-    "lark-skill-maker": {
+    "lark-attendance": {
       "tags": [],
-      "translation": "创建 lark-cli 的自定义 Skill。当用户需要把飞书 API 操作封装成可复用的 Skill（包装原子 API 或编排多步流程）时使用。",
+      "translation": "飞书考勤打卡：查询自己的考勤打卡记录",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592758
+      "last_analyzed_mtime": 1776592757
     },
-    "lark-task": {
-      "tags": [],
-      "translation": "飞书任务：管理任务和清单。创建待办任务、查看和更新任务状态、拆分子任务、组织任务清单、分配协作成员。当用户需要创建待办事项、查看任务列表、跟踪任务进度、管理项目清单或给他人分配任务时使用。",
+    "find-skills": {
+      "tags": [
+        "system"
+      ],
+      "translation": "当用户提出诸如“如何做X”、“查找用于X的技能”、“有没有能……的技能”等问题，或表达出扩展能力的兴趣时，帮助用户发现并安装智能体技能。此技能应在用户寻找可能以可安装技能形式存在的功能时使用。",
       "dependencies": [
-        "lark-cli"
+        "npx skills"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592758
+      "last_analyzed_mtime": 1773888698
     }
   },
   "settings": {

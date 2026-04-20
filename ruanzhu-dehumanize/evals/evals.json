@@ -1,0 +1,40 @@
+{
+  "skill_name": "ruanzhu-dehumanize",
+  "evals": [
+    {
+      "id": 0,
+      "name": "audit-python",
+      "prompt": "我这个 Python 文件是 AI 生成的，要提交软著申请。帮我扫一遍，按四级分类（红线/一级/二级/三级）告诉我哪里有 AI 痕迹、哪里有软著红线内容。不要改文件，只出报告。报告保存为 audit_report.md。文件路径：sample_ai_code.py",
+      "input_files": ["sample_ai_code.py"],
+      "expected_outputs": ["audit_report.md"]
+    },
+    {
+      "id": 1,
+      "name": "rewrite-python",
+      "prompt": "这个 Python 文件是 AI 写的，要放进软著源代码文档。帮我改一下：清掉所有软著红线（版权、作者、日期、copyright 字样、块注释头等），去掉明显的 AI 痕迹（冗余 docstring、过度类型注解、match/case、try/except 外包、命名过度语义化等），但要保证代码能跑、函数行为不变、接口不动。改完保存为 sample_ai_code.rewritten.py，并生成 dehumanize-diff.md 记录所有改动。文件路径：sample_ai_module.py",
+      "input_files": ["sample_ai_module.py"],
+      "expected_outputs": ["sample_ai_code.rewritten.py", "dehumanize-diff.md"]
+    },
+    {
+      "id": 2,
+      "name": "rewrite-doc-zh",
+      "prompt": "这是软著用户手册里的一节，明显是 AI 生成的味道特别重。帮我改写，去掉 AI 口癖（综上所述、旨在、不仅而且、一方面另一方面、赋能、极大地等）、打破对仗三段式、减少 bullet 密度、保留功能信息和术语不变。改完保存为 sample_ai_manual.rewritten.md，并生成 dehumanize-diff-doc.md 记录改动。文件路径：sample_ai_manual.md",
+      "input_files": ["sample_ai_manual.md"],
+      "expected_outputs": ["sample_ai_manual.rewritten.md", "dehumanize-diff-doc.md"]
+    },
+    {
+      "id": 3,
+      "name": "edge-case-url-in-code",
+      "prompt": "这个 Python 文件里有 URL 字符串，有些是功能必需的 API endpoint，有些是注释里的外部链接。帮我 audit：区分"功能必需 URL"（不应删）和"软著红线 URL"（应删或替换），按四级分类出报告。不要改文件。报告保存为 edge_url_audit.md。文件路径：edge_case_url_code.py",
+      "input_files": ["edge_case_url_code.py"],
+      "expected_outputs": ["edge_url_audit.md"]
+    },
+    {
+      "id": 4,
+      "name": "edge-case-name-mismatch",
+      "prompt": "代码文件和文档文件里的软件名称不一致（代码里是'齿轮接触应力校核工具'，文档里是'齿轮接触应力计算工具 V1.0'）。帮我 audit，检测名称不一致问题，按红线标注。不要改文件。报告保存为 name_mismatch_audit.md。文件路径：edge_case_mismatch_doc.md",
+      "input_files": ["edge_case_mismatch_doc.md"],
+      "expected_outputs": ["name_mismatch_audit.md"]
+    }
+  ]
+}
