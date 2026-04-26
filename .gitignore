@@ -2,3 +2,4 @@
 .claude/__pycache__/
 .obsidian/
 .skillsbase-cache/
+.skillsbase-local.json
