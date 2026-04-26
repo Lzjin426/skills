@@ -16,6 +16,11 @@
         "论文"
       ]
     },
+    "avoid-ai-writing-zh": {
+      "tags": [
+        "论文"
+      ]
+    },
     "better-md-writer": {
       "tags": [
         "write"
@@ -49,6 +54,21 @@
     "humanizer-zh": {
       "tags": [
         "write"
+      ]
+    },
+    "lark-approval": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-attendance": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-base": {
+      "tags": [
+        "lark"
       ]
     },
     "mermaid-visualizer": {
