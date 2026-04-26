@@ -12,14 +12,16 @@
       "last_analyzed_mtime": 1777119751
     },
     "lark-base": {
-      "tags": [],
+      "tags": [
+        "lark"
+      ],
       "translation": "当需要用 lark-cli 操作飞书多维表格（Base）时调用：适用于建表、字段管理、记录读写、视图配置、历史查询，以及角色/表单/仪表盘管理/工作流；也适用于把旧的 +table / +field / +record 写法改成当前命令写法。涉及字段设计、公式字段、查找引用、跨表计算、行级派生指标、数据分析需求时也必须使用本 skill。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776595112
+      "last_analyzed_mtime": 1776592757
     },
     "lark-event": {
       "tags": [],
@@ -178,10 +180,12 @@
     "ruanzhu-dehumanize": {
       "tags": [],
       "translation": "为中国软件著作权（软著）申请准备材料时，去除 Python 代码（目前仅支持 Python）和中文技术\n文档里的\"AI 生成痕迹\"，让成果看起来像人工书写，并顺手清理软著硬红线（版权声明、作者信息、\n日期、copyright 字样、块注释等）。触发场景：用户提到软著、软件著作权、版权局、著作权登记、\n源代码文档、用户手册、设计说明书、AI 查重、去 AI 味、降 AI 率、代码注水、材料造假、AI 痕迹、\nhumanize code、code originality 等关键词；或用户把一段 Python 代码 / 技术文档丢过来说\n\"这看起来太像 AI 写的帮我改改\"。即使用户没明说\"软著\"，只要意图是让 AI 生成的代码或中文技术\n文档看起来更像人写的，就应使用本 skill。",
-      "dependencies": [],
+      "dependencies": [
+        "lark-cli"
+      ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776733977
+      "last_analyzed_mtime": 1776697327
     },
     "ui-animation": {
       "tags": [
@@ -382,12 +386,10 @@
         "write"
       ],
       "translation": "将当前对话中的问题解决过程或工作方式洞察总结为结构化笔记，保存到 Obsidian 知识库。两种触发场景：(1) 问题解决型——用户说\"总结一下\"\"保存这个方案\"\"记录一下这个问题\"\"save solution\"\"存到知识库\"，或对话中包含问题解决过程；(2) 方法/洞察型——用户说\"这个做法不错存一下\"\"发现 X 比 Y 好\"\"记下这个思路\"\"以后都这么做\"\"存一下这个经验\"，或对话中出现\"用了子代理效果更好\"\"先读 XX 再动手会更快\"之类的效率发现。即使用户只说\"存一下\"\"记一下\"，也应触发。",
-      "dependencies": [
-        "obsidian"
-      ],
-      "dependencies_scanned": true,
+      "dependencies": [],
+      "dependencies_scanned": false,
       "file_translations": {},
-      "last_analyzed_mtime": 1776592301
+      "last_analyzed_mtime": 1776999102
     },
     "find-skills": {
       "tags": [
@@ -402,14 +404,16 @@
       "last_analyzed_mtime": 1776592301
     },
     "lark-attendance": {
-      "tags": [],
+      "tags": [
+        "lark"
+      ],
       "translation": "飞书考勤打卡：查询自己的考勤打卡记录",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776595112
+      "last_analyzed_mtime": 1776592757
     },
     "lark-okr": {
       "tags": [],
@@ -476,14 +480,16 @@
       "last_analyzed_mtime": 1776592301
     },
     "lark-approval": {
-      "tags": [],
+      "tags": [
+        "lark"
+      ],
       "translation": "飞书审批 API：审批实例、审批任务管理。",
       "dependencies": [
         "lark-cli"
       ],
       "dependencies_scanned": true,
       "file_translations": {},
-      "last_analyzed_mtime": 1776595112
+      "last_analyzed_mtime": 1776592757
     },
     "lark-workflow-meeting-summary": {
       "tags": [],
