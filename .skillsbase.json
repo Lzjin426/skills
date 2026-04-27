@@ -146,6 +146,11 @@
       "tags": [
         "write"
       ]
+    },
+    "zh-engineering-paper": {
+      "tags": [
+        "论文"
+      ]
     }
   },
   "skill_order": []
