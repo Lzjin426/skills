@@ -1,0 +1,23 @@
+{
+  "skill_name": "dev-env-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "同步一下 skill",
+      "expected_output": "检查 Mac 和 Windows 两边 ~/.agent/skills 的 git 状态，判断谁领先谁落后，并执行相应的 pull/push 操作使两边同步。输出应包含两边的最新 commit hash、同步方向判断、执行的操作、以及同步后的确认结果。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "看看两边的环境有什么不一样，特别是 CLI 工具",
+      "expected_output": "通过 ssh main-long 检查 Windows 端，对比 Mac 和 Windows 的 ~/.agent/ 目录结构、全局 CLI 工具列表（如 lark-cli、mineru-cli 等）、npm/pip 全局包、~/bin/ 内容。输出应为对比表格，清晰标示哪边有独有的工具或目录。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "帮我检查一下另一台电脑",
+      "expected_output": "同时执行 skills 同步检查和开发环境对比。先判断 skills 仓库是否需要同步并执行相应操作，然后对比两边的 CLI 工具和环境差异。输出应包含两个部分：Skills 同步状态 和 开发环境对比。",
+      "files": []
+    }
+  ]
+}
