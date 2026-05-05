@@ -1,0 +1,13 @@
+{
+  "_comment": "Shared config for weekly-summary / monthly-summary / yearly-summary. Edit folder tokens here to retarget all three skills at once.",
+  "root_folder_token": "JyrofqI3Fl8odedDZa4c9wLunNg",
+  "root_folder_url": "https://my.feishu.cn/drive/folder/JyrofqI3Fl8odedDZa4c9wLunNg",
+  "daily_folder_token": "MCCafZNY3lwajKd3L5Yce2cpnue",
+  "daily_folder_name": "daliy",
+  "weekly_folder_token": "CghdfxXsLl0cU6d2XrycLd3tnPe",
+  "weekly_folder_name": "weekly",
+  "monthly_folder_token": "SSm0fWXtqlZpDfdCsqhcm0uHnVb",
+  "monthly_folder_name": "monthly",
+  "yearly_folder_token": "JyrofqI3Fl8odedDZa4c9wLunNg",
+  "yearly_folder_name": "(root, no dedicated yearly folder)"
+}

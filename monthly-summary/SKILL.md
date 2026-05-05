@@ -1,16 +1,16 @@
 ---
 name: monthly-summary
-description: 当用户要求"月总结""本月总结""上月总结""月报""月度复盘"等任务时使用。本技能会在本地 `05-note` 文档库中按月检索每日 Markdown 文档，必要时参考同月周报与历史月报风格，生成新的本地月总结并写入对应 `Monthly` 目录。
+description: 当用户要求"月总结""本月总结""上月总结""月报""月度复盘"等任务时使用。本技能从飞书云空间扫描日报/周报/历史月报，生成新的月总结并写回飞书 monthly 文件夹。
 ---
 
 # Monthly Summary
 
 ## 适用范围
 
-- 默认假设当前工作区根目录下存在 `05-note/<year>/Daily/*.md`。
-- 月报输出目录约定为 `05-note/<year>/Monthly/`；若目录不存在，可在写入时创建。
-- 若用户明确给出其他文档库根目录，按用户指定路径执行。
-- 若本地不存在 `05-note`，先告知缺少数据入口，再让用户确认正确路径。
+- 数据源固定为飞书云空间（folder token 配置在 `../summary-shared/lark_folders.json`）。
+- 默认结构：根目录下 `daliy/`、`weekly/`、`monthly/` 三个文件夹；每篇日报/周报/月报都是飞书 `docx` 文档（不是本地 Markdown）。
+- 文件名约定：日报 `M.D-YY`（如 `5.5-26`）、周报 `M.DD～M.DD-YY`（日两位补零，如 `3.09～3.15-26`）、月报 `M月-YY`（如 `3月-26`）。
+- 用户若指定了不同的飞书文件夹结构，先确认 folder token 是否更新到 `lark_folders.json`，再继续执行。
 
 ## 工作流
 
@@ -23,38 +23,41 @@ description: 当用户要求"月总结""本月总结""上月总结""月报""月�
 - 优先使用脚本生成标准月份窗口：
 
 ```bash
-python3 scripts/month_window.py --which current
-python3 scripts/month_window.py --which last
-python3 scripts/month_window.py --which explicit --month 2026-01
-python3 scripts/month_window.py --which title --title '1月-26'
+python scripts/month_window.py --which current
+python scripts/month_window.py --which last
+python scripts/month_window.py --which explicit --month 2026-01
+python scripts/month_window.py --which title --title '1月-26'
 ```
 
-2. 扫描本地日报、周报与月报
-- 用 `scripts/collect_local_month_notes.py` 扫描 `05-note`，一次性拿到：
-  - 当月日报命中情况
-  - 缺失日期
-  - 同月周报文件，可作为补充与交叉校验
-  - 建议输出的月报路径
-  - 最近 2~3 篇历史月报；若本地尚无月报，则回退到历史周报作为文风参考
+2. 扫描飞书 daily/weekly/monthly 文件夹
+- 用 `scripts/collect_lark_month_notes.py` 一次性拿到：
+  - 当月日报命中情况 `matched_daily_files`（每项含 `name` / `token` / `url`）
+  - 缺失日期 `missing_dates`
+  - 同月周报 `supplementary_weekly_files`（与月份重叠的 docx）
+  - 目标月报文件名 `monthly_output_basename`、是否已存在 `monthly_output_exists`
+  - 历史月报 `historical_context_files.monthly_files`（最近 6 篇，按时间倒序）
 - 示例：
 
 ```bash
-python3 scripts/collect_local_month_notes.py --root . --month 2026-01
+python scripts/collect_lark_month_notes.py --month 2026-01
 ```
 
+- 该脚本读取 `../summary-shared/lark_folders.json` 获取 folder token，禁止把 token 硬编码到任何地方。
+
 3. 读取历史上下文（内观与发现的数据基础）
-- 脚本返回的 `historical_context_files` 包含过去 3-6 篇月报。
-- **这些文件不是文风参考，而是内容对比素材**——必须读取其实际内容，重点关注：
+- 脚本返回的 `historical_context_files.monthly_files` 包含过去 3-6 篇月报。
+- **这些文件不是文风参考，而是内容对比素材**——必须读取其实际内容（`lark-cli docs +fetch --doc <url>`），重点关注：
   - 过去月报中「下月聚焦」里的目标项：哪些已完成？哪些一直在拖延？哪些悄悄消失了？
   - 「精力分布」的长期变化趋势：哪个方向在持续扩张或萎缩？
   - 反复出现的踩坑或风险——是否有结构性问题在跨月延续？
   - 「主线与阶段推进」的延续性：哪些主线在本月得到了推进，哪些断裂了？
 - 若历史文件较多，优先精读最近 2-3 篇月报，其余扫描关键章节即可。
+- **飞书 → markdown 注意事项**：`docs +fetch` 返回值在 `data.markdown`。历史月报里 `精力分布` 章节会显示 `<whiteboard token="..." align="left"/>` 标签——代表那是一张飞书画板，文字内容看不到，但不影响阅读其他章节。
 
 4. 读取并提炼证据
-- **周报加速策略**：如果本月已有周报（`supplementary_weekly_files` 非空），优先从周报提炼主线框架和精力分布估算，只回溯日报补充周报未覆盖的细节、验证关键事实。这样可以避免逐篇读 30 篇日报的低效路径。
-- 日报始终是主证据来源，周报是中间层加速手段，历史月报只作文风参考。
-- **跨月衔接**：如果上月月报存在（`style_reference_files` 中有上月月报），读取其"下月聚焦"章节，在本月"主线与阶段推进"中自然呼应——哪些上月计划完成了、哪些延续了、哪些调整了方向。不需要专设章节，融入叙事即可。
+- **周报加速策略**：如果本月已有周报（`supplementary_weekly_files` 非空），优先读周报提炼主线框架和精力分布估算，只回溯日报补充周报未覆盖的细节、验证关键事实。这样可以避免逐篇读 30 篇日报的低效路径。
+- 日报始终是主证据来源，周报是中间层加速手段，历史月报只作内容对比与文风参考。
+- **跨月衔接**：如果上月月报存在（`historical_context_files.monthly_files[0]`），读取其"下月聚焦"章节，在本月"主线与阶段推进"中自然呼应——哪些上月计划完成了、哪些延续了、哪些调整了方向。不需要专设章节，融入叙事即可。
 - 提炼时采用**成果导向思维**，不是逐天罗列做了什么，而是回答：
   - 这个月推动了哪几条主线？各主线经历了什么阶段变化？（主线与阶段推进）
   - 精力大致花在哪几个方向？各占多少？（精力分布）
@@ -64,18 +67,9 @@ python3 scripts/collect_local_month_notes.py --root . --month 2026-01
 - 若个别日期无日报，只记录为缺失，不补写、不猜测。
 
 5. 格式与风格规则
-- 默认保持本地月报格式：
-  - 文件名使用短日期格式：`M月-YY.md`（如 `3月-26.md`）
-  - **正文不再重复文件名/笔记标题**，frontmatter 之后直接从 `# 本月一句话` 开始
-  - 保留本地 frontmatter：
-
-```md
----
-tags:
-aliases:
----
-```
-
+- 文件名使用 `monthly_output_basename`（如 `3月-26`），不带 `.md` 扩展名（飞书 docx 不需要）。
+- **不写 Markdown frontmatter**（飞书 docx 不支持，写了也不会被保留）。
+- 正文从 `# 本月一句话` 开始，不重复文件名/标题。
 - 读取最近 2~3 篇历史月报（或周报），仅借鉴句式和篇幅密度，不继承旧事实。
 - 默认文风为任务导向、低主语，不连续使用第一人称"我"。
 
@@ -92,7 +86,7 @@ aliases:
 
 ### 6.1 内容结构（7 个一级章节）
 
-按以下顺序输出。**正文不再重复文件名/笔记标题**，直接从第一个内容章节开始。每个 `#` 章节结束后插入 `---` 分隔线，最后一节不加。
+按以下顺序输出。**正文从第一个 `#` 章节开始**，不写 frontmatter、不重复文件名。每个 `#` 章节结束后插入 `---` 分隔线，最后一节不加。
 
 **`# 本月一句话`**
 - 用一句话概括本月最核心的推进或转折。
@@ -101,8 +95,8 @@ aliases:
 
 **`# 精力分布`**
 - 根据日报内容估算本月精力在各主题上的粗略百分比分配。
-- 使用 `mermaid-visualizer` skill 的语法规则生成 Mermaid 饼图代码块，确保在飞书文档中正常渲染。
-- 饼图格式：
+- **此章节使用飞书画板（whiteboard）呈现**，不要在 markdown 里写 mermaid 代码块。导入主体 markdown 时该章节正文留空，画板由步骤 7 的后处理流程通过 `lark-cli whiteboard +update` 写入（mermaid pie 作为输入格式）。
+- 把估算后的内容存为临时 mermaid 文件 `./pie.mmd`，供后续步骤使用：
 
 ````md
 ```mermaid
@@ -128,7 +122,6 @@ pie title 本月精力分布
 - 当月主线为论文推进时，论文相关内容合并为一条主线。
 
 **`# 关键里程碑与决策`**
-- 合并原"关键里程碑与量化结果"和"关键决策与策略调整"。
 - 里程碑用 **✅**标记：优先写可验证成果（版本号、实验批次、提交记录、上线结果、数量指标）。
 - 决策用 **📌**标记：必须回答"为什么调整策略"，写清**触发原因**、**调整动作**、**当前效果**。
 - 条目数按实际情况增减。
@@ -156,7 +149,7 @@ pie title 本月精力分布
   - 禁止用列表/bullet 堆砌——必须用段落叙事
   - 每期的长度、角度、语气都应该根据实际发现自然变化；没有深刻发现时宁可短写两段，不要凑字数
   - **自检**：如果连续两期的「内观与发现」在结构和语气上高度相似，说明在套路化，必须调整
-- **历史引用**：在提及历史笔记中的具体事项时，直接写出文件名（如 `2月-26.md`），方便用户回溯上下文
+- **历史引用**：在提及历史笔记中的具体事项时，直接写出文件名（如 `2月-26`），方便用户回溯上下文。
 - **篇幅指引**：月报的内观应比周报更厚实，通常 3-5 段，视发现密度而定。
 
 **`# 下月聚焦`**
@@ -166,11 +159,11 @@ pie title 本月精力分布
 
 ### 6.2 去日期化规则
 
-- **正文中禁止以日期开头叙事**。不得出现 `` `3.09` 完成……``、``第一周做了……`` 这类写法。
+- **正文中禁止以日期开头叙事**。不得出现 `` `3.09` 完成…… ``、``第一周做了…… `` 这类写法。
 - 叙事以成果和主题为锚点，而非时间线。
 - 若需要表达时间跨度，用模糊表述："月初""中旬""下旬""持续推进""后半月加速"。
 - "主线与阶段推进"章节允许使用时间区段（上中下旬、W1→W4）作为叙事辅助，但不要每条主线都套"月初…月中…下旬…"三段论。时间只是组织手段之一，不是唯一手段。
-- 若用户明确要求"可追溯明细"，可在末尾追加一个日期映射附录：
+- 若用户明确要求"可追溯明细"，可在末尾追加日期映射附录：
 
 ```md
 # 每日工作映射（可追溯明细）
@@ -190,51 +183,91 @@ pie title 本月精力分布
   - `**⚠️**`：问题、风险
   - `**💡**`：正面经验、收获
   - `**📌**`：关键决策
-- Mermaid 饼图仅用于"精力分布"章节，不在其他地方插入图表。
-- 下月计划使用 `- [ ]` checkbox + 优先级标签（P1/P2/P3），方便下月复盘勾选。
-
+- `精力分布` 章节用飞书画板渲染（步骤 7 后处理），markdown 里不写 mermaid 代码块。
+- 下月计划使用 `- [ ]` checkbox + 优先级标签（P1/P2/P3）。
 - 若存在缺失日期，在文末用以下格式说明，不扩展推断：
 
 ```md
 > 本月日报覆盖率：22/28 (79%)。缺失日期：`2026-02-03`、`2026-02-12`、`2026-02-18` 至 `2026-02-23`。
 ```
 
-7. 写回本地月报
-- 目标路径使用脚本给出的 `monthly_output_path`。
-- 若同名文件已存在：
-  - 默认先读取旧文件判断是否为已完成月报。
-  - 未经用户明确允许，不直接覆盖。
-  - 优先改写为 `_v2.md` 或在答复中请用户确认覆盖策略。
-- 写入内容前确保父目录存在。
+7. 写回飞书月报
+- 输出步骤：
+  1. 在临时目录生成 markdown 文件，文件名为 `<monthly_output_basename>.md`（如 `4月-26.md`）。**markdown 中不要写 mermaid 代码块**——`# 精力分布` 章节正文留空（标题下直接接 `---` 分隔线），画板会在 import 后通过后处理写入。
+  2. 检查 `monthly_output_exists`：
+     - 若为 false，直接执行步骤 3。
+     - 若为 true，**未经用户明确允许，不要覆盖**。改用 `monthly_output_basename_v2`（即 `<basename>_v2`）作为目标文件名，并在最终回复里告知用户。
+  3. 上传成 docx：
+
+```bash
+lark-cli drive +import --type docx \
+  --file ./<basename>.md \
+  --folder-token <monthly_folder_token> \
+  --name <output_basename>
+# 记下返回的 data.url 作为 DOC_URL
+```
+
+  4. 在 `# 精力分布` 章节后插入空白画板，拿到 board_token：
+
+```bash
+lark-cli docs +update \
+  --doc <DOC_URL> \
+  --mode insert_after \
+  --selection-by-title "# 精力分布" \
+  --markdown '<whiteboard type="blank"></whiteboard>'
+# 记下返回的 data.board_tokens[0] 作为 WB_PIE_TOKEN
+```
+
+  5. 把第 6.1 节准备好的 `./pie.mmd` 写入画板：
+
+```bash
+lark-cli whiteboard +update \
+  --whiteboard-token <WB_PIE_TOKEN> \
+  --input_format mermaid \
+  --source @./pie.mmd \
+  --idempotent-token "wb-pie-$(date +%s)" \
+  --overwrite --yes --as user
+```
+
+  6. 验证最终 doc URL，写入临时记录中。
+
+- 整套流程把"主体内容"和"画板内容"解耦：主体走 `drive +import`，图表走 `lark-whiteboard` skill 的官方路径，避免 mermaid 自动转换的风格不一致。
 
 8. 结果回传给用户
-- 返回生成的月报路径。
-- 列出纳入的日报日期范围与同月周报补充文件。
+- 返回新生成的飞书月报 URL。
+- 列出纳入的日报日期范围与同月周报补充文件名。
 - 列出缺失日期（若有）。
+- 列出写入的画板 token（方便用户后续编辑/查看）。
 - 若发生覆盖规避，明确说明最终写入的文件名。
 
 ## 执行细节
 
-1. 本地文档定位规则
-- 日报路径固定为：`05-note/<year>/Daily/YYYY-MM-DD.md`
-- 周报路径固定为：`05-note/<year>/Weekly/M.DD～M.DD-YY.md`
-- 月报路径固定为：`05-note/<year>/Monthly/M月-YY.md`（如 `3月-26.md`）
+1. 飞书文件命名规则
+- 日报：`M.D-YY`（不补零，如 `5.5-26`、`4.30-26`）。
+- 周报：`M.DD～M.DD-YY`（日补零，如 `3.09～3.15-26`、`4.20～4.26-26`）。
+- 月报：`M月-YY`（如 `3月-26`）。
+- 这些规则已编码在 `collect_lark_month_notes.py` 与 `month_window.py` 中，不要在 SKILL.md 之外手动拼接。
 
 2. 时间规则
 - 月总结必须严格限定在单个自然月内。
 - 同月周报只作为补充证据，不得引入跨月事实。
 
-3. 兼容旧命名
-- 用户若提到 `1月-26` 这类旧月标题，只作为输入解析格式。
-- 新生成的本地文件名统一使用短日期格式 `M月-YY.md`，与笔记标题保持一致。
+3. 跨年场景
+- 当月份为 1 月时，`historical_context_files` 会自然包含上一年 12 月的月报；不需要特殊处理。
 
 4. 完整性检查
 - 交付前必须复核当月日期覆盖率。
-- 明确区分主证据（日报）和补充证据（周报/月报）。
+- 明确区分主证据（日报）和补充证据（周报/历史月报）。
+
+5. 配置与权限
+- folder token 集中放在 `../summary-shared/lark_folders.json`，三个 summary skill 共用。
+- 修改飞书数据源（如换文件夹）时，只需修改这一个文件。
+- 调用 `lark-cli` 前确保已登录（`lark-cli auth login`）；若返回 `permission denied`，提示用户检查身份。
 
 ## 资源
 
-- `scripts/month_window.py`: 解析月区间，输出标准日期范围、正文标题、文件名。
-- `scripts/collect_local_month_notes.py`: 扫描本地 `05-note`，返回日报命中情况、同月周报、建议输出路径、历史风格参考路径。
-- `references/monthly-summary-template.md`: 本地月报模板骨架。
-- `mermaid-visualizer` skill: 生成 Mermaid 图表时参考其语法规则与兼容性检查清单，防止渲染异常。
+- `scripts/month_window.py`: 解析月区间，输出标准日期范围、正文标题、文件名候选。
+- `scripts/collect_lark_month_notes.py`: 通过 `lark-cli` 扫描飞书 daily/weekly/monthly 文件夹，返回日报命中、同月周报、目标月报文件名、历史月报。
+- `references/monthly-summary-template.md`: 月报模板骨架（无 frontmatter，无 mermaid 代码块）。
+- `lark-whiteboard` skill: 画板写入的官方路径，本 skill 第 7 步直接复用其 `whiteboard +update` 流程。
+- `../summary-shared/lark_folders.json`: 共享 folder token 配置。
