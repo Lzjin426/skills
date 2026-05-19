@@ -14,6 +14,8 @@ Cross-year aware: filenames carry a `-YY` suffix, so a window spanning Dec/Jan
 matches files with both year suffixes.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re

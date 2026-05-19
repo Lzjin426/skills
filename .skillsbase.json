@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "skill_order": [],
   "skills": {
     "academic-writing": {
       "tags": [
@@ -153,5 +153,5 @@
       ]
     }
   },
-  "skill_order": []
+  "version": 3
 }
