@@ -26,6 +26,11 @@
         "write"
       ]
     },
+    "dev-env-sync": {
+      "tags": [
+        "tools"
+      ]
+    },
     "doc": {
       "tags": [
         "tools"
@@ -71,6 +76,26 @@
         "lark"
       ]
     },
+    "lark-calendar": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-contact": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-doc": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-drive": {
+      "tags": [
+        "lark"
+      ]
+    },
     "mermaid-visualizer": {
       "tags": [
         "obsidian/draw"
@@ -88,8 +113,7 @@
     },
     "obsidian-bases": {
       "tags": [
-        "obsidian",
-        "draw"
+        "obsidian"
       ]
     },
     "obsidian-canvas-creator": {
@@ -129,12 +153,12 @@
     },
     "taste-skill": {
       "tags": [
-        "UI"
+        "UI&UX"
       ]
     },
     "ui-animation": {
       "tags": [
-        "UI"
+        "UI&UX"
       ]
     },
     "weekly-summary": {
@@ -153,5 +177,51 @@
       ]
     }
   },
-  "skill_order": []
+  "skill_order": [],
+  "tag_styles": {
+    "system": {
+      "icon": "tdesign:system-3",
+      "color": "#a855f7"
+    },
+    "create": {
+      "icon": "",
+      "color": ""
+    },
+    "论文": {
+      "icon": "lets-icons:paper-light",
+      "color": ""
+    },
+    "draw": {
+      "icon": "material-symbols:draw",
+      "color": ""
+    },
+    "obsidian": {
+      "icon": "simple-icons:obsidian",
+      "color": ""
+    },
+    "video": {
+      "icon": "",
+      "color": "#eab308"
+    },
+    "UI": {
+      "icon": "",
+      "color": "#ef4444"
+    },
+    "tools": {
+      "icon": "tabler:tool",
+      "color": ""
+    },
+    "lark": {
+      "icon": "icon-park-outline:new-lark",
+      "color": ""
+    }
+  },
+  "tool_order": [
+    "claude",
+    "codex",
+    "gemini",
+    "openclaw",
+    "qclaw",
+    "opencode"
+  ]
 }
