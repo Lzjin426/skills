@@ -1,5 +1,5 @@
 {
-  "skill_order": [],
+  "version": 3,
   "skills": {
     "academic-writing": {
       "tags": [
@@ -61,12 +61,127 @@
         "lark"
       ]
     },
+    "lark-apps": {
+      "tags": [
+        "lark"
+      ]
+    },
     "lark-attendance": {
       "tags": [
         "lark"
       ]
     },
     "lark-base": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-calendar": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-contact": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-doc": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-drive": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-event": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-im": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-mail": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-markdown": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-minutes": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-okr": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-openapi-explorer": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-shared": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-sheets": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-skill-maker": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-slides": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-task": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-vc": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-vc-agent": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-whiteboard": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-wiki": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-workflow-meeting-summary": {
+      "tags": [
+        "lark"
+      ]
+    },
+    "lark-workflow-standup-report": {
       "tags": [
         "lark"
       ]
@@ -119,22 +234,22 @@
     },
     "skill-vetter": {
       "tags": [
-        "system"
+        "skill"
       ]
     },
     "slides": {
       "tags": [
-        "Work"
+        "tools"
       ]
     },
     "taste-skill": {
       "tags": [
-        "UI"
+        "UI&UX"
       ]
     },
     "ui-animation": {
       "tags": [
-        "UI"
+        "UI&UX"
       ]
     },
     "weekly-summary": {
@@ -153,5 +268,37 @@
       ]
     }
   },
-  "version": 3
+  "skill_order": [],
+  "tag_styles": {
+    "create": {
+      "icon": "",
+      "color": "#6b7280"
+    },
+    "tools": {
+      "icon": "",
+      "color": "#f59e0b"
+    },
+    "obsidian/draw": {
+      "icon": "",
+      "color": "#ef4444"
+    },
+    "论文": {
+      "icon": "",
+      "color": ""
+    },
+    "lark": {
+      "icon": "",
+      "color": "#3b82f6"
+    },
+    "UI&UX": {
+      "icon": "",
+      "color": "#10b981"
+    }
+  },
+  "tool_order": [
+    "claude",
+    "codex",
+    "gemini",
+    "opencode"
+  ]
 }

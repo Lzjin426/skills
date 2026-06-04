@@ -221,19 +221,6 @@ Shortcut 是对常用操作的高级封装（`lark-cli sheets +<verb> [flags]`�
 | [`+get-dropdown`](references/lark-sheets-get-dropdown.md) | 查询下拉列表配置 |
 | [`+delete-dropdown`](references/lark-sheets-delete-dropdown.md) | 删除下拉列表 |
 
-### 浮动图片
-
-| Shortcut | 说明 |
-|----------|------|
-| [`+media-upload`](references/lark-sheets-media-upload.md) | 上传本地图片素材，返回 `file_token`（供 `+create-float-image` 使用；>20MB 自动分片） |
-| [`+create-float-image`](references/lark-sheets-create-float-image.md) | 创建浮动图片 |
-| [`+update-float-image`](references/lark-sheets-update-float-image.md) | 更新浮动图片属性 |
-| [`+get-float-image`](references/lark-sheets-get-float-image.md) | 获取浮动图片 |
-| [`+list-float-images`](references/lark-sheets-list-float-images.md) | 查询所有浮动图片 |
-| [`+delete-float-image`](references/lark-sheets-delete-float-image.md) | 删除浮动图片 |
-
-> 浮动图片相关的读接口只返回元数据（含 `float_image_token`），**不包含图片字节**。要读取图片内容，用 token 调 `lark-cli docs +media-preview --token "<float_image_token>" --output ./image.png`。
-
 ## API Resources
 
 ```bash
@@ -260,14 +247,6 @@ lark-cli sheets <resource> <method> [flags] # 调用 API
 
   - `find` — 查找单元格
 
-### spreadsheet.sheet.float_images
-
-  - `create` — 创建浮动图片
-  - `patch` — 更新浮动图片
-  - `get` — 获取浮动图片
-  - `query` — 查询所有浮动图片
-  - `delete` — 删除浮动图片
-
 ## 权限表
 
 | 方法 | 所需 scope |
@@ -280,9 +259,4 @@ lark-cli sheets <resource> <method> [flags] # 调用 API
 | `spreadsheet.sheet.filters.get` | `sheets:spreadsheet:read` |
 | `spreadsheet.sheet.filters.update` | `sheets:spreadsheet:write_only` |
 | `spreadsheet.sheets.find` | `sheets:spreadsheet:read` |
-| `spreadsheet.sheet.float_images.create` | `sheets:spreadsheet:write_only` |
-| `spreadsheet.sheet.float_images.patch` | `sheets:spreadsheet:write_only` |
-| `spreadsheet.sheet.float_images.get` | `sheets:spreadsheet:read` |
-| `spreadsheet.sheet.float_images.query` | `sheets:spreadsheet:read` |
-| `spreadsheet.sheet.float_images.delete` | `sheets:spreadsheet:write_only` |
 

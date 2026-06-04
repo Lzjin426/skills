@@ -1,106 +1,198 @@
-# DSL 路径
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" />
+  <title></title>
+  <style>
+      * {
+          box-sizing: border-box;
+          padding: 0;
+          margin: 0;
+      }
 
-> **这是画板，不是网页。** 画板是无限画布上自由放置元素，flex 布局是可选增强。
+      .open-platform-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background-color: #ffffff;
+      }
 
-## Workflow
+      .open-platform-icon {
+          width: 120px;
+          height: 120px;
+          display: block;
+      }
 
-```
-Step 1: 路由 & 读取知识
-  - 读对应 scene 指南 — 了解结构特征和布局策略
-  - 确定布局策略（见下方快速判断）和构建方式
-  - 读 references/ 核心模块 — 语法、布局、配色、排版、连线
+      .open-platform-desc {
+          margin-top: 16px;
+          line-height: 22px;
+          font-size: 14px;
+          color: #646a73;
+          text-align: center
+      }
 
-Step 2: 生成完整 DSL（含颜色）
-  - 按 content.md 规划信息量和分组
-  - 按 layout.md 选择布局模式和间距
-  - 推荐使用图标让图表更直观，运行 `npx -y @larksuite/whiteboard-cli@^0.2.0 --icons` 查看可用图标
-  - 按 style.md 上色（用户没指定时用默认经典色板）
-  - 按 schema.md 语法输出完整 JSON
-  - 连线参考 connectors.md，排版参考 typography.md
+      .open-platform-back {
+          border-radius: 6px;
+          font-size: 14px;
+          height: 32px;
+          line-height: 22px;
+          min-width: 80px;
+          padding: 4px 11px;
+          text-align: center;
+          text-decoration: none;
+          touch-action: manipulation;
+          transition: color .1s ease-in, background-color .1s ease-in, border-color .1s ease-in, width .2s ease-in;
+          user-select: none;
+          white-space: nowrap;
+          background: #1456f0;
+          border: 1px solid #1456f0;
+          color: #ffffff;
+          margin-top: 16px;
+      }
+  </style>
+</head>
+<body>
+<div class="open-platform-wrapper">
+  <img class="open-platform-icon"
+       src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyLjkxMyA1NS4yNDRjLTUuNjMyIDIuOTUtOC4yNDYgNi4yODQtOC4yNDYgOS40NHY5LjcyYzAtMy4xNTYgMi42MTQtNi40OSA4LjI0Ni05LjQ0di05LjcyWm05NC4xNjMtMTIuMDg0di05LjcyNmM1LjkzNC0zLjE5IDguOTgxLTYuODkxIDguOTgxLTEwLjcyNXY5LjcyYzAgMy44NC0zLjA0NyA3LjU0My04Ljk4MSAxMC43MzJaIiBmaWxsPSIjMEMyOTZFIi8+PHBhdGggZD0iTTYwLjIyOSAxOS4wNTkgNDguNzMgNDkuOTIyIDYwLjM2NSA3Mi45MmwtOC40NzQgMjMuODczSDE2LjkyM2E0IDQgMCAwIDEtNC00VjIzLjA2YTQgNCAwIDAgMSA0LTRINjAuMjNaIiBmaWxsPSIjQkJCRkM0IiBmaWxsLW9wYWNpdHk9Ii40NSIvPjxwYXRoIGQ9Ik03MS40MDggMTkuMDU5IDYwLjAxMyA0OS45MjIgNzEuNDYgNzIuOTJsLTguMzI1IDIzLjg3M2gzOS45NDNhNCA0IDAgMCAwIDQtNFYyMy4wNmE0IDQgMCAwIDAtNC00aC0zMS42N1oiIGZpbGw9IiNCQkJGQzQiIGZpbGwtb3BhY2l0eT0iLjQ1Ii8+PHBhdGggZD0iTTIxLjkyMyAyNi4xYTIgMiAwIDEgMSAwIDQgMiAyIDAgMCAxIDAtNFptMyAyYTMgMyAwIDEgMC02IDAgMyAzIDAgMCAwIDYgMFptNi45MTUtMmEyIDIgMCAxIDEgMCA0IDIgMiAwIDAgMSAwLTRabTMgMmEzIDMgMCAxIDAtNiAwIDMgMyAwIDAgMCA2IDBabS0xNS43NjMgNy4zOTRhLjUuNSAwIDAgMSAuNS0uNWgzMS41ODFhLjUuNSAwIDAgMSAwIDFIMTkuNTc1YS41LjUgMCAwIDEtLjUtLjVabTQ4LjQ3NyAwYS41LjUgMCAwIDEgLjUtLjVoMzIuNDY1YS41LjUgMCAwIDEgMCAxSDY4LjA1MmEuNS41IDAgMCAxLS41LS41WiIgZmlsbD0iIzhGOTU5RSIvPjxwYXRoIGQ9Ik05OCAxMTFjOS45NDEgMCAxOC04LjA1OSAxOC0xOHMtOC4wNTktMTgtMTgtMThjLTkuOTQyIDAtMTggOC4wNTktMTggMThzOC4wNTggMTggMTggMThaIiBmaWxsPSIjRjgwIi8+PHBhdGggZD0iTTk3LjE4MSA4NC44MThhLjgxOC44MTggMCAwIDAtLjgxOC44MTl2OS44MThjMCAuNDUyLjM2Ni44MTguODE4LjgxOGgxLjYzN2EuODE4LjgxOCAwIDAgMCAuODE4LS44MTh2LTkuODE5YS44MTguODE4IDAgMCAwLS44MTgtLjgxOEg5Ny4xOFptMCAxMy4wOTJhLjgxOC44MTggMCAwIDAtLjgxOC44MTh2MS42MzZjMCAuNDUyLjM2Ni44MTguODE4LjgxOGgxLjYzN2EuODE4LjgxOCAwIDAgMCAuODE4LS44MTh2LTEuNjM2YS44MTguODE4IDAgMCAwLS44MTgtLjgxOUg5Ny4xOFoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNC4wMjcgODUuMzFjMi40OSA1LjUxIDE0Ljc3IDkuOTQgNDEuNDUgOS45M3Y5LjcyMWMtMjYuNjguMDEtMzguOTYtNC40Mi00MS40NS05Ljkzdi05LjcyWm04NC44MS0yNy4yN2MxNy41Mi0yLjY5IDI1LjgwNy03LjAyNiAyNy4yLTExLjcxdjkuNzJjLS4zMyA0LjY3LTkuNjggOS4wMi0yNy4yIDExLjcxdi05LjcyWiIgZmlsbD0iIzMzNzBGRiIvPjxwYXRoIGQ9Ik04OS4yMzcgMTMuMDFjMTguMDU4IDAgMjYuOCAzLjI1IDI2LjggOS43MnY5LjcyYzAtNi40Ny04Ljc0Mi05LjcyLTI2LjgtOS43MnYtOS43MlptLTg0LjU3IDUxLjdjMCA2LjYgMTEuMzcgMTIuNDUgMzAuNDcgMTIuNDR2OS43MmMtMTkuMSAwLTMwLjQ3LTUuODQtMzAuNDctMTIuNDR2LTkuNzJaIiBmaWxsPSIjMDBENkI5Ii8+PC9zdmc+"
+       alt="">
+  <div class="open-platform-desc">The page does not exist.</div>
+  <a class="open-platform-back" href="/">Go to homepage</a>
+</div>
+<script>window.gfdatav1={"env":"prod","ver":"1.0.0.13","canary":0,"garrModules":null,"envName":"prod","region":"CN","idc":"lf","webServerCodeType":"DeployServerlessWebServer","runtime":"node","extra":{"canaryType":null}}</script><script>
 
-  注意：部分图形（鱼骨/飞轮/柱状/折线等）要按 scene 指南的脚本模板写 CommonJS 脚本生成 JSON：
-    1. 创建产物目录 ./diagrams/YYYY-MM-DDTHHMMSS/
-    2. 将脚本保存为 diagram.gen.cjs（必须 .cjs 后缀，脚本用 require() 写，.js 在 ESM 项目下会崩），执行 node diagram.gen.cjs 产出 diagram.json
-    3. 用产出的 diagram.json 进入 Step 3
+  function parseQueryString(queryString) {
+    // 移除开头的 "?"
+    if (queryString.charAt(0) === '?') {
+      queryString = queryString.substring(1);
+    }
 
-Step 3: 渲染 & 审查 → 交付
-  - 渲染前自查（见下方检查清单）
-  - 渲染 PNG（仅用于预览验证，不是最终产物）：npx -y @larksuite/whiteboard-cli@^0.2.0 -i diagram.json -o diagram.png
-  - 检查：信息完整？布局合理？配色协调？文字无截断？连线无交叉？
-  - 有问题 → 按症状表修复 → 重新渲染（最多 2 轮）
-  - 2 轮后仍有严重问题 → 考虑走 Mermaid 路径兜底
-  - 写入画板：用 whiteboard-cli 将 diagram.json 转换为 OpenAPI 格式并 pipe 给 +update：
-      npx -y @larksuite/whiteboard-cli@^0.2.0 -i diagram.json --to openapi --format json \
-        | lark-cli whiteboard +update --whiteboard-token <board_token> \
-            --source - --input_format raw --idempotent-token <时间戳+标识> --yes --as user
-      → 完整 dry-run / 确认流程见 SKILL.md [§ 写入画板](../SKILL.md#写入画板)
-  - 交付：向用户报告 board_token 写入成功
-```
+    var params = {};
+    if (!queryString) return params;
 
-**布局策略快速判断**（详见 `references/layout.md`）：
+    // 分割参数对
+    var paramPairs = queryString.split('&');
 
-先定**主布局**，再定子布局：**结构化信息**优先用 Flex，**关系链路**优先用 Dagre，**灵活定位**用绝对布局。
+    for (var i = 0; i < paramPairs.length; i++) {
+      var paramPair = paramPairs[i].split('=');
+      var key = decodeURIComponent(paramPair[0]);
+      var value = paramPair.length > 1 ? decodeURIComponent(paramPair[1]) : '';
 
-> **构建方式是强约束**：当 scene 指南要求"脚本生成"时，必须先写脚本（`.cjs`，CommonJS）并用 `node` 执行来产出 JSON 文件。
+      // 处理重复参数（转为数组）
+      if (params[key] === undefined) {
+        params[key] = value;
+      } else if (!Array.isArray(params[key])) {
+        params[key] = [params[key], value];
+      } else {
+        params[key].push(value);
+      }
+    }
 
-## 模块索引
+    return params;
+  }
 
-### 核心参考（必读）
+  function getLocale() {
+    var zhLang = 'zh-CN';
+    var enLang = 'en-US';
 
-| 模块     | 文件                       | 说明                            |
-| -------- | -------------------------- | ------------------------------- |
-| DSL 语法 | `references/schema.md`     | 节点类型、属性、尺寸值          |
-| 内容规划 | `references/content.md`    | 信息提取、密度决策、连线预判    |
-| 布局系统 | `references/layout.md`     | 网格方法论、Flex 映射、间距规则 |
-| 排版规则 | `references/typography.md` | 字号层级、对齐、行距            |
-| 连线系统 | `references/connectors.md` | 拓扑规划、锚点选择              |
-| 配色系统 | `references/style.md`      | 多色板、视觉层级                |
+    var queryLang = parseQueryString(window.location.search).lang;
+    var cookieLang = getCookieLocale();
+    var lang = enLang;
 
-### 场景指南（按类型选读一个）
+    <!--从cookie中取值-->
+    function getCookieLocale() {
+      var locale = '';
+      var cookies = document.cookie.split('; ');
+      var loclaeKey = 'open_locale';
 
-| 图表类型    | 文件                     | 适用场景                               |
-| ----------- | ------------------------ | -------------------------------------- |
-| 架构图      | `scenes/architecture.md` | 分层架构、微服务架构                   |
-| 组织架构图  | `scenes/organization.md` | 公司组织、树形层级                     |
-| 泳道图      | `scenes/swimlane.md`     | 跨角色流程、跨系统交互流程             |
-| 对比图      | `scenes/comparison.md`   | 方案对比、功能矩阵                     |
-| 鱼骨图      | `scenes/fishbone.md`     | 因果分析、根因分析                     |
-| 柱状图      | `scenes/bar-chart.md`    | 柱状图、条形图                         |
-| 折线图      | `scenes/line-chart.md`   | 折线图、趋势图                         |
-| 树状图      | `scenes/treemap.md`      | 矩形树图、层级占比                     |
-| 漏斗图      | `scenes/funnel.md`       | 转化漏斗、销售漏斗                     |
-| 金字塔图    | `scenes/pyramid.md`      | 层级结构、需求层次                     |
-| 循环/飞轮图 | `scenes/flywheel.md`     | 增长飞轮、闭环链路                     |
-| 里程碑      | `scenes/milestone.md`    | 时间线、版本演进                       |
-| 流程图      | `scenes/flowchart.md`    | 业务流、状态机、带条件判断的链路       |
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        var cookieArr = cookie.split('=');
+        if (cookieArr[0] === loclaeKey) {
+          locale = cookieArr[1];
+          break;
+        }
+      }
+      return locale;
+    }
 
-## 渲染前自查
+    function setLocaleCookie(lang) {
+      var date = new Date();
+      // 300天到期
+      date.setTime(date.getTime() + (300 * 24 * 60 * 60 * 1000));
+      var expires = 'expires=' + date.toUTCString();
+      document.cookie = 'open_locale=' + lang + '; ' + expires + '; path=/;';
+    }
 
-- [ ] 不同分组用了不同颜色？同组节点样式完全一致？
-- [ ] 外层浅色背景、内层白色节点？
-- [ ] 所有节点有边框（borderWidth=2）？文字在背景上清晰可读？
-- [ ] 连线用灰色（#BBBFC4），不用彩色？
-- [ ] frame 都写了 layout 属性？gap 和 padding 都显式设置了？
-- [ ] 含文字节点 height 用 fit-content？connector 在顶层 nodes 数组？
+    // 获取浏览器默认语言
+    if (navigator.language.indexOf('en') !== -1) {
+      lang = enLang;
+    } else if (navigator.language.indexOf('zh') !== -1) {
+      lang = zhLang;
+    }
+    if (cookieLang === enLang) {
+      lang = enLang;
+    } else if (cookieLang === zhLang) {
+      lang = zhLang;
+    }
+    if (queryLang === enLang) {
+      lang = enLang;
+    } else if (queryLang === zhLang) {
+      lang = zhLang;
+    }
+    // 设置cookie
+    setLocaleCookie(lang);
+    return lang;
+  }
 
-## 症状→修复表
+  // 根据域名获取当前brand
+  function isLarkDomain() {
+    var defaultBrandMap = {
+      lark: ['larksuite'],
+      feishu: ['feishu', 'larkoffice', 'larkenterprise'],
+    };
+    const { hostname } = window.location;
 
-| 看到的问题         | 改什么                              |
-| ------------------ | ----------------------------------- |
-| 文字被截断         | height 改为 fit-content             |
-| 文字溢出容器右侧   | 增大 width，或缩短文字              |
-| 节点重叠粘连       | 增大 gap                            |
-| 节点挤成一团       | 增大 padding 和 gap                 |
-| 连线穿过节点       | 调整 fromAnchor/toAnchor 或增大间距 |
-| 大面积空白         | 缩小外层 frame 宽度                 |
-| 文字和背景色太接近 | 调整 fillColor 或 textColor         |
-| 布局整体偏左/偏右  | 调整绝对定位的 x 坐标使内容居中     |
+    if (defaultBrandMap.feishu.some((item) => hostname.includes(item))) {
+      return false;
+    }
 
-## 关键约束速查
+    if (defaultBrandMap.lark.some((item) => hostname.includes(item))) {
+      return true;
+    }
 
-1. **含文字节点的 height 必须用 `'fit-content'`** — 写死数值会截断文字
-2. **`fill-container` 仅在 flex 父容器中生效** — `layout: 'none'` 下宽度退化为 0
-3. **`layout: 'none'` 的容器必须有固定宽高** — 不要写成 `fit-content`
-4. **connector 必须放在顶层 nodes 数组** — 不能嵌套在 frame children 里
-5. **flex 容器内的 x/y 会被完全忽略** — 需要自由定位时用 `layout: 'none'`
-6. **Dagre 子容器默认为不透明节点** — 需穿透时声明 `layout: "dagre"` + `layoutOptions: { isCluster: true }`
+    if (window.domainBrand) {
+      return window.domainBrand === 'lark';
+    }
+
+    return false;
+  }
+
+  var isLarkBrand = isLarkDomain();
+
+  var config = {
+    'zh-CN': {
+      'desc': '抱歉，您访问的页面不存在',
+      'back': '返回首页',
+      'title': (isLarkBrand ? 'Lark' : '飞书') + '开放平台',
+    },
+    'en-US': {
+      'desc': 'The page does not exist.',
+      'back': 'Go to homepage',
+      'title': (isLarkBrand ? 'Lark': 'Feishu') + ' Open Platform',
+    },
+  };
+  var locale = getLocale();
+  var descObj = document.querySelector('.open-platform-desc');
+  var backObj = document.querySelector('.open-platform-back');
+  descObj.innerHTML = config[locale].desc;
+  backObj.innerHTML = config[locale].back;
+  document.title = config[locale].title;
+
+</script>
+</body>
+</html>
