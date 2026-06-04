@@ -17,6 +17,7 @@ import shutil
 import subprocess
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from typing import Optional
 
 
 SHARED_CONFIG_RELATIVE = Path("..") / ".." / "summary-shared" / "lark_folders.json"
@@ -36,7 +37,7 @@ def month_range(year: int, month: int) -> tuple[date, date]:
     return start, end
 
 
-def load_config(explicit: Path | None) -> dict:
+def load_config(explicit: Optional[Path]) -> dict:
     path = explicit if explicit else (Path(__file__).parent / SHARED_CONFIG_RELATIVE).resolve()
     if not path.exists():
         raise SystemExit(f"shared config not found: {path}")
@@ -44,7 +45,7 @@ def load_config(explicit: Path | None) -> dict:
         return json.load(fh)
 
 
-_LARK_CLI: str | None = None
+_LARK_CLI: Optional[str] = None
 
 
 def _lark_cli_path() -> str:
@@ -97,7 +98,7 @@ def daily_name_candidates(d: date) -> list[str]:
     ]))
 
 
-def parse_weekly_filename(name: str) -> tuple[date, date] | None:
+def parse_weekly_filename(name: str) -> Optional[tuple[date, date]]:
     m = re.fullmatch(r"(\d{1,2})\.(\d{1,2})～(\d{1,2})\.(\d{1,2})-(\d{2})", name)
     if not m:
         return None
@@ -111,14 +112,14 @@ def parse_weekly_filename(name: str) -> tuple[date, date] | None:
         return None
 
 
-def parse_monthly_filename(name: str) -> tuple[int, int] | None:
+def parse_monthly_filename(name: str) -> Optional[tuple[int, int]]:
     m = re.fullmatch(r"(\d{1,2})月-(\d{2})", name)
     if not m:
         return None
     return 2000 + int(m.group(2)), int(m.group(1))
 
 
-def match_daily_file(files: list[dict], d: date) -> dict | None:
+def match_daily_file(files: list[dict], d: date) -> Optional[dict]:
     candidates = set(daily_name_candidates(d))
     for f in files:
         if f.get("type") == "docx" and f.get("name") in candidates:
@@ -126,7 +127,7 @@ def match_daily_file(files: list[dict], d: date) -> dict | None:
     return None
 
 
-def find_monthly_output(files: list[dict], output_basename: str) -> dict | None:
+def find_monthly_output(files: list[dict], output_basename: str) -> Optional[dict]:
     for f in files:
         if f.get("type") == "docx" and f.get("name") == output_basename:
             return f

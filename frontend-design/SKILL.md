@@ -1,42 +1,54 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
-license: Complete terms in LICENSE.txt
+description: 打造独具特色、达到生产级质量的前端界面，具备高水平的设计品质。当用户要求构建网页组件、页面、产品、海报或应用程序时（例如网站、落地页、仪表盘、React 组件、HTML/CSS 布局，或对任何网页 UI 进行样式美化）使用此技能。生成富有创意且精良的代码和 UI 设计，避免落入千篇一律的 AI 美学俗套。
+license: 完整条款见 LICENSE.txt
 ---
+本技能指导创建独特且达到生产级质量的前端界面，避免平庸的“AI 敷衍”美学。需实现真实可用的代码，并在美学细节与创意选择上格外用心。
 
-This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices.
+用户提出前端需求：需构建一个组件、页面、应用程序或界面。他们可能会提供用途、受众或技术约束等相关背景信息。
 
-The user provides frontend requirements: a component, page, application, or interface to build. They may include context about the purpose, audience, or technical constraints.
+## 设计思路
 
-## Design Thinking
+在编码之前，先理解上下文，并坚定选择一种**大胆**的美学方向：
 
-Before coding, understand the context and commit to a BOLD aesthetic direction:
-- **Purpose**: What problem does this interface solve? Who uses it?
-- **Tone**: Pick an extreme: brutally minimal, maximalist chaos, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, soft/pastel, industrial/utilitarian, etc. There are so many flavors to choose from. Use these for inspiration but design one that is true to the aesthetic direction.
-- **Constraints**: Technical requirements (framework, performance, accessibility).
-- **Differentiation**: What makes this UNFORGETTABLE? What's the one thing someone will remember?
+* **目的**：该界面解决什么问题？使用者是谁？
 
-**CRITICAL**: Choose a clear conceptual direction and execute it with precision. Bold maximalism and refined minimalism both work - the key is intentionality, not intensity.
+* **基调**：选择一个极致方向：极简主义、混乱极繁、复古未来、有机/自然、奢华/精致、游戏/玩具风格、编辑/杂志风格、粗野/原始、装饰艺术/几何、柔和/粉彩、工业/实用等。选择多种多样，可从中获取灵感，但要设计出真正契合美学方向的作品。
 
-Then implement working code (HTML/CSS/JS, React, Vue, etc.) that is:
-- Production-grade and functional
-- Visually striking and memorable
-- Cohesive with a clear aesthetic point-of-view
-- Meticulously refined in every detail
+* **约束**：技术要求（框架、性能、可访问性）。
 
-## Frontend Aesthetics Guidelines
+* **差异化**：让人**难以忘怀**的是什么？用户会记住哪一点？
 
-Focus on:
-- **Typography**: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like Arial and Inter; opt instead for distinctive choices that elevate the frontend's aesthetics; unexpected, characterful font choices. Pair a distinctive display font with a refined body font.
-- **Color & Theme**: Commit to a cohesive aesthetic. Use CSS variables for consistency. Dominant colors with sharp accents outperform timid, evenly-distributed palettes.
-- **Motion**: Use animations for effects and micro-interactions. Prioritize CSS-only solutions for HTML. Use Motion library for React when available. Focus on high-impact moments: one well-orchestrated page load with staggered reveals (animation-delay) creates more delight than scattered micro-interactions. Use scroll-triggering and hover states that surprise.
-- **Spatial Composition**: Unexpected layouts. Asymmetry. Overlap. Diagonal flow. Grid-breaking elements. Generous negative space OR controlled density.
-- **Backgrounds & Visual Details**: Create atmosphere and depth rather than defaulting to solid colors. Add contextual effects and textures that match the overall aesthetic. Apply creative forms like gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows, decorative borders, custom cursors, and grain overlays.
+**至关重要**：选择一个清晰的概念方向，并精准执行。大胆的极繁主义和精致的极简主义都行之有效——关键在于有意为之，而非强度本身。
 
-NEVER use generic AI-generated aesthetics like overused font families (Inter, Roboto, Arial, system fonts), cliched color schemes (particularly purple gradients on white backgrounds), predictable layouts and component patterns, and cookie-cutter design that lacks context-specific character.
+然后实现可运行的代码（HTML/CSS/JS、React、Vue 等），需满足：
 
-Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different fonts, different aesthetics. NEVER converge on common choices (Space Grotesk, for example) across generations.
+* 生产级且功能完备
 
-**IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
+* 视觉上引人注目且令人难忘
 
-Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+* 风格统一，具有清晰的美学观点
+
+* 每个细节都经过精心雕琢
+
+## 前端美学指南
+
+重点关注：
+
+* **排版**：选择美观、独特且富有趣味的字体。避免使用 Arial 和 Inter 等通用字体；应选用能提升前端美感的特色字体；做出出人意料、富有性格的字体选择。将独特的展示字体与精致的正文字体搭配使用。
+
+* **色彩与主题**：坚定采用统一的美学风格。使用 CSS 变量保持一致性。主色调搭配鲜明强调色，远比平均分配色彩的调色板效果更佳。
+
+* **动效**：利用动画实现效果和微交互。优先使用纯 CSS 解决方案。若可使用 Motion 库则为 React 项目优先选用。专注于高影响力时刻：一次精心编排的页面加载（利用 animation-delay 实现错落展现）比零散的微交互更能带来愉悦感。使用滚动触发和令人惊喜的悬停状态。
+
+* **空间构成**：出人意料的布局。不对称。重叠。斜向流动。打破网格的元素。大面积的负空间或受控的密集感。
+
+* **背景与视觉细节**：营造氛围与深度，避免仅使用纯色。添加与整体美学相符的上下文特效与纹理。运用创意形式，如渐变网格、噪点纹理、几何图案、多层透明、戏剧性阴影、装饰性边框、自定义光标及颗粒叠加层。
+
+**永远不要**使用 AI 生成的通用美学，例如过度使用的字体系列（Inter、Roboto、Arial、系统字体）、老套的配色方案（尤其是白色背景上的紫色渐变）、可预测的布局和组件模式，以及缺乏上下文特色的千篇一律设计。
+
+进行创造性诠释，做出出人意料的选择，使其感觉是为该上下文量身打造。每项设计都不应雷同。在亮色与暗色主题、不同字体、不同美学风格之间切换。**永远不要**在多次生成中趋同于常见选择（例如 Space Grotesk）。
+
+**重要提示**：实现复杂度需与美学愿景相匹配。极繁主义设计需要包含大量动画和特效的复杂代码。极简或精致的设计则需要克制、精准，并在间距、排版和细微细节上格外用心。优雅来自于对愿景的出色执行。
+
+记住：Claude 有能力完成非凡的创意工作。不要有所保留，展示出当你跳出常规思维、坚定投入独特愿景时真正能够创造出的成果。
