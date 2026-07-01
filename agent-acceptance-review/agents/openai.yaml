@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Acceptance Review"
+  short_description: "Score agent work before accepting it"
+  default_prompt: "Use $agent-acceptance-review to evaluate the latest task version before accepting it."
