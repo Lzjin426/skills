@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-Agent Decision Review"
+  short_description: "Neutral multi-agent scoring for decisions"
+  default_prompt: "Use $multi-agent-decision-review to evaluate this decision with neutral multi-agent scoring."

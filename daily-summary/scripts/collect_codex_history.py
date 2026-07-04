@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 
@@ -43,6 +44,59 @@ def load_session_index(codex_dir: Path) -> list[dict]:
                 continue
 
     return sessions
+
+
+def get_git_info(cwd: str) -> dict[str, str]:
+    """Get git branch and repo name for a given directory.
+
+    For worktrees, returns the original repo name (not the worktree directory name).
+    """
+    result = {"branch": "", "repo": ""}
+    if not cwd or not Path(cwd).exists():
+        return result
+
+    try:
+        branch_proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if branch_proc.returncode == 0:
+            result["branch"] = branch_proc.stdout.strip()
+
+        repo_proc = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if repo_proc.returncode == 0:
+            toplevel = repo_proc.stdout.strip()
+            if toplevel:
+                git_file = Path(toplevel) / ".git"
+                if git_file.is_file():
+                    try:
+                        content = git_file.read_text().strip()
+                        if content.startswith("gitdir:"):
+                            gitdir = content.split(":", 1)[1].strip()
+                            gitdir_path = Path(gitdir)
+                            parent = gitdir_path.parent
+                            if parent.name == "worktrees":
+                                original_git = parent.parent
+                                original_repo = original_git.parent
+                                if original_repo.exists():
+                                    result["repo"] = original_repo.name
+                                    return result
+                    except (OSError, ValueError):
+                        pass
+                result["repo"] = Path(toplevel).name
+    except (subprocess.TimeoutExpired, OSError, FileNotFoundError):
+        pass
+
+    return result
 
 
 def parse_iso_datetime(dt_str: str) -> datetime | None:
@@ -178,6 +232,11 @@ def collect_sessions(codex_dir: Path, target_date: date) -> list[dict]:
             parsed = parse_session_jsonl(files[0])
             session_data["cwd"] = parsed["cwd"]
             session_data["user_messages"] = parsed["user_messages"]
+
+        # Get git info for the session's cwd
+        git_info = get_git_info(session_data["cwd"])
+        session_data["git_branch"] = git_info["branch"]
+        session_data["git_repo"] = git_info["repo"]
 
         results.append(session_data)
 
