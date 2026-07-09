@@ -1,9 +1,24 @@
 {
   "skill_order": [],
   "skills": {
+    "academic-research-suite": {
+      "tags": [
+        "论文"
+      ]
+    },
     "academic-writing": {
       "tags": [
         "论文"
+      ]
+    },
+    "agently-mail": {
+      "tags": [
+        "tools"
+      ]
+    },
+    "anysearch": {
+      "tags": [
+        "tools"
       ]
     },
     "ask-questions-if-underspecified": {
@@ -21,12 +36,12 @@
         "论文"
       ]
     },
-    "better-md-writer": {
+    "doc": {
       "tags": [
-        "write"
+        "tools"
       ]
     },
-    "doc": {
+    "doc-translator-zh": {
       "tags": [
         "tools"
       ]
@@ -196,11 +211,6 @@
         "write"
       ]
     },
-    "multi-agent-deliberation-skill": {
-      "tags": [
-        "create"
-      ]
-    },
     "obsidian-bases": {
       "tags": [
         "obsidian/draw"
@@ -267,28 +277,8 @@
       "color": "#10b981",
       "icon": ""
     },
-    "create": {
-      "color": "#6b7280",
-      "icon": ""
-    },
-    "lark": {
-      "color": "#3b82f6",
-      "icon": ""
-    },
     "obsidian": {
-      "color": "#6b7280",
-      "icon": ""
-    },
-    "obsidian/draw": {
-      "color": "#ef4444",
-      "icon": ""
-    },
-    "tools": {
-      "color": "#f59e0b",
-      "icon": ""
-    },
-    "论文": {
-      "color": "",
+      "color": "#a855f7",
       "icon": ""
     }
   },
@@ -296,7 +286,16 @@
     "claude",
     "codex",
     "gemini",
-    "opencode"
+    "opencode",
+    "openclaw",
+    "qclaw"
   ],
-  "version": 3
+  "version": 3,
+  "visible_tools": [
+    "claude",
+    "codex",
+    "gemini",
+    "opencode",
+    "kimi-work"
+  ]
 }

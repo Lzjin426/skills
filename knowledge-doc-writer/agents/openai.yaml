@@ -1,0 +1,4 @@
+interface:
+  display_name: "知识库文档写作"
+  short_description: "用于先调研资料、规划文章结构、设计配图并撰写可靠知识库长文"
+  default_prompt: "Use $knowledge-doc-writer to research and write a knowledge-base article about a technical concept."

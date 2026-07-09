@@ -1,6 +1,6 @@
 # Guided Learning Templates
 
-Use these templates as flexible shapes, not mandatory forms. Remove sections that do not help the current request. Prefer the Fast Path only for small questions without depth cues; use Deep Teaching when the user asks to thoroughly understand, apply, read papers, or use a method in work. Output knowledge-base prose only in Note Distillation or when the user explicitly asks for notes, distillation, or knowledge-base text.
+Use these templates as flexible shapes, not mandatory forms. Remove sections that do not help the current request. Prefer the Fast Path only for small questions without depth cues; use Deep Teaching when the user asks to thoroughly understand, apply, read papers, or use a method in work. Before deep or applied teaching, identify the user's goal, level, prerequisites, and first learning chunk. For core knowledge points, use Wikipedia and Baidu Baike as baseline references when available, then teach from stronger sources. When the goal and stages are already clear, gather staged learning resources directly: Chinese first, English as authoritative supplement. Prefer one anchor document as the teaching backbone. Output knowledge-base prose only in Note Distillation or when the user explicitly asks for notes, distillation, or knowledge-base text.
 
 ## Fast Path
 
@@ -16,7 +16,16 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 
 ```markdown
 ## 这次要真正搞懂什么
-说明用户当前目标，以及这次讲透哪 2-4 个核心点。把暂不展开的分支放到一句话里。
+说明用户当前目标、推断的学习水平，以及这次讲透哪 2-4 个核心点。把暂不展开的分支放到一句话里。不要为了显得详细而列很多一级标题。
+
+## 先修知识
+列出学当前概念之前最好知道的 1-4 个知识点。标明哪些现在必须懂，哪些知道名字就行。
+
+## 百科基线和主参考
+列出本轮核心知识点对应的维基百科、百度百科入口。说明这两个入口只用于术语、范围和基础定义；深入讲解以哪一篇主文档、标准、论文或官方文档为锚点。
+
+## 主文档怎么读
+说明这篇主参考的哪一节、哪张图、哪张表、哪个公式或哪个例子最值得先看，以及暂时跳过哪里。
 
 ## 先建立直觉
 用连续段落解释这个概念为什么存在、它解决什么问题、它的核心动作是什么。
@@ -25,13 +34,30 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 选择一个贴近用户目标的例子，从输入、过程、判断、输出走完整链条。不要只说"例如"，要让用户看到它实际在干什么。
 
 ## 机制拆解
-用少量二级标题讲关键部件之间的关系。每个标题下至少有一段解释，不要只列名词。
+用少量二级标题讲关键部件之间的关系。每个标题下至少有一段完整解释，不要只列名词。需要时保留术语、变量、公式、算法步骤、假设、边界条件和失败模式。
+
+## 如果太大，下一段学什么
+当主题过大时，给出分段大纲，并说明本轮先停在哪一段。
 
 ## 容易误解的地方
 只讲会影响应用或论文表述的误解、边界和限制。
 
 ## 用到论文/项目里时怎么写
 当用户目标是论文、项目、实验或复现时，说明它在方法、实验、对比、指标、可复现性中的位置。
+
+## 推荐先看
+当外部教程、文档、论文、教材章节或标准明显更适合作为入口时，说明看哪一份、先看哪一节、暂时跳过什么。中文资料优先，英文资料作为权威补充。
+
+## 分阶段资料包
+当学习目标和阶段已经清楚时，按阶段列资料，而不是只给一串链接：
+- 阶段：
+- 目标产出：
+- 百科基线：维基百科 / 百度百科
+- 中文优先：视频 / 文档 / 教程 / 博客 / 课程讲义
+- 英文补充：官方文档 / 标准 / 原论文 / 综述 / 权威教程
+- 主文档锚点：
+- 现在先看：
+- 暂时跳过：
 
 ## 最小理解校验
 给一个小问题，并说明合格回答应包含哪些要点。
@@ -47,8 +73,18 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 ## 这次先讲到什么程度
 为了达成 [用户目标]，这次重点讲 [A/B/C]。暂不展开 [D/E]，因为它们只有在 [条件] 下才重要。
 
+## 百科基线和主参考
+- 维基百科：
+- 百度百科：
+- 主参考文档：
+- 先看图/表/公式：
+
+## 开始之前要知道什么
+- 必须先懂：
+- 知道名字即可：
+
 ## 核心思想
-用连续段落解释主线。先建立直觉，再讲机制。
+用连续段落解释主线。先建立直觉，再讲机制；不要把详细内容拆成一堆只有一句话的小标题。
 
 ## 例子走读
 用一个具体例子说明它从输入到输出到底做了什么。
@@ -56,7 +92,7 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 ## 关键结构
 
 ### 子概念 A
-说明它在整体机制中的作用。
+说明它在整体机制中的作用。需要时保留标准术语、符号、公式和假设。
 
 ### 子概念 B
 说明它和 A 的关系。
@@ -64,6 +100,9 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 ## 有用但先不展开
 - 分支 1：一句话说明为什么可能有用。
 - 分支 2：一句话说明什么时候需要学。
+
+## 学习路径
+如果概念过大，给出 2-5 步路径：先学什么、再学什么、什么时候回到真实任务。
 
 ## 最小理解校验
 给一个小问题，要求用户复述、判断反例、比较相邻概念，或应用到当前任务。附一句"合格回答应包含..."，避免只抛问题。
@@ -87,6 +126,12 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 ## 最小补课
 只补影响主线理解的知识。把其它术语放入"稍后再看"。
 
+## 先修和分支
+说明当前论文方法依赖哪些基础概念；如果同一术语有多种路线，先帮用户选和论文主线相关的一条。
+
+## 百科基线和主文档
+对当前关键术语查维基百科和百度百科，校准术语边界；再说明以论文/标准/官方文档中的哪一节、图、表、公式作为深入讲解锚点。
+
 ## 如果要写进论文
 说明它适合放在方法、基线、消融、特征重要性、误差分析或讨论中的哪个位置。
 
@@ -105,6 +150,13 @@ Use these templates as flexible shapes, not mandatory forms. Remove sections tha
 2. 再学：
 3. 做一个小例子：
 4. 回到真实材料：
+
+## 学习材料
+当有可靠外部材料时，按学习阶段推荐入口，并说明每个材料适合解决什么问题。中文资料优先，英文资料用于补权威性、标准原文、原始论文或中文资料不足的部分。
+
+| 阶段 | 目标 | 百科基线 | 中文优先资料 | 英文补充 | 主文档锚点 | 先看哪里 | 暂时跳过 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 |  | 维基百科 / 百度百科 |  |  |  |  |  |
 
 ## 暂不学
 说明哪些内容现在不用系统学，以及什么时候再补。
