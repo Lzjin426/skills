@@ -1,0 +1,4 @@
+interface:
+  display_name: "截图写入飞书文档"
+  short_description: "识别截图（剪贴板/聊天图片/本地文件）并按已有结构准确写入指定飞书文档；也可整理已粘贴截图的飞书文档（转写后重构并删除原图），或把 AI 对话/网页链接内容收录进飞书文档"
+  default_prompt: "使用 $lark-screenshot-to-doc 将截图内容按现有结构写入我指定的飞书文档。"

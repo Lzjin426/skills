@@ -1,8 +1,6 @@
 
 # slides +media-upload（上传本地图片到飞书幻灯片）
 
-> **前置条件：** 先阅读 [`../lark-shared/SKILL.md`](../../lark-shared/SKILL.md) 了解认证、全局参数和安全规则。
-
 把本地图片上传到指定演示文稿的 drive 媒体库，返回 `file_token`。**返回的 token 作为 `<img src="...">` 的值塞进 slide XML 即可显示图片。**
 
 ## 命令
@@ -107,7 +105,7 @@ lark-cli slides +replace-slide --as user \
 
 `+media-upload` 内部调用 `POST /open-apis/drive/v1/medias/upload_all`（单次上传，最大 20 MB），固定使用：
 
-- `parent_type=slide_file`（slides 后端唯一接受的取值，已实测验证）
+- `parent_type=slide_file`（slides 后端唯一接受的取值）
 - `parent_node=<xml_presentation_id>`
 
 **不要尝试用 `slides_image`、`slide_image` 等 parent_type**——后端会返回 1061001 / 1061002 错误。这是 slides 的特殊约定。

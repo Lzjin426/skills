@@ -78,7 +78,7 @@ def lark_list_folder(folder_token: str) -> list[dict]:
             payload = json.loads(result.stdout)
         except json.JSONDecodeError as e:
             raise SystemExit(f"failed to parse lark-cli output: {e}\n{result.stdout[:500]}")
-        if payload.get("code") != 0:
+        if payload.get("ok") is False or payload.get("code") not in (0, None):
             raise SystemExit(f"lark-cli returned error: {payload}")
         data = payload.get("data") or {}
         files.extend(data.get("files") or [])

@@ -1,12 +1,7 @@
 {
-  "skill_order": [],
+  "version": 3,
   "skills": {
     "academic-research-suite": {
-      "tags": [
-        "论文"
-      ]
-    },
-    "academic-writing": {
       "tags": [
         "论文"
       ]
@@ -36,6 +31,11 @@
         "论文"
       ]
     },
+    "context-manager": {
+      "tags": [
+        "tools"
+      ]
+    },
     "doc": {
       "tags": [
         "tools"
@@ -54,11 +54,6 @@
     "find-skills": {
       "tags": [
         "system"
-      ]
-    },
-    "frontend-design": {
-      "tags": [
-        "UI&UX"
       ]
     },
     "frontend-ui-animator": {
@@ -146,6 +141,11 @@
         "lark"
       ]
     },
+    "lark-screenshot-to-doc": {
+      "tags": [
+        "tools"
+      ]
+    },
     "lark-shared": {
       "tags": [
         "lark"
@@ -199,6 +199,11 @@
     "lark-workflow-standup-report": {
       "tags": [
         "lark"
+      ]
+    },
+    "literature-review": {
+      "tags": [
+        "论文"
       ]
     },
     "mermaid-visualizer": {
@@ -272,30 +277,83 @@
       ]
     }
   },
+  "skill_order": [],
   "tag_styles": {
     "UI&UX": {
-      "color": "#10b981",
-      "icon": ""
+      "icon": "",
+      "color": "#10b981"
     },
     "obsidian": {
-      "color": "#a855f7",
-      "icon": ""
+      "icon": "",
+      "color": "#a855f7"
     }
   },
   "tool_order": [
     "claude",
     "codex",
-    "gemini",
     "opencode",
+    "workbuddy",
+    "kimi-code",
+    "gemini",
     "openclaw",
-    "qclaw"
+    "qclaw",
+    "qoder",
+    "kimi-work",
+    "hermes",
+    "trae",
+    "zcode"
   ],
-  "version": 3,
   "visible_tools": [
     "claude",
-    "codex",
-    "gemini",
     "opencode",
-    "kimi-work"
+    "codex",
+    "kimi-code",
+    "workbuddy"
+  ],
+  "presets": [
+    {
+      "id": "seed-frontend",
+      "name": "Frontend Development",
+      "description": "UI, components, browser testing, and animation",
+      "skill_names": [
+        "taste-skill",
+        "frontend-ui-animator",
+        "ui-animation"
+      ],
+      "agent_ids": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "id": "seed-research",
+      "name": "Research & Writing",
+      "description": "Literature search, reading, papers, and figures",
+      "skill_names": [
+        "literature-review",
+        "academic-research-suite",
+        "figure-style",
+        "paper-narrative"
+      ],
+      "agent_ids": [
+        "claude",
+        "codex"
+      ]
+    },
+    {
+      "id": "seed-general",
+      "name": "Everyday Essentials",
+      "description": "Search, documents, tasks, and daily collaboration",
+      "skill_names": [
+        "anysearch",
+        "find-skills",
+        "context-manager",
+        "save-solution",
+        "daily-summary"
+      ],
+      "agent_ids": [
+        "claude"
+      ]
+    }
   ]
 }
