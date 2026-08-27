@@ -2,7 +2,7 @@
 name: daily-summary
 description: >
   当用户要求"写日报""今日总结""生成日报""daily summary""今天做了什么"等任务时使用。
-  从飞书新建/有改动的文档、嘀嗒清单、GitHub、Claude Code、Codex、OpenCode、Craft Agent 等多数据源自动收集当天工作内容，
+  从飞书新建/有改动的文档、嘀嗒清单、GitHub、Claude Code、Codex、OpenCode、Craft Agent、Kimi Code、DeepSeek Harness 等多数据源自动收集当天工作内容，
   交叉验证后生成简洁日报，写入飞书云空间 note2026/daily 文件夹。
   本技能也适用于回顾任意指定日期的总结（如"帮我补一下上周三的日报"）。
 metadata:
@@ -41,6 +41,8 @@ metadata:
 | GitHub | `gh` CLI + 本地 git 仓库 | 当天与本人相关的通知、PR、issue、review、commit、release，以及 Agent 对话提到的仓库/编号反查结果 |
 | Claude Code（本地） | 读取 `~/.claude/history.jsonl` + `~/.claude/sessions/*.json` | 当天会话的 cwd（工作目录）、**git 仓库名**、**git 分支**和用户输入 |
 | Codex（本地） | 读取 `~/.codex/session_index.jsonl` + `~/.codex/sessions/YYYY/MM/DD/*.jsonl` | 当天会话的 cwd（工作目录）、**git 仓库名**、**git 分支**和对话摘要 |
+| Kimi Code（本地） | 读取 `~/.kimi-code/sessions/*/session_*/state.json` + `agents/*/wire.jsonl`（`turn.prompt` 记录） | 当天会话的 cwd、**git 仓库名**、**git 分支**、标题和用户消息（fork 会话自动去重） |
+| DeepSeek Harness（本地） | 读取 `~/.dsh/sessions/*/session-*/session.jsonl.zstd`（zstd 压缩 JSONL，需 `zstd` CLI） | 当天会话的 cwd、**git 仓库名**、**git 分支**、标题和用户消息（自动过滤 system-reminder 等注入内容） |
 | OpenCode / Craft Agent（本地） | 读取对应本地会话目录（若存在） | 当天会话的 cwd、git 仓库名、git 分支和对话摘要 |
 | Claude Code（远程） | SSH `main-long` 读取 `%USERPROFILE%\.claude\history.jsonl` | 远程电脑的会话信息 |
 | Codex（远程） | SSH `main-long` 读取 `%USERPROFILE%\.codex\session_index.jsonl` | 远程电脑的会话信息 |
@@ -140,7 +142,45 @@ python3 scripts/collect_codex_history.py --date YYYY-MM-DD
 
 如果路径不存在或格式无法稳定解析，记录为"该数据源不可用"，不要阻断日报生成。
 
-**1g. 远程电脑 Agent 对话（SSH）**
+**1g. 本地 Kimi Code 对话**
+
+运行脚本收集：
+
+```bash
+python3 scripts/collect_kimi_history.py --date YYYY-MM-DD
+```
+
+该脚本读取：
+- `~/.kimi-code/sessions/*/session_*/state.json`：会话元数据（cwd、title、createdAt/updatedAt、forkedFrom）
+- 对应会话的 `agents/*/wire.jsonl`：解析 `turn.prompt` 记录，提取用户消息（图片标记为 `[图片]`）
+
+注意事项：
+- Kimi 的 fork 会话会完整重放父会话历史，脚本按（时间戳，文本）全局去重，优先保留最早会话。
+- 兼容旧版 `~/.kimi/sessions/` 布局（`<root>/<session-id>/.../wire.jsonl`）。
+- 输出每条会话的：**标题、时间、工作目录、git 仓库名、git 分支、用户消息列表**。
+
+**1h. 本地 DeepSeek Harness 对话**
+
+运行脚本收集：
+
+```bash
+python3 scripts/collect_dsh_history.py --date YYYY-MM-DD
+```
+
+该脚本读取：
+- `~/.dsh/sessions/<cwd-sanitized>/session-<uuid>/session.jsonl.zstd`（zstd 压缩 JSONL）
+
+解析的记录类型：
+- `session`：会话元数据（cwd、createdAt）；注意该记录字段在**顶层**而非 `data` 中
+- `session/title`：会话标题
+- `user/message` / `assistant/message`：按消息时间（毫秒时间戳）过滤目标日期；自动过滤 `<system-reminder>`、`<skill_content>`、runtime context 等系统注入内容
+- `tool/call`：工具调用名称（仅做参考，不写入日报）
+
+前置条件：机器需有 `zstd` 命令（或 Python `zstandard` 包，脚本二者之一即可用）。
+
+输出每条会话的：**标题、时间、工作目录、git 仓库名、git 分支、用户消息列表**。
+
+**1i. 远程电脑 Agent 对话（SSH）**
 
 尝试 SSH 到 `main-long`：
 
@@ -204,6 +244,8 @@ python3 scripts/generate_daily.py \
   --github /tmp/daily_github.json \
   --claude /tmp/daily_claude.json \
   --codex /tmp/daily_codex.json \
+  --kimi /tmp/daily_kimi.json \
+  --dsh /tmp/daily_dsh.json \
   --opencode /tmp/daily_opencode.json \
   --craft /tmp/daily_craft.json \
   --remote /tmp/daily_remote.json \

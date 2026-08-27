@@ -39,6 +39,8 @@ def parse_args():
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument("--claude", help="Path to collect_claude_history.py output JSON")
     parser.add_argument("--codex", help="Path to collect_codex_history.py output JSON")
+    parser.add_argument("--kimi", help="Path to collect_kimi_history.py output JSON")
+    parser.add_argument("--dsh", help="Path to collect_dsh_history.py output JSON")
     parser.add_argument("--remote", help="Path to collect_remote_history.py output JSON")
     parser.add_argument("--linear", help="Path to Linear issues JSON (from MCP)")
     parser.add_argument("--ticktick", help="Path to TickTick tasks JSON (from MCP)")
@@ -291,6 +293,8 @@ def build_structured_data(
     target_date: date,
     claude_data: dict | None,
     codex_data: dict | None,
+    kimi_data: dict | None,
+    dsh_data: dict | None,
     remote_data: dict | None,
     linear_data: dict | None,
     ticktick_data: dict | None,
@@ -361,6 +365,32 @@ def build_structured_data(
             for text in compressed:
                 add_input(proj, text)
 
+    # Kimi Code
+    if kimi_data:
+        for sess in kimi_data.get("sessions", []):
+            proj = extract_project_name(
+                sess.get("cwd", ""),
+                sess.get("git_repo", ""),
+                sess.get("git_branch", ""),
+            )
+            msgs = [m for m in sess.get("user_messages", []) if is_significant_input(m)]
+            compressed = compress_qa_chain(msgs)
+            for text in compressed:
+                add_input(proj, text)
+
+    # DeepSeek Harness
+    if dsh_data:
+        for sess in dsh_data.get("sessions", []):
+            proj = extract_project_name(
+                sess.get("cwd", ""),
+                sess.get("git_repo", ""),
+                sess.get("git_branch", ""),
+            )
+            msgs = [m for m in sess.get("user_messages", []) if is_significant_input(m)]
+            compressed = compress_qa_chain(msgs)
+            for text in compressed:
+                add_input(proj, text)
+
     # Remote
     remote_status = {"reachable": False, "host": "", "note": ""}
     if remote_data:
@@ -416,6 +446,8 @@ def main():
 
     claude_data = load_json(args.claude)
     codex_data = load_json(args.codex)
+    kimi_data = load_json(args.kimi)
+    dsh_data = load_json(args.dsh)
     remote_data = load_json(args.remote)
     linear_data = load_json(args.linear)
     ticktick_data = load_json(args.ticktick)
@@ -424,6 +456,8 @@ def main():
         target_date,
         claude_data,
         codex_data,
+        kimi_data,
+        dsh_data,
         remote_data,
         linear_data,
         ticktick_data,
