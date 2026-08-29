@@ -1,0 +1,46 @@
+{
+  "model": "gpt-image-2",
+  "prompt": "Create a complex, professional, publication-ready vector flowchart explaining a Genetic Algorithm optimization workflow. White background, landscape composition, crisp thin dark-navy connectors with directional arrowheads, modern flat technical infographic style, blue/teal/violet/orange accent colors, ample whitespace, highly legible English sans-serif labels. Structure: Start -> Define objective function and constraints -> Encode candidate chromosome -> Initialize diverse population -> Evaluate fitness. Then a decision diamond labeled \"Termination criterion met?\". If Yes: Select best solution -> Validate constraints -> End. If No: Selection (tournament + elitism) -> Crossover -> Mutation -> Repair infeasible offspring -> Evaluate offspring fitness -> Replacement / next generation -> loop back to the termination decision. Include a side feedback branch from fitness evaluation labeled \"Diversity monitor\" feeding into an \"Adaptive mutation rate\" module, then into Mutation. Add a small bottom legend for chromosome, population, fitness, and elite archive. Use concise exact labels only; no paragraphs, no logos, no watermark, no decorative illustrations.",
+  "quality": "medium",
+  "requested_count": 1,
+  "submissions": [
+    {
+      "index": 1,
+      "task_id": "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr",
+      "submission": {
+        "created_at": 1785936925,
+        "id": "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr",
+        "model": "gpt-image-2",
+        "object": "image.task",
+        "status": "queued",
+        "task_id": "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr"
+      }
+    }
+  ],
+  "tasks": {
+    "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr": {
+      "completed_at": 1785936988,
+      "created_at": 1785936926,
+      "detail": {
+        "data": [
+          {
+            "download_url": "https://cdnimage2.fapinebula.vip/chatgpt/70169208-03bc-40f3-885b-fab2165d2f5c.png"
+          }
+        ],
+        "response_format": "url"
+      },
+      "id": "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr",
+      "model": "gpt-image-2",
+      "object": "image",
+      "status": "completed"
+    }
+  },
+  "downloads": [
+    {
+      "task_id": "task_JAhYUTrE5EhuHLm5fiog9j5im5jU4hKr",
+      "url": "https://cdnimage2.fapinebula.vip/chatgpt/70169208-03bc-40f3-885b-fab2165d2f5c.png",
+      "file": "/Users/fullstop/.agents/skills/apinebula-gpt-image/ga-flow.Jx4Udt/retry/image-01-01.png"
+    }
+  ],
+  "errors": []
+}

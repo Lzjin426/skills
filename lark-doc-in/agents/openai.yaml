@@ -1,0 +1,4 @@
+interface:
+  display_name: "自动整理到飞书文档"
+  short_description: "将截图、飞书文档内截图、网页或 AI 对话链接、Markdown 自动转成可编辑飞书正文；有文档链接则原位写入并删除已转写截图，无目标则在 Inbox 新建文档"
+  default_prompt: "使用 $lark-doc-in 自动把我提供的截图、链接或 Markdown 整理为可编辑飞书文档；给出飞书文档链接时直接原位写入并删除已转写截图。"

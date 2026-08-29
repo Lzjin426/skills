@@ -3,3 +3,5 @@
 .obsidian/
 .skillsbase-cache/
 .skillsbase-local.json
+apinebula-gpt-image/.api_key
+mimo-vision/.api_key

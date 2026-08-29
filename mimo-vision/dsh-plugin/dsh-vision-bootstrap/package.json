@@ -1,0 +1,19 @@
+{
+  "name": "dsh-vision-bootstrap",
+  "version": "0.1.0",
+  "description": "DSH plugin: inject a mandatory image-reading directive into every new session's system prompt (via mimo-vision skill).",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "schemastery": "*"
+  }
+}

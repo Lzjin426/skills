@@ -1,0 +1,46 @@
+{
+  "model": "gpt-image-2",
+  "prompt": "极简测试图：纯白背景中央一个柔和蓝色圆形，无文字，无水印。",
+  "quality": "low",
+  "requested_count": 1,
+  "submissions": [
+    {
+      "index": 1,
+      "task_id": "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo",
+      "submission": {
+        "created_at": 1785936498,
+        "id": "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo",
+        "model": "gpt-image-2",
+        "object": "image.task",
+        "status": "queued",
+        "task_id": "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo"
+      }
+    }
+  ],
+  "tasks": {
+    "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo": {
+      "completed_at": 1785936535,
+      "created_at": 1785936500,
+      "detail": {
+        "data": [
+          {
+            "download_url": "https://cdnimage2.fapinebula.vip/chatgpt/9734a1eb-952b-4029-81b6-262fed8f2744.png"
+          }
+        ],
+        "response_format": "url"
+      },
+      "id": "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo",
+      "model": "gpt-image-2",
+      "object": "image",
+      "status": "completed"
+    }
+  },
+  "downloads": [
+    {
+      "task_id": "task_wLhZClCXNmzWBJ8lGP9KBJTc8OiCDCxo",
+      "url": "https://cdnimage2.fapinebula.vip/chatgpt/9734a1eb-952b-4029-81b6-262fed8f2744.png",
+      "file": "/Users/fullstop/.agents/skills/apinebula-gpt-image/live-test-output/image-01-01.png"
+    }
+  ],
+  "errors": []
+}

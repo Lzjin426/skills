@@ -3,7 +3,13 @@
   "skills": {
     "academic-research-suite": {
       "tags": [
-        "论文"
+        "论文/文献综述",
+        "论文/写作"
+      ]
+    },
+    "agent-acceptance-review": {
+      "tags": [
+        "tools"
       ]
     },
     "agently-mail": {
@@ -13,7 +19,17 @@
     },
     "anysearch": {
       "tags": [
-        "tools"
+        "tools/搜索"
+      ]
+    },
+    "apinebula-gpt-image": {
+      "tags": [
+        "tools/画图"
+      ]
+    },
+    "apinebula-nanobanana": {
+      "tags": [
+        "tools/画图"
       ]
     },
     "ask-questions-if-underspecified": {
@@ -23,15 +39,35 @@
     },
     "avoid-ai-writing": {
       "tags": [
-        "论文"
+        "论文/润色"
       ]
     },
     "avoid-ai-writing-zh": {
       "tags": [
-        "论文"
+        "论文/润色"
+      ]
+    },
+    "build-with-exa": {
+      "tags": [
+        "Tools/exa"
+      ]
+    },
+    "code-mode": {
+      "tags": [
+        "code"
+      ]
+    },
+    "computer-use": {
+      "tags": [
+        "Tools/orca"
       ]
     },
     "context-manager": {
+      "tags": [
+        "tools"
+      ]
+    },
+    "daily-summary": {
       "tags": [
         "tools"
       ]
@@ -46,9 +82,24 @@
         "tools"
       ]
     },
+    "exa-search": {
+      "tags": [
+        "Tools/exa"
+      ]
+    },
     "excalidraw-diagram": {
       "tags": [
         "obsidian/draw"
+      ]
+    },
+    "figure-composer": {
+      "tags": [
+        "论文/作图"
+      ]
+    },
+    "figure-style": {
+      "tags": [
+        "论文/作图"
       ]
     },
     "find-skills": {
@@ -61,9 +112,29 @@
         "UI&UX"
       ]
     },
+    "grill-me": {
+      "tags": [
+        "tools"
+      ]
+    },
+    "guided-learning": {
+      "tags": [
+        "tools"
+      ]
+    },
+    "guizang-ppt-skill": {
+      "tags": [
+        "tools"
+      ]
+    },
     "humanizer-zh": {
       "tags": [
-        "write"
+        "论文/润色"
+      ]
+    },
+    "knowledge-doc-writer": {
+      "tags": [
+        "tools/写作"
       ]
     },
     "lark-approval": {
@@ -99,6 +170,16 @@
     "lark-doc": {
       "tags": [
         "lark"
+      ]
+    },
+    "lark-doc-in": {
+      "tags": [
+        "Lark/doc"
+      ]
+    },
+    "lark-doc-tidy": {
+      "tags": [
+        "Lark/doc"
       ]
     },
     "lark-drive": {
@@ -203,7 +284,17 @@
     },
     "literature-review": {
       "tags": [
-        "论文"
+        "论文/文献综述"
+      ]
+    },
+    "md-image-supplement": {
+      "tags": [
+        "tools"
+      ]
+    },
+    "md-to-docx-template": {
+      "tags": [
+        "tools"
       ]
     },
     "mermaid-visualizer": {
@@ -211,9 +302,113 @@
         "obsidian/draw"
       ]
     },
+    "mimo-vision": {
+      "tags": [
+        "tools/识图"
+      ]
+    },
     "monthly-summary": {
       "tags": [
         "write"
+      ]
+    },
+    "nature-academic-search": {
+      "tags": [
+        "论文/搜索"
+      ]
+    },
+    "nature-citation": {
+      "tags": [
+        "论文/文献综述"
+      ]
+    },
+    "nature-data": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-downloader": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-experiment-log": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-figure": {
+      "tags": [
+        "论文/作图",
+        "论文/nature-skill"
+      ]
+    },
+    "nature-literature-pipeline": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-paper-card": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-paper-to-patent": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-paper2ppt": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-polishing": {
+      "tags": [
+        "论文/写作",
+        "论文/nature-skill"
+      ]
+    },
+    "nature-proposal-writer": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-reader": {
+      "tags": [
+        "论文/阅读",
+        "论文/nature-skill"
+      ]
+    },
+    "nature-ref-verifier": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-response": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-reviewer": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-shared": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-statistics": {
+      "tags": [
+        "论文/nature-skill"
+      ]
+    },
+    "nature-writing": {
+      "tags": [
+        "论文/写作",
+        "论文/nature-skill"
       ]
     },
     "obsidian-bases": {
@@ -226,19 +421,59 @@
         "obsidian/draw"
       ]
     },
+    "orca-cli": {
+      "tags": [
+        "Tools/orca"
+      ]
+    },
+    "orca-linear": {
+      "tags": [
+        "Tools/orca"
+      ]
+    },
+    "orchestration": {
+      "tags": [
+        "Tools/orca"
+      ]
+    },
+    "paper-humanizer-skill": {
+      "tags": [
+        "论文/润色"
+      ]
+    },
+    "paper-narrative": {
+      "tags": [
+        "论文/写作"
+      ]
+    },
+    "product-management": {
+      "tags": [
+        "code"
+      ]
+    },
+    "readme-wiki": {
+      "tags": [
+        "code"
+      ]
+    },
     "remotion-best-practices": {
       "tags": [
         "video"
       ]
     },
-    "research-paper-writing": {
+    "research-writing-skill": {
       "tags": [
-        "论文"
+        "论文/写作"
       ]
     },
     "save-solution": {
       "tags": [
         "write"
+      ]
+    },
+    "sciverse": {
+      "tags": [
+        "论文/搜索"
       ]
     },
     "screenshot": {
@@ -278,10 +513,54 @@
     }
   },
   "skill_order": [],
+  "tag_order": [
+    "论文",
+    "论文/润色",
+    "论文/搜索",
+    "论文/文献综述",
+    "论文/写作",
+    "论文/阅读",
+    "论文/作图",
+    "论文/nature-skill",
+    "code",
+    "lark",
+    "Lark",
+    "Lark/doc",
+    "obsidian",
+    "obsidian/draw",
+    "Tools",
+    "Tools/exa",
+    "Tools/orca",
+    "system",
+    "tools",
+    "tools/画图",
+    "tools/识图",
+    "tools/搜索",
+    "tools/写作",
+    "UI&UX",
+    "video",
+    "write"
+  ],
   "tag_styles": {
+    "论文/写作": {
+      "icon": "",
+      "color": "#ef4444"
+    },
     "UI&UX": {
       "icon": "",
       "color": "#10b981"
+    },
+    "Nature-skill": {
+      "icon": "mdi:brush",
+      "color": "#ef4444"
+    },
+    "论文写作": {
+      "icon": "",
+      "color": "#f97316"
+    },
+    "论文/文献综述": {
+      "icon": "",
+      "color": "#ef4444"
     },
     "obsidian": {
       "icon": "",
@@ -309,51 +588,5 @@
     "codex",
     "kimi-code",
     "workbuddy"
-  ],
-  "presets": [
-    {
-      "id": "seed-frontend",
-      "name": "Frontend Development",
-      "description": "UI, components, browser testing, and animation",
-      "skill_names": [
-        "taste-skill",
-        "frontend-ui-animator",
-        "ui-animation"
-      ],
-      "agent_ids": [
-        "claude",
-        "codex"
-      ]
-    },
-    {
-      "id": "seed-research",
-      "name": "Research & Writing",
-      "description": "Literature search, reading, papers, and figures",
-      "skill_names": [
-        "literature-review",
-        "academic-research-suite",
-        "figure-style",
-        "paper-narrative"
-      ],
-      "agent_ids": [
-        "claude",
-        "codex"
-      ]
-    },
-    {
-      "id": "seed-general",
-      "name": "Everyday Essentials",
-      "description": "Search, documents, tasks, and daily collaboration",
-      "skill_names": [
-        "anysearch",
-        "find-skills",
-        "context-manager",
-        "save-solution",
-        "daily-summary"
-      ],
-      "agent_ids": [
-        "claude"
-      ]
-    }
   ]
 }

@@ -1,4 +1,0 @@
-interface:
-  display_name: "中文论文写作"
-  short_description: "中文学术论文写作与改写：六类病灶诊断、句式骨架、图文叙述协议"
-  default_prompt: "帮我用学术论文的语言改写这段文字，并说明诊断出的问题"

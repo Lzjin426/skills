@@ -1,13 +1,20 @@
 ---
 name: code-mode
-description: "Use for any software development task that needs a consistent end-to-end workflow: clarify requirements, research uncertain decisions, prototype frontend work in standalone HTML, delegate bounded implementation tasks to subagents, review changes, and run the project's full relevant test suite before delivery."
+description: "Use for any software development task that needs a consistent end-to-end workflow: the main agent owns all research, planning, and user communication, and delegates only bounded execution tasks (e.g., frontend design, code implementation) to subagents, then reviews changes and runs the project's full relevant test suite before delivery."
 ---
 
 # Code Mode
 
 Use a concise, evidence-based delivery loop. Optimize for the smallest correct change, clear ownership, and verified behavior.
 
+## Ownership Model
+
+- The main agent owns everything that requires judgment or user context: requirement clarification, research and investigation, planning and design, agent orchestration, user communication, integration, and final review. These responsibilities are never delegated.
+- Subagents are pure executors. They receive fully decided, narrowly bounded tasks — typically frontend design/prototyping or a scoped code implementation — plus all context needed to complete them. A subagent never talks to the user, never makes product or architecture decisions, and never does open-ended research; if it hits an undecided question, it reports back instead of guessing.
+
 ## 1. Frame the Problem
+
+The main agent performs this step itself, never via a subagent:
 
 1. State the desired user outcome and the acceptance criteria.
 2. Inspect the repository, existing behavior, tests, and applicable `AGENTS.md` files before proposing implementation details.
@@ -19,11 +26,12 @@ Do not write code until the implementation approach has been presented and appro
 
 ## 2. Design Before Building
 
-Write a short implementation plan that names:
+The main agent writes the plan itself. Write a short implementation plan that names:
 
 - Files or components expected to change.
 - Data and control flow changes.
 - Test and validation strategy.
+- Which bounded pieces (if any) will be delegated to subagents, and the exact context each will receive.
 - Any migration, rollback, or feature-flag need.
 
 For user-facing frontend work, create a runnable standalone HTML prototype before application implementation. Open it immediately after creation so the user can inspect the actual rendered result. Use it to validate structure, key interactions, content hierarchy, responsive behavior, and visual direction. Treat the prototype as a decision artifact, not production code: reuse only design decisions deliberately.
@@ -32,15 +40,16 @@ Skip the HTML prototype only for non-visual changes or when the user explicitly 
 
 ## 3. Delegate Deliberately
 
-Delegate independent, bounded implementation or investigation tasks to a subagent when delegation reduces elapsed time or improves review quality. Use the subagent explicitly specified by the user; if none is specified, use Luna.
+After the main agent has finished framing and design, delegate only bounded execution tasks — e.g., building the standalone HTML prototype, implementing a scoped set of code changes — when delegation reduces elapsed time or improves review quality. Never delegate research, planning, requirement interpretation, or user communication. Use the subagent explicitly specified by the user; if none is specified, use Luna.
 
 Provide each subagent:
 
-- A narrow objective and exact success criteria.
+- A narrow objective and exact success criteria, with all relevant decisions already made.
 - Relevant paths, interfaces, constraints, and validation commands.
 - Ownership boundaries that avoid overlapping edits.
+- An instruction to report back open questions instead of deciding them.
 
-Use the maximum available reasoning setting for every subagent task, regardless of the selected model. Keep the main agent responsible for architecture, integration, requirement interpretation, and final review. Do not delegate unresolved product choices without context.
+Use the maximum available reasoning setting for every subagent task, regardless of the selected model. The main agent stays responsible for architecture, integration, requirement interpretation, and final review, and reconciles subagent output against the plan it wrote.
 
 ## 4. Implement Minimally
 
