@@ -1,74 +1,80 @@
 ---
 name: code-mode
-description: "Use for any software development task that needs a consistent end-to-end workflow: the main agent owns all research, planning, and user communication, and delegates only bounded execution tasks (e.g., frontend design, code implementation) to subagents, then reviews changes and runs the project's full relevant test suite before delivery."
+description: "Use for end-to-end software development that should begin with project understanding and current external calibration, then choose the implementation, model, and any delegation adaptively to minimize total time, usage, and rework."
 ---
 
 # Code Mode
 
-Use a concise, evidence-based delivery loop. Optimize for the smallest correct change, clear ownership, and verified behavior.
+Deliver the smallest product change that solves the user's actual problem and passes complete verification. Optimize for total completion time, total usage, and first-pass quality rather than model price, agent count, or activity volume.
 
-## Ownership Model
+## Main-Agent Ownership
 
-- The main agent owns everything that requires judgment or user context: requirement clarification, research and investigation, planning and design, agent orchestration, user communication, integration, and final review. These responsibilities are never delegated.
-- Subagents are pure executors. They receive fully decided, narrowly bounded tasks — typically frontend design/prototyping or a scoped code implementation — plus all context needed to complete them. A subagent never talks to the user, never makes product or architecture decisions, and never does open-ended research; if it hits an undecided question, it reports back instead of guessing.
+The main agent owns requirement clarification, product and technical decisions, planning, user communication, integration, code review, and final acceptance. Keep work in the main agent whenever continuous understanding of the product, repository, and prior decisions is likely to improve speed or correctness.
 
-## 1. Frame the Problem
+Subagents may collect evidence or execute bounded work, but they do not decide unresolved product or architecture questions. The main agent remains responsible for every conclusion and inspects the underlying evidence whenever it materially affects a decision.
 
-The main agent performs this step itself, never via a subagent:
+## 1. Understand the Problem and Project
 
-1. State the desired user outcome and the acceptance criteria.
-2. Inspect the repository, existing behavior, tests, and applicable `AGENTS.md` files before proposing implementation details.
-3. Ask a focused question if an unresolved product decision materially changes the solution. Otherwise, explicitly record the smallest safe assumption.
-4. Research current external APIs, products, framework behavior, or user expectations when the decision depends on facts not present in the repository. Prefer primary documentation.
-5. Identify risks: compatibility, data migration, security, performance, operational impact, and test coverage.
+Before proposing an implementation:
 
-Do not write code until the implementation approach has been presented and approved by the user when that rule applies in the active environment.
+- identify the user outcome, current friction, acceptance criteria, and important failure states;
+- inspect the applicable `AGENTS.md`, repository structure, existing behavior, tests, dependencies, conventions, reusable components, and prior decisions;
+- distinguish a missing feature from a symptom of a deeper product or technical problem;
+- prefer the smallest solution that fits the existing system unless current evidence justifies a larger change.
 
-## 2. Design Before Building
+Ask a focused question only when the missing answer would materially change the result. Otherwise state the smallest safe assumption.
 
-The main agent writes the plan itself. Write a short implementation plan that names:
+## 2. Calibrate Against the Outside World
 
-- Files or components expected to change.
-- Data and control flow changes.
-- Test and validation strategy.
-- Which bounded pieces (if any) will be delegated to subagents, and the exact context each will receive.
-- Any migration, rollback, or feature-flag need.
+For a new feature, perform external calibration before choosing the solution whenever there is a meaningful technology, architecture, dependency, API, security, or user-experience decision.
 
-For user-facing frontend work, create a runnable standalone HTML prototype before application implementation. Open it immediately after creation so the user can inspect the actual rendered result. Use it to validate structure, key interactions, content hierarchy, responsive behavior, and visual direction. Treat the prototype as a decision artifact, not production code: reuse only design decisions deliberately.
+Check the most decision-relevant current evidence:
 
-Skip the HTML prototype only for non-visual changes or when the user explicitly asks to skip it. Say why when skipping.
+- official documentation, release notes, compatibility limits, deprecations, and security guidance;
+- maintained open-source implementations of the same technical problem;
+- current behavior of comparable products that solve the same user problem;
+- established architecture or interaction patterns, including known failure modes.
 
-## 3. Delegate Deliberately
+Separate product references from implementation references. A comparable product may inform behavior without determining the project's technical architecture. Prefer primary sources and real current behavior; treat blog posts, examples, benchmarks, and popularity as supporting evidence rather than authority.
 
-After the main agent has finished framing and design, delegate only bounded execution tasks — e.g., building the standalone HTML prototype, implementing a scoped set of code changes — when delegation reduces elapsed time or improves review quality. Never delegate research, planning, requirement interpretation, or user communication. Use the subagent explicitly specified by the user; if none is specified, use Luna.
+Compare the smallest solution compatible with the current project against credible alternatives. Judge them by project fit, maturity, maintainability, migration cost, performance, security, reversibility, and ecosystem health. Novelty alone is not a reason to adopt a technology, and familiarity alone is not a reason to keep an inferior approach.
 
-Provide each subagent:
+Keep research proportional to the decision. A localized fix or mechanical edit with no meaningful product or technical choice does not need broad external research. Stop when enough current evidence supports a decision; do not search merely to accumulate links.
 
-- A narrow objective and exact success criteria, with all relevant decisions already made.
-- Relevant paths, interfaces, constraints, and validation commands.
-- Ownership boundaries that avoid overlapping edits.
-- An instruction to report back open questions instead of deciding them.
+## 3. Make the Decision Visible
 
-Use the maximum available reasoning setting for every subagent task, regardless of the selected model. The main agent stays responsible for architecture, integration, requirement interpretation, and final review, and reconciles subagent output against the plan it wrote.
+Before writing or delegating code, present a concise proposal and wait for user approval. Include:
 
-## 4. Implement Minimally
+- the intended user outcome and acceptance criteria;
+- what the project already provides and constrains;
+- the useful external findings and their sources;
+- serious alternatives considered, the selected direction, and its trade-offs;
+- affected files or components, data or control flow, and validation;
+- any proposed delegation boundary.
 
-1. Follow existing project conventions unless they conflict with the accepted design.
-2. Keep changes small and cohesive; avoid opportunistic refactors.
-3. Add or update tests with the behavior change.
-4. Preserve user changes in a dirty worktree; never revert unrelated work.
-5. Surface any scope change, destructive action, external side effect, or newly discovered requirement before taking it.
+For user-facing frontend work, create and open a runnable standalone HTML prototype when interaction, navigation, information hierarchy, responsive behavior, or state handling needs a product decision. Produce multiple variants only when they represent materially different choices. Skip the prototype for non-visual or already-decided changes and state why.
 
-## 5. Review and Verify
+## 4. Choose Execution Adaptively
 
-The main agent reviews all changes, including subagent changes, before delivery:
+Do not fix the main-agent model, subagent model, reasoning effort, or agent count in this skill. Follow explicit user choices; otherwise select them from the current environment according to task difficulty, cost of error, context needs, speed, and verifiability.
 
-1. Compare the implementation against each acceptance criterion.
-2. Inspect diffs for correctness, security, concurrency, error handling, edge cases, API compatibility, and unintended scope.
-3. Run formatting, static checks, and the complete relevant test suite. If project instructions require the full suite, run the full suite rather than a targeted subset.
-4. Exercise a representative end-to-end or manual verification path when automated tests cannot cover the user-visible behavior.
-5. Fix failures and repeat verification until it passes. Do not claim success if required verification is unavailable; report the gap and its risk plainly.
+Use a subagent only when all of these are true:
 
-## Delivery
+- the work has an independent useful output;
+- its input, boundaries, and done condition can be stated precisely;
+- its result can be verified cheaply;
+- delegation is expected to reduce total elapsed time or context cost after startup, coordination, review, and likely rework are included.
 
-Lead with the outcome. Report changed files, user-visible behavior, and validation results. Mention only material assumptions, known limitations, or follow-up work. Include actionable review findings first if the request was a code review.
+Use the fewest agents needed. Parallelize only genuinely independent work, keep delegation one level deep, and do not create agents merely because capacity is available. If an agent's work fails or creates substantial integration cost, reassess the task boundary or model instead of repeating the same dispatch pattern.
+
+Before write-capable delegation, record the dirty-worktree baseline and give each executor exclusive path ownership. Reserve full-repository tests, code generation, and global formatting for main-agent integration.
+
+Give each subagent a compact packet containing the objective, done condition, relevant paths and interfaces, preserved decisions, non-goals, owned paths, required validation, and a request for concise evidence, changed files, results, and blockers. Use fresh context when the packet is sufficient and the interface supports it; inherit conversation history only when the task truly depends on that history. State that the subagent may not spawn descendants, make undecided product or architecture choices, or modify unrelated user work.
+
+## 5. Implement, Integrate, and Verify
+
+Follow the accepted proposal and existing project conventions. Keep changes cohesive, avoid opportunistic refactors, and surface any newly discovered requirement or scope change before expanding the implementation.
+
+The main agent reviews the combined diff against the approved outcome and plan, including error handling, compatibility, concurrency, security, and unintended scope. After every feature or bug fix, run the complete project test suite plus applicable formatting, static analysis, build checks, and representative manual or end-to-end verification. Fix failures and repeat the affected checks. When a prototype was approved, confirm that the shipped experience matches its decisions.
+
+Deliver the outcome first, followed by changed files, user-visible behavior, and concrete validation results. State unavailable verification or material limitations plainly.

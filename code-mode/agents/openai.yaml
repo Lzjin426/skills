@@ -1,4 +1,4 @@
 interface:
   display_name: "Code Mode"
-  short_description: "标准化软件开发、协作与完整验收流程规范"
-  default_prompt: "使用 $code-mode 按标准流程分析、实现并验收这个代码任务。"
+  short_description: "先内外调研校准，再自适应实现与完整验收"
+  default_prompt: "使用 $code-mode：先理解现有项目并调研当前外部方案，比较选择后再自适应实现和完整验收。"

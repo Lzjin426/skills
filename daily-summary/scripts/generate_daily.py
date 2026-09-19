@@ -1,474 +1,719 @@
 #!/usr/bin/env python3
-"""Aggregate and structure collected daily data from all sources.
+"""Build one unified evidence packet for a daily-summary subagent.
 
-Reads JSON outputs from collect_claude_history.py, collect_codex_history.py,
-collect_remote_history.py, and optional Linear/TickTick MCP data.
-
-Produces a structured JSON that an LLM can read to generate a concise,
-summarized daily report (NOT a direct Markdown output — the summarization
-should be done by the AI using this skill).
-
-Output JSON structure:
-{
-  "date": "YYYY-MM-DD",
-  "linear_issues": [...],
-  "ticktick_tasks": [...],
-  "projects": {
-    "ProjectName": {
-      "themes": [
-        {"name": "主题名", "inputs": [...], "keywords": [...]}
-      ],
-      "source": ["local"]
-    }
-  },
-  "remote_status": {"reachable": true|false, "host": "...", "note": "..."}
-}
+This script deliberately does not write prose. It normalizes all available
+source files into one date-scoped packet so that two scoped low-cost subagents
+can aggregate the complete picture before the main model writes one report.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
-from datetime import date, datetime
+from collections import defaultdict
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any, Iterable
+
+try:
+    from zoneinfo import ZoneInfo
+
+    TZ = ZoneInfo("Asia/Shanghai")
+except Exception:  # pragma: no cover - only for unusually old Python builds
+    TZ = timezone(timedelta(hours=8))
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Aggregate daily data into structured JSON")
+SOURCE_OPTIONS = (
+    "lark_docs",
+    "github",
+    "claude",
+    "codex",
+    "kimi",
+    "dsh",
+    "opencode",
+    "craft",
+    "computer_history",
+    "remote",
+    "linear",
+    "ticktick",
+)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Normalize daily-summary sources into one evidence packet"
+    )
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
-    parser.add_argument("--claude", help="Path to collect_claude_history.py output JSON")
-    parser.add_argument("--codex", help="Path to collect_codex_history.py output JSON")
-    parser.add_argument("--kimi", help="Path to collect_kimi_history.py output JSON")
-    parser.add_argument("--dsh", help="Path to collect_dsh_history.py output JSON")
-    parser.add_argument("--remote", help="Path to collect_remote_history.py output JSON")
-    parser.add_argument("--linear", help="Path to Linear issues JSON (from MCP)")
-    parser.add_argument("--ticktick", help="Path to TickTick tasks JSON (from MCP)")
-    parser.add_argument("-o", "--output", help="Output file path (default: stdout)")
+    parser.add_argument("--lark-docs", dest="lark_docs", help="Lark documents JSON")
+    parser.add_argument("--github", help="GitHub activity JSON")
+    parser.add_argument("--claude", help="Claude Code history JSON")
+    parser.add_argument("--codex", help="Codex history JSON")
+    parser.add_argument("--kimi", help="Kimi Code history JSON")
+    parser.add_argument("--dsh", help="DeepSeek Harness history JSON")
+    parser.add_argument("--opencode", help="OpenCode history JSON")
+    parser.add_argument("--craft", help="Craft Agent history JSON")
+    parser.add_argument(
+        "--computer-history",
+        dest="computer_history",
+        help="Computer History observations JSON",
+    )
+    parser.add_argument("--remote", help="Remote agent history JSON")
+    parser.add_argument("--linear", help="Linear issues JSON")
+    parser.add_argument("--ticktick", help="TickTick tasks JSON")
+    parser.add_argument(
+        "--existing-report",
+        help="Existing report Markdown or JSON wrapper to include in the packet",
+    )
+    parser.add_argument(
+        "--style-samples",
+        help="Recent personal daily-note samples JSON or Markdown",
+    )
+    parser.add_argument("-o", "--output", help="Output packet path (default: stdout)")
     return parser.parse_args()
 
 
-def load_json(path: str | None) -> dict | None:
+def load_json(path: str | None) -> tuple[Any | None, dict[str, Any]]:
+    """Load an optional JSON file without making one bad source fatal."""
     if not path:
+        return None, {"status": "not_requested"}
+
+    file_path = Path(path).expanduser()
+    if not file_path.exists():
+        return None, {"status": "missing", "path": str(file_path)}
+
+    try:
+        with file_path.open("r", encoding="utf-8") as handle:
+            return json.load(handle), {"status": "ok", "path": str(file_path)}
+    except (OSError, UnicodeError) as exc:
+        return None, {
+            "status": "error",
+            "path": str(file_path),
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+    except json.JSONDecodeError as exc:
+        return None, {
+            "status": "invalid",
+            "path": str(file_path),
+            "error": f"JSONDecodeError: {exc}",
+        }
+
+
+def load_text_or_json(path: str | None) -> tuple[Any | None, dict[str, Any]]:
+    """Load Markdown as text and JSON as structured data."""
+    if not path:
+        return None, {"status": "not_requested"}
+
+    file_path = Path(path).expanduser()
+    if not file_path.exists():
+        return None, {"status": "missing", "path": str(file_path)}
+
+    try:
+        text = file_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        return None, {
+            "status": "error",
+            "path": str(file_path),
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
+    try:
+        return json.loads(text), {"status": "ok", "path": str(file_path)}
+    except json.JSONDecodeError:
+        return text, {"status": "ok", "path": str(file_path), "format": "text"}
+
+
+def parse_datetime(value: Any) -> datetime | None:
+    """Parse common epoch and ISO-8601 timestamp forms into Asia/Shanghai."""
+    if value is None or value == "":
         return None
-    p = Path(path)
-    if not p.exists():
+
+    if isinstance(value, (int, float)):
+        try:
+            number = float(value)
+            seconds = number / 1000 if abs(number) >= 10**11 else number
+            return datetime.fromtimestamp(seconds, tz=timezone.utc).astimezone(TZ)
+        except (OverflowError, OSError, ValueError):
+            return None
+
+    if not isinstance(value, str):
         return None
-    with p.open("r", encoding="utf-8") as fh:
-        return json.load(fh)
+
+    text = value.strip()
+    if not text:
+        return None
+    if text.isdigit():
+        return parse_datetime(int(text))
+
+    normalized = text.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=TZ)
+    return parsed.astimezone(TZ)
 
 
-def extract_project_name(cwd: str, git_repo: str = "", git_branch: str = "") -> str:
-    """Extract a readable project name from git metadata or cwd path.
-
-    Priority:
-    1. git_repo if available
-    2. git_branch (if not main/master) appended to repo name for context
-    3. cwd path fallback
-    """
-    # Use git repo name as primary project identifier
-    if git_repo:
-        project = git_repo
-        # Append branch if it's a feature/work branch (not main/master)
-        if git_branch and git_branch not in ("main", "master", "HEAD"):
-            project = f"{git_repo} ({git_branch})"
-        return project
-
-    # Fallback: extract from cwd
-    if not cwd:
-        return "其他"
-    parts = [p for p in cwd.replace("\\", "/").split("/") if p]
-    if not parts:
-        return "其他"
-    skip = {"users", "fullstop", "desktop", "documents", "code", "workspace", "home"}
-    for part in reversed(parts):
-        lower = part.lower()
-        if lower not in skip and not lower.startswith("."):
-            return part
-    return "其他"
+def iso_time(value: Any) -> str:
+    parsed = parse_datetime(value)
+    return parsed.isoformat() if parsed else ""
 
 
-# ── 1. 增强输入过滤 ──────────────────────────────────────────────
-
-SKIP_PATTERNS = [
-    re.compile(r"^(你好|在吗|hi|hello|hey)\b", re.I),
-    re.compile(r"^(谢谢|thanks|thx)\b", re.I),
-    re.compile(r"^(ok|okay|好的|行|嗯|确认|知道|明白)\b", re.I),
-    re.compile(r"^(claude|codex)\b", re.I),
-    re.compile(r"^(给我|帮我|请)\s+(看看|查一下|找一下)\b", re.I),
-    # 纯命令/探索性查询
-    re.compile(r"^(ls|cd|cat|pwd|echo|rm|mkdir|touch|grep|find|git\s+status|git\s+log|git\s+diff)\s*$", re.I),
-    re.compile(r"^(open|查看|打开|运行|执行)\s+.*$", re.I),
-    # 纯路径引用（无上下文）
-    re.compile(r"^(/Users/[^\s]+|/home/[^\s]+|\w:\\[^\s]+)\s*$"),
-    # 纯数字/单字
-    re.compile(r"^\d+$"),
-    re.compile(r"^[\d\s]+$"),
-]
-
-# 纯 skill 调用（无额外内容）
-PURE_SKILL_PATTERN = re.compile(r"^/[a-zA-Z0-9_\-:]+$")
+def is_target_date(value: Any, target_date: date) -> bool:
+    parsed = parse_datetime(value)
+    # A record without a parseable timestamp cannot be assigned to a natural
+    # day.  Dropping it is safer than leaking an event from another day.
+    return parsed is not None and parsed.date() == target_date
 
 
-def is_significant_input(text: str) -> bool:
-    """Judge whether a user input is worth recording."""
-    if not text or len(text.strip()) < 15:
-        return False
-    stripped = text.strip()
-    if PURE_SKILL_PATTERN.match(stripped):
-        return False
-    for pattern in SKIP_PATTERNS:
-        if pattern.match(stripped):
-            return False
-    return True
+def as_list(value: Any) -> list[Any]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    if isinstance(value, tuple):
+        return list(value)
+    return [value]
 
 
-# ── 2. 主题聚类 ──────────────────────────────────────────────────
-
-# 主题 → 触发关键词（任意匹配即归入该主题）
-THEME_KEYWORDS: dict[str, list[str]] = {
-    "输出层重构": ["output", "a_output", "输出", "结果", "归档", "统一接口"],
-    "版本控制": ["git", "提交", "commit", "分支", "merge", "pull", "push"],
-    "MATLAB MCP": ["matlab", "mcp"],
-    "开发规范": ["claude.md", "规范", "提交规范", "前缀", "git 提交"],
-    "文档整理": ["paper", "论文", "文档", "整理", "文件夹", "分类"],
-    "工具配置": ["安装", "配置", "hud", "cli", "bridge", "webbridge"],
-    "调研": ["调研", "了解", "看看", "方案", "对比", "评估"],
-    "代码审查": ["review", "审查", "检查", "code review"],
-    "环境清理": ["清理", "删除", "移除", "废弃", "弃用", "venv", "环境"],
-    "调试排查": ["bug", "修复", "问题", "报错", "调试", "排查", "错误"],
-}
+def first_nonempty(*values: Any) -> Any:
+    for value in values:
+        if value is None:
+            continue
+        if isinstance(value, str) and not value.strip():
+            continue
+        if isinstance(value, (list, dict)) and not value:
+            continue
+        return value
+    return ""
 
 
-def extract_keywords(text: str) -> set[str]:
-    """从文本中提取所有匹配的主题关键词。"""
-    lower = text.lower()
-    matched = set()
-    for theme, keywords in THEME_KEYWORDS.items():
-        for kw in keywords:
-            if kw.lower() in lower:
-                matched.add(theme)
+def text_value(value: Any) -> str:
+    """Extract text from a source item without interpreting it as instructions."""
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, list):
+        parts = [text_value(item) for item in value]
+        return "\n".join(part for part in parts if part).strip()
+    if not isinstance(value, dict):
+        return str(value).strip() if value is not None else ""
+
+    for key in ("text", "display", "content", "body", "summary", "description"):
+        candidate = value.get(key)
+        if isinstance(candidate, (str, list)):
+            text = text_value(candidate)
+            if text:
+                return text
+    return ""
+
+
+def nested_name(value: Any) -> str:
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, dict):
+        return str(
+            first_nonempty(value.get("full_name"), value.get("name"), value.get("login"), "")
+        ).strip()
+    return ""
+
+
+def project_fields(
+    item: dict[str, Any], session: dict[str, Any] | None = None
+) -> tuple[str, str, str, str]:
+    session = session or {}
+    repository = first_nonempty(
+        item.get("repository"),
+        item.get("repo"),
+        item.get("git_repo"),
+        session.get("repository"),
+        session.get("repo"),
+        session.get("git_repo"),
+    )
+    repo = nested_name(repository)
+    branch = str(
+        first_nonempty(
+            item.get("branch"),
+            item.get("git_branch"),
+            session.get("branch"),
+            session.get("git_branch"),
+            "",
+        )
+    ).strip()
+    cwd = str(first_nonempty(item.get("cwd"), session.get("cwd"), "")).strip()
+
+    project = repo
+    if not project and cwd:
+        parts = [part for part in re.split(r"[/\\]", cwd) if part]
+        ignored = {"users", "fullstop", "desktop", "documents", "code", "workspace", "home"}
+        for part in reversed(parts):
+            if part.lower() not in ignored and not part.startswith("."):
+                project = part
                 break
-    return matched
+    if not project:
+        project = str(first_nonempty(item.get("project"), session.get("project"), "其他")).strip() or "其他"
+
+    project_key = project
+    if branch and branch not in {"main", "master", "HEAD"}:
+        project_key = f"{project} ({branch})"
+    return project_key, repo, branch, cwd
 
 
-def _theme_score(text: str, theme: str) -> int:
-    """计算文本与主题的匹配分数：命中关键词数 * 10 + 文本长度/10。"""
-    keywords = THEME_KEYWORDS.get(theme, [])
-    hits = sum(1 for kw in keywords if kw.lower() in text.lower())
-    return hits * 10 + len(text) // 10
+def event_id(
+    source: str, item: dict[str, Any], *, text: str, timestamp: str, index: int
+) -> str:
+    raw = first_nonempty(
+        item.get("id"),
+        item.get("node_id"),
+        item.get("token"),
+        item.get("url"),
+        item.get("html_url"),
+        f"{timestamp}|{text}|{index}",
+    )
+    digest = hashlib.sha1(f"{source}|{raw}".encode("utf-8", "replace")).hexdigest()[:16]
+    return f"{source}:{digest}"
 
 
-def cluster_inputs_by_theme(inputs: list[str]) -> list[dict]:
-    """将输入按主题聚类，每条输入只分配到最匹配的主题，每个主题保留 2 条最具代表性的输入。"""
-    # 先为每条输入找到最佳匹配主题
-    themed: dict[str, list[tuple[str, int]]] = {}  # theme -> [(input, score), ...]
-    unclassified: list[str] = []
+def make_event(
+    source: str,
+    item: dict[str, Any],
+    *,
+    session: dict[str, Any] | None = None,
+    kind: str,
+    index: int,
+    target_date: date,
+    default_status: str = "unknown",
+    evidence_level: str = "source_record",
+) -> dict[str, Any] | None:
+    project, repo, branch, cwd = project_fields(item, session)
+    raw_time = first_nonempty(
+        item.get("timestamp"),
+        item.get("time"),
+        item.get("updated_at"),
+        item.get("modified_time"),
+        item.get("modifiedTime"),
+        item.get("modified_at"),
+        item.get("created_at"),
+        item.get("created_time"),
+        item.get("createdAt"),
+        item.get("published_at"),
+        item.get("merged_at"),
+        (session or {}).get("timestamp"),
+        (session or {}).get("updated_at"),
+        (session or {}).get("started_at"),
+    )
+    if not raw_time or not is_target_date(raw_time, target_date):
+        return None
+    timestamp = iso_time(raw_time)
+    if not timestamp:
+        return None
 
-    for inp in inputs:
-        all_themes = list(THEME_KEYWORDS.keys())
-        scores = [(t, _theme_score(inp, t)) for t in all_themes]
-        scores.sort(key=lambda x: x[1], reverse=True)
+    title = str(
+        first_nonempty(
+            item.get("title"),
+            item.get("name"),
+            item.get("thread_name"),
+            item.get("subject"),
+            "",
+        )
+    ).strip()
+    text = text_value(item)
+    if not text and title:
+        text = title
+    if not text and not title:
+        return None
 
-        best_theme, best_score = scores[0]
-        if best_score >= 10:  # 至少命中 1 个关键词
-            themed.setdefault(best_theme, []).append((inp, _theme_score(inp, best_theme)))
+    status_value = first_nonempty(
+        item.get("status"), item.get("state"), item.get("action"), default_status
+    )
+    if isinstance(status_value, dict):
+        status_value = first_nonempty(status_value.get("name"), default_status)
+    status = str(status_value).strip()
+
+    url = str(first_nonempty(item.get("url"), item.get("html_url"), item.get("web_url"), "")).strip()
+    evidence = [url] if url else []
+    return {
+        "event_id": event_id(source, item, text=text, timestamp=timestamp, index=index),
+        "source": source,
+        "time": timestamp,
+        "project": project,
+        "repo": repo,
+        "branch": branch,
+        "cwd": cwd,
+        "kind": kind,
+        "status": status,
+        "title": title,
+        "text": text,
+        "url": url,
+        "evidence": evidence,
+        "evidence_level": evidence_level,
+    }
+
+
+def source_items(data: Any, *keys: str) -> list[Any]:
+    if isinstance(data, list):
+        return data
+    if not isinstance(data, dict):
+        return []
+    for key in keys:
+        if key in data:
+            return as_list(data[key])
+    nested = data.get("data")
+    if isinstance(nested, dict):
+        for key in keys:
+            if key in nested:
+                return as_list(nested[key])
+    return []
+
+
+def session_events(
+    source: str,
+    data: Any,
+    target_date: date,
+    *,
+    remote: bool = False,
+) -> list[dict[str, Any]]:
+    sessions: list[dict[str, Any]] = []
+    if isinstance(data, dict):
+        if remote:
+            sessions.extend(
+                {**item, "_remote_kind": "claude"}
+                for item in source_items(data, "claude_sessions")
+                if isinstance(item, dict)
+            )
+            sessions.extend(
+                {**item, "_remote_kind": "codex"}
+                for item in source_items(data, "codex_sessions")
+                if isinstance(item, dict)
+            )
         else:
-            unclassified.append(inp)
+            sessions.extend(item for item in source_items(data, "sessions") if isinstance(item, dict))
+    elif isinstance(data, list):
+        sessions.extend(item for item in data if isinstance(item, dict))
 
-    # 每个主题保留得分最高的 2 条
+    events: list[dict[str, Any]] = []
+    index = 0
+    for session in sessions:
+        messages = first_nonempty(
+            session.get("inputs"),
+            session.get("user_messages"),
+            session.get("messages"),
+            [],
+        )
+        if not isinstance(messages, list):
+            messages = [messages]
+        if not messages:
+            fallback = first_nonempty(
+                session.get("display"),
+                session.get("thread_name"),
+                session.get("title"),
+                session.get("last_prompt"),
+                "",
+            )
+            messages = [fallback] if fallback else []
+
+        for message in messages:
+            item = dict(message) if isinstance(message, dict) else {"text": str(message)}
+            if not item.get("text") and item.get("display"):
+                item["text"] = item["display"]
+            event = make_event(
+                source,
+                item,
+                session=session,
+                kind="conversation",
+                index=index,
+                target_date=target_date,
+                default_status="observed" if remote else "unknown",
+                evidence_level="observed_activity" if remote else "user_input",
+            )
+            index += 1
+            if event:
+                events.append(event)
+    return events
+
+
+def documents_events(source: str, data: Any, target_date: date) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    for index, raw in enumerate(source_items(data, "documents", "files", "items")):
+        if not isinstance(raw, dict):
+            continue
+        item = dict(raw)
+        item["text"] = first_nonempty(
+            item.get("summary"),
+            item.get("content_preview"),
+            item.get("name"),
+            item.get("title"),
+            "",
+        )
+        event = make_event(
+            source,
+            item,
+            kind="document",
+            index=index,
+            target_date=target_date,
+            default_status="updated",
+            evidence_level="document_metadata",
+        )
+        if event:
+            events.append(event)
+    return events
+
+
+def github_events(data: Any, target_date: date) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    if not isinstance(data, dict):
+        return events
+
+    collections = (
+        ("events", "github_event"),
+        ("notifications", "github_notification"),
+        ("commits", "commit"),
+        ("prs", "pull_request"),
+        ("pull_requests", "pull_request"),
+        ("issues", "issue"),
+        ("reviews", "review"),
+        ("releases", "release"),
+        ("workflows", "workflow"),
+    )
+    index = 0
+    for key, kind in collections:
+        for raw in source_items(data, key):
+            if not isinstance(raw, dict):
+                continue
+            event = make_event(
+                "github",
+                raw,
+                kind=kind,
+                index=index,
+                target_date=target_date,
+                default_status="observed",
+                evidence_level="github_record",
+            )
+            index += 1
+            if event:
+                events.append(event)
+    return events
+
+
+def task_events(source: str, data: Any, target_date: date, key: str, kind: str) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    for index, raw in enumerate(source_items(data, key, "items", "data")):
+        if not isinstance(raw, dict):
+            continue
+        event = make_event(
+            source,
+            raw,
+            kind=kind,
+            index=index,
+            target_date=target_date,
+            default_status="completed" if source == "ticktick" else "observed",
+            evidence_level="task_record" if source == "ticktick" else "issue_record",
+        )
+        if event:
+            events.append(event)
+    return events
+
+
+def computer_history_events(data: Any, target_date: date) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    if not isinstance(data, dict):
+        return events
+    observations = source_items(data, "events", "observations")
+    memories = source_items(data, "memories", "summaries")
+    for index, raw in enumerate([*observations, *memories]):
+        if not isinstance(raw, dict):
+            raw = {"text": text_value(raw)}
+        item = dict(raw)
+        item["text"] = first_nonempty(
+            item.get("text"),
+            item.get("selected_text"),
+            item.get("focused_element"),
+            item.get("window_title"),
+            item.get("url"),
+            item.get("app"),
+            "",
+        )
+        event = make_event(
+            "computer_history",
+            item,
+            kind="computer_observation",
+            index=index,
+            target_date=target_date,
+            default_status="observed",
+            evidence_level="observed_activity_only",
+        )
+        if event:
+            events.append(event)
+    return events
+
+
+def exact_dedupe(events: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Remove only exact duplicates; semantic grouping belongs to the subagent."""
     result = []
-    for theme, items in sorted(themed.items()):
-        items.sort(key=lambda x: x[1], reverse=True)
-        kept = [inp for inp, _ in items[:2]]
-        result.append({
-            "name": theme,
-            "inputs": kept,
-            "keywords": list(THEME_KEYWORDS.get(theme, [])),
-        })
-
-    # 未分类的单独处理：最多保留 3 条最长的
-    if unclassified:
-        unclassified.sort(key=len, reverse=True)
-        result.append({
-            "name": "其他",
-            "inputs": unclassified[:3],
-            "keywords": [],
-        })
-
+    seen: set[tuple[str, str, str, str]] = set()
+    for event in events:
+        key = (
+            str(event.get("source", "")),
+            str(event.get("time", "")),
+            str(event.get("text", "")),
+            str(event.get("url", "")),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(event)
     return result
 
 
-# ── 3. 问答链压缩 ────────────────────────────────────────────────
-
-def compress_qa_chain(inputs: list[str]) -> list[str]:
-    """压缩同一主题的连续问答链，保留最具代表性的一条。"""
-    if len(inputs) <= 1:
-        return inputs
-
-    compressed = []
-    i = 0
-    while i < len(inputs):
-        current = inputs[i]
-        current_themes = extract_keywords(current)
-        chain = [current]
-        j = i + 1
-        while j < len(inputs):
-            next_themes = extract_keywords(inputs[j])
-            # 如果共享至少一个主题，或都是未分类但前30字符相似度>50%
-            shared = current_themes & next_themes
-            if shared:
-                chain.append(inputs[j])
-                j += 1
-            else:
-                # 检查前 30 字符相似度
-                prefix_a = current[:30].lower()
-                prefix_b = inputs[j][:30].lower()
-                if prefix_a and prefix_b:
-                    common = sum(1 for a, b in zip(prefix_a, prefix_b) if a == b)
-                    min_len = min(len(prefix_a), len(prefix_b))
-                    if min_len > 0 and common / min_len > 0.5:
-                        chain.append(inputs[j])
-                        j += 1
-                        current_themes = current_themes | next_themes
-                    else:
-                        break
-                else:
-                    break
-
-        # 从链中选一条：优先选最长的（通常包含完整指令或结论）
-        if len(chain) > 1:
-            chain.sort(key=len, reverse=True)
-            compressed.append(chain[0])
-        else:
-            compressed.append(current)
-        i = j
-
-    return compressed
+def style_items(value: Any) -> list[Any]:
+    if isinstance(value, str):
+        return [{"content": value}]
+    if isinstance(value, list):
+        return value
+    if isinstance(value, dict):
+        return as_list(
+            first_nonempty(value.get("style_samples"), value.get("documents"), value.get("files"), value)
+        )
+    return []
 
 
-# ── 4. 改进去重 ──────────────────────────────────────────────────
-
-def similarity(a: str, b: str) -> float:
-    """计算两条输入的相似度（基于最长公共子串比例）。"""
-    a, b = a.lower().strip(), b.lower().strip()
-    if not a or not b:
-        return 0.0
-    # 简化版：基于公共子串
-    shorter, longer = (a, b) if len(a) < len(b) else (b, a)
-    if not shorter:
-        return 0.0
-
-    # 使用滑动窗口找最长公共子串
-    max_len = 0
-    for i in range(len(shorter)):
-        for j in range(i + 1, len(shorter) + 1):
-            substr = shorter[i:j]
-            if substr in longer:
-                max_len = max(max_len, j - i)
-
-    return max_len / max(len(a), len(b))
-
-
-def deduplicate_inputs(inputs: list[str]) -> list[str]:
-    """去重：相似度 > 60% 的视为重复，保留较长的一条。"""
-    unique = []
-    for inp in inputs:
-        is_dup = False
-        for existing in unique:
-            if similarity(inp, existing) > 0.6:
-                # 保留较长的
-                if len(inp) > len(existing):
-                    unique[unique.index(existing)] = inp
-                is_dup = True
-                break
-        if not is_dup:
-            unique.append(inp)
-    return unique
+def compact_source_metadata(value: Any) -> dict[str, Any]:
+    """Keep small source-level fields without duplicating every event payload."""
+    if not isinstance(value, dict):
+        return {}
+    metadata: dict[str, Any] = {}
+    useful_keys = {
+        "source",
+        "status",
+        "available",
+        "reachable",
+        "host",
+        "note",
+        "errors",
+        "repos",
+        "folder_tokens",
+        "target_name",
+        "evidence_quality",
+        "scan_all",
+        "timezone",
+    }
+    for key in useful_keys:
+        if key not in value:
+            continue
+        item = value[key]
+        if isinstance(item, (str, int, float, bool)) or item is None:
+            metadata[key] = item
+        elif isinstance(item, list) and all(isinstance(part, (str, int, float, bool)) for part in item):
+            metadata[key] = item
+    return metadata
 
 
-# ── 5. 主构建逻辑 ────────────────────────────────────────────────
+def source_load_status(data: Any, load_status: dict[str, Any]) -> dict[str, Any]:
+    """Distinguish a readable JSON file from an unavailable upstream source."""
+    result = dict(load_status)
+    if not isinstance(data, dict) or result.get("status") != "ok":
+        return result
 
-def build_structured_data(
-    target_date: date,
-    claude_data: dict | None,
-    codex_data: dict | None,
-    kimi_data: dict | None,
-    dsh_data: dict | None,
-    remote_data: dict | None,
-    linear_data: dict | None,
-    ticktick_data: dict | None,
-) -> dict:
-    """Build the structured output from all data sources."""
+    upstream_state = data.get("status")
+    if isinstance(upstream_state, (str, int, float, bool)):
+        result["source_state"] = upstream_state
+    if data.get("available") is False or data.get("reachable") is False:
+        result["load_status"] = "ok"
+        result["status"] = "unavailable"
+    elif data.get("errors"):
+        result["status"] = "partial"
+    return result
 
-    # Linear issues
-    linear_issues = []
-    if linear_data:
-        issues = linear_data.get("issues", linear_data.get("data", []))
-        for issue in issues:
-            linear_issues.append({
-                "identifier": issue.get("identifier", ""),
-                "title": issue.get("title", ""),
-                "state": issue.get("state", {}).get("name", ""),
-                "priority": issue.get("priority", ""),
-                "url": issue.get("url", ""),
-                "assignee": issue.get("assignee", {}).get("name", "") if issue.get("assignee") else "",
-            })
 
-    # TickTick tasks
-    ticktick_tasks = []
-    if ticktick_data:
-        tasks = ticktick_data.get("tasks", [])
-        for task in tasks:
-            ticktick_tasks.append({
-                "title": task.get("title", ""),
-                "status": task.get("status", ""),
-                "due_date": task.get("dueDate", ""),
-            })
+SUMMARY_CONTRACT = {
+    "language": "zh-CN",
+    "voice": "短句、记录式、自然口语；允许保留用户的判断和不确定性",
+    "structure": [
+        "只保留一个 # 主要内容",
+        "事情少时直接列 bullet，不强行创建项目标题",
+        "项目较多时使用 2-4 个简短的 ## 标题；每个项目通常 1-3 条",
+        "普通日报控制在约 4-10 条；高信息量日只保留影响后续行动的明细",
+        "# 记录只放生活琐事、临时杂事、零散链接和补充备注",
+    ],
+    "retain": ["事实", "结果", "数量", "截止时间", "状态", "地点", "渠道", "下一步", "真实感受"],
+    "merge": ["同一目标的多次对话", "同类投递/沟通", "没有独立结果的零散操作"],
+    "avoid": [
+        "按数据源分栏",
+        "逐条复制 Agent 用户输入",
+        "凭空补写完成结论",
+        "项目背景、工具层状态、采集过程",
+        "全面推进、取得阶段性成果等报告腔",
+    ],
+    "completion_policy": "只有提交、文档产出、GitHub/任务状态等证据支持时才写完成；Computer History 和用户提问本身只能作为活动线索。",
+}
 
-    # Projects: collect raw inputs first
-    projects_raw: dict[str, list[str]] = {}
 
-    def add_input(proj: str, text: str) -> None:
-        if not is_significant_input(text):
-            return
-        projects_raw.setdefault(proj, []).append(text)
+def build_packet(args: argparse.Namespace) -> dict[str, Any]:
+    target_date = datetime.strptime(args.date, "%Y-%m-%d").date()
+    loaded: dict[str, Any] = {}
+    source_status: dict[str, dict[str, Any]] = {}
+    source_metadata: dict[str, dict[str, Any]] = {}
 
-    # Local Claude Code
-    if claude_data:
-        for sess in claude_data.get("sessions", []):
-            proj = extract_project_name(
-                sess.get("cwd", ""),
-                sess.get("git_repo", ""),
-                sess.get("git_branch", ""),
-            )
-            session_inputs = []
-            for inp in sess.get("inputs", []):
-                text = inp.get("text", "")
-                if is_significant_input(text):
-                    session_inputs.append(text)
-            # 先压缩问答链
-            compressed = compress_qa_chain(session_inputs)
-            for text in compressed:
-                add_input(proj, text)
+    for source in SOURCE_OPTIONS:
+        path = getattr(args, source)
+        data, status = load_json(path)
+        source_status[source] = source_load_status(data, status)
+        if data is not None:
+            loaded[source] = data
+            source_metadata[source] = compact_source_metadata(data)
 
-    # Local Codex
-    if codex_data:
-        for sess in codex_data.get("sessions", []):
-            proj = extract_project_name(
-                sess.get("cwd", ""),
-                sess.get("git_repo", ""),
-                sess.get("git_branch", ""),
-            )
-            msgs = [m for m in sess.get("user_messages", []) if is_significant_input(m)]
-            compressed = compress_qa_chain(msgs)
-            for text in compressed:
-                add_input(proj, text)
+    existing_report, existing_status = load_text_or_json(args.existing_report)
+    style_samples, style_status = load_text_or_json(args.style_samples)
 
-    # Kimi Code
-    if kimi_data:
-        for sess in kimi_data.get("sessions", []):
-            proj = extract_project_name(
-                sess.get("cwd", ""),
-                sess.get("git_repo", ""),
-                sess.get("git_branch", ""),
-            )
-            msgs = [m for m in sess.get("user_messages", []) if is_significant_input(m)]
-            compressed = compress_qa_chain(msgs)
-            for text in compressed:
-                add_input(proj, text)
+    events: list[dict[str, Any]] = []
+    events.extend(documents_events("lark_docs", loaded.get("lark_docs"), target_date))
+    events.extend(github_events(loaded.get("github"), target_date))
+    for source in ("claude", "codex", "kimi", "dsh", "opencode", "craft"):
+        events.extend(session_events(source, loaded.get(source), target_date))
+    events.extend(session_events("remote", loaded.get("remote"), target_date, remote=True))
+    events.extend(task_events("linear", loaded.get("linear"), target_date, "issues", "linear_issue"))
+    events.extend(task_events("ticktick", loaded.get("ticktick"), target_date, "tasks", "task"))
+    events.extend(computer_history_events(loaded.get("computer_history"), target_date))
+    events = exact_dedupe(events)
+    events.sort(key=lambda item: (item.get("time", ""), item.get("source", ""), item.get("event_id", "")))
 
-    # DeepSeek Harness
-    if dsh_data:
-        for sess in dsh_data.get("sessions", []):
-            proj = extract_project_name(
-                sess.get("cwd", ""),
-                sess.get("git_repo", ""),
-                sess.get("git_branch", ""),
-            )
-            msgs = [m for m in sess.get("user_messages", []) if is_significant_input(m)]
-            compressed = compress_qa_chain(msgs)
-            for text in compressed:
-                add_input(proj, text)
-
-    # Remote
-    remote_status = {"reachable": False, "host": "", "note": ""}
-    if remote_data:
-        remote_status["reachable"] = remote_data.get("reachable", False)
-        remote_status["host"] = remote_data.get("host", "")
-        if not remote_status["reachable"]:
-            remote_status["note"] = remote_data.get("note", "")
-
-        if remote_status["reachable"]:
-            for sess in remote_data.get("claude_sessions", []):
-                text = sess.get("display", "")
-                if is_significant_input(text):
-                    add_input("远程", text)
-
-            for sess in remote_data.get("codex_sessions", []):
-                name = sess.get("thread_name", "").strip()
-                if name and is_significant_input(name):
-                    add_input("远程", name)
-
-    # 去重 + 主题聚类
-    projects: dict[str, dict] = {}
-    for proj_name, raw_inputs in projects_raw.items():
-        deduped = deduplicate_inputs(raw_inputs)
-        # 每个项目最多保留 12 条原始输入（去重后）
-        deduped = deduped[:12]
-        themes = cluster_inputs_by_theme(deduped)
-        projects[proj_name] = {
-            "themes": themes,
-            "source": ["local"] if proj_name != "远程" else ["remote"],
-        }
+    by_project: dict[str, list[str]] = defaultdict(list)
+    for event in events:
+        by_project[event["project"]].append(event["event_id"])
 
     return {
         "date": args.date,
-        "linear_issues": linear_issues,
-        "ticktick_tasks": ticktick_tasks,
-        "projects": {k: v for k, v in sorted(projects.items())},
-        "remote_status": remote_status,
+        "timezone": "Asia/Shanghai",
+        "source_status": source_status,
+        "events": events,
+        "events_by_project": dict(sorted(by_project.items())),
+        "source_metadata": source_metadata,
+        "style_samples": style_items(style_samples),
+        "style_samples_status": style_status,
+        "existing_report": existing_report if existing_report is not None else "",
+        "existing_report_status": existing_status,
+        "summary_contract": SUMMARY_CONTRACT,
         "_instructions": (
-            "This is structured raw data grouped by themes. An LLM should read this and generate "
-            "a concise, summarized daily report. For each theme, write 1-2 sentence summaries that "
-            "capture the essence of the work, NOT a list of individual operations. "
-            "Merge related themes into broader descriptions when possible. "
-            "If this is a SUPPLEMENT to an existing report, do NOT repeat top-level headings like "
-            "'# 主要内容' or '# 记录'. Instead, append new content directly under the relevant project sections."
+            "This is one unified evidence packet. Two low-cost subagents must read the same packet in parallel: "
+            "the local-scope agent summarizes every non-remote source, and the remote-scope agent summarizes only "
+            "remote activity. They must output structured evidence digests, not a final report. The main model "
+            "then reads both digests, the existing report, and personal style samples before drafting one concise "
+            "Chinese daily note. Do not create a separate paragraph for each source. Treat observed "
+            "Computer History activity and user requests as evidence of activity only, not proof of "
+            "completion. Keep missing/failed sources out of the prose unless they materially affect "
+            "confidence. The main model owns the final wording, while the two subagents own source aggregation."
         ),
     }
 
 
-def main():
-    global args
+def main() -> None:
     args = parse_args()
-    target_date = datetime.strptime(args.date, "%Y-%m-%d").date()
-
-    claude_data = load_json(args.claude)
-    codex_data = load_json(args.codex)
-    kimi_data = load_json(args.kimi)
-    dsh_data = load_json(args.dsh)
-    remote_data = load_json(args.remote)
-    linear_data = load_json(args.linear)
-    ticktick_data = load_json(args.ticktick)
-
-    structured = build_structured_data(
-        target_date,
-        claude_data,
-        codex_data,
-        kimi_data,
-        dsh_data,
-        remote_data,
-        linear_data,
-        ticktick_data,
-    )
-
-    output = json.dumps(structured, ensure_ascii=False, indent=2)
-
+    packet = build_packet(args)
+    output = json.dumps(packet, ensure_ascii=False, indent=2)
     if args.output:
-        with open(args.output, "w", encoding="utf-8") as fh:
-            fh.write(output)
-        print(f"Structured data written to: {args.output}")
+        Path(args.output).write_text(output, encoding="utf-8")
+        print(f"Unified evidence packet written to: {args.output}")
     else:
         print(output)
 

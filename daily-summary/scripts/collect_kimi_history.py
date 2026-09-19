@@ -34,6 +34,7 @@ def parse_args():
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument("--kimi-dir", nargs="+", default=DEFAULT_ROOTS,
                         help="Kimi config dirs (default: ~/.kimi-code ~/.kimi)")
+    parser.add_argument("--output", help="Output JSON path (default: stdout)")
     return parser.parse_args()
 
 
@@ -244,13 +245,18 @@ def main():
         sessions.extend(collect(root, target_date, seen_global))
 
     total = sum(len(s["user_messages"]) for s in sessions)
-    print(json.dumps({
+    rendered = json.dumps({
         "date": args.date,
         "source": "kimi_code_local",
         "session_count": len(sessions),
         "total_user_messages": total,
         "sessions": sessions,
-    }, ensure_ascii=False, indent=2))
+    }, ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(f"Kimi history written to: {args.output}")
+    else:
+        print(rendered)
 
 
 if __name__ == "__main__":

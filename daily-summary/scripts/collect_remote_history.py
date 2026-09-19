@@ -24,6 +24,7 @@ def parse_args():
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument("--host", default="main-long", help="SSH host name")
     parser.add_argument("--timeout", type=int, default=10, help="SSH connection timeout in seconds")
+    parser.add_argument("--output", help="Output JSON path (default: stdout)")
     return parser.parse_args()
 
 
@@ -130,7 +131,7 @@ def main():
 
     # Check SSH connectivity
     if not check_ssh(args.host, args.timeout):
-        print(json.dumps({
+        rendered = json.dumps({
             "date": args.date,
             "source": "remote",
             "host": args.host,
@@ -138,21 +139,31 @@ def main():
             "note": f"SSH to {args.host} timed out or failed. Skipping remote collection.",
             "claude_sessions": [],
             "codex_sessions": [],
-        }, ensure_ascii=False, indent=2))
+        }, ensure_ascii=False, indent=2)
+        if args.output:
+            Path(args.output).write_text(rendered, encoding="utf-8")
+            print(f"Remote history written to: {args.output}")
+        else:
+            print(rendered)
         return
 
     # Collect remote data
     claude_sessions = collect_claude_remote(args.host, target_date)
     codex_sessions = collect_codex_remote(args.host, target_date)
 
-    print(json.dumps({
+    rendered = json.dumps({
         "date": args.date,
         "source": "remote",
         "host": args.host,
         "reachable": True,
         "claude_sessions": claude_sessions,
         "codex_sessions": codex_sessions,
-    }, ensure_ascii=False, indent=2))
+    }, ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(f"Remote history written to: {args.output}")
+    else:
+        print(rendered)
 
 
 if __name__ == "__main__":

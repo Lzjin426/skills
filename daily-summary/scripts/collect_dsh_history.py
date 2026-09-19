@@ -43,6 +43,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Collect DeepSeek Harness history for a date")
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument("--dsh-dir", default="~/.dsh", help="Path to .dsh directory")
+    parser.add_argument("--output", help="Output JSON path (default: stdout)")
     return parser.parse_args()
 
 
@@ -244,13 +245,18 @@ def main():
     sessions = collect(dsh_dir, target_date)
     total = sum(len(s["user_messages"]) for s in sessions)
 
-    print(json.dumps({
+    rendered = json.dumps({
         "date": args.date,
         "source": "dsh_local",
         "session_count": len(sessions),
         "total_user_messages": total,
         "sessions": sessions,
-    }, ensure_ascii=False, indent=2))
+    }, ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(f"DSH history written to: {args.output}")
+    else:
+        print(rendered)
 
 
 if __name__ == "__main__":

@@ -1,40 +1,79 @@
 {
   "skill_name": "daily-summary",
+  "acceptance_contract": {
+    "date_timezone": "Asia/Shanghai",
+    "summary_owner": "two low-cost subagents aggregate, main model finalizes",
+    "summary_model": "gpt-5.6-luna",
+    "reasoning_effort": "high",
+    "aggregation_agents": 2,
+    "final_owner": "main_model",
+    "normal_bullet_target": "4-10",
+    "project_target": "2-4 when grouping is useful",
+    "top_level_headings": ["主要内容", "记录"]
+  },
   "evals": [
     {
       "id": 1,
-      "eval_name": "generate-today-summary",
+      "eval_name": "unified-source-packet",
       "prompt": "帮我写今天的日报",
-      "expected_output": "从 Claude Code、Codex、Linear、嘀嗒清单等数据源收集今天的工作内容，生成符合用户模板的 Markdown 日报，并写入飞书 daily 文件夹。",
-      "files": []
+      "expected_output": "采集可用来源后建立一个统一 evidence packet，固定并行派出两个 gpt-5.6-luna 低成本子代理分别汇总本地与远程信息，再由总模型统一整理；最终不按来源分栏。",
+      "files": ["scripts/generate_daily.py"]
     },
     {
       "id": 2,
-      "eval_name": "generate-specific-date-summary",
+      "eval_name": "specific-date-and-timezone",
       "prompt": "帮我补一下 2026-05-25 的日报",
-      "expected_output": "收集指定日期（2026-05-25）的所有数据源信息，生成日报。",
-      "files": []
+      "expected_output": "所有消息和活动按 Asia/Shanghai 的 2026-05-25 自然日筛选，跨日会话不能带入其他日期内容。",
+      "files": ["scripts/collect_codex_history.py", "scripts/generate_daily.py"]
     },
     {
       "id": 3,
-      "eval_name": "cross-source-verification",
+      "eval_name": "computer-history-evidence-boundary",
       "prompt": "今天做了什么？帮我总结一下",
-      "expected_output": "日报应体现跨数据源的信息交叉验证，例如 Linear issue 状态与 Agent 对话中的相关讨论应相互印证。",
-      "files": []
+      "expected_output": "先检查 computer_history_status；Computer History 仅作为观察证据，不能单独证明完成；插件不可用时不阻断其他来源。",
+      "files": ["SKILL.md", "scripts/collect_computer_history.py"]
     },
     {
       "id": 4,
-      "eval_name": "filter-insignificant-inputs",
+      "eval_name": "personal-note-style",
       "prompt": "写日报",
-      "expected_output": "日报中不应包含纯闲聊、问候、重复提问、纯斜杠命令（如 /memory、/plugins）等无意义内容。",
-      "files": []
+      "expected_output": "先读取最近飞书日笔记作为 style_samples；输出短句、记录式中文，正常情况下约 4-10 条，不写长篇总结，不按数据源拆栏目。",
+      "files": ["SKILL.md", "scripts/collect_lark_docs.py"]
     },
     {
       "id": 5,
-      "eval_name": "remote-collection-fallback",
+      "eval_name": "existing-report-merge",
+      "prompt": "补充今天的日报",
+      "expected_output": "读取已有日报后合并，保留原有事实和链接，不重复 # 主要内容、# 记录 或已有 ## 项目标题；重复运行不应不断复制内容。",
+      "files": ["SKILL.md", "scripts/validate_daily_report.py"]
+    },
+    {
+      "id": 6,
+      "eval_name": "partial-source-failure",
       "prompt": "生成今日日报",
-      "expected_output": "当远程电脑 SSH 不可达时，应优雅跳过远程数据源，在 # 记录 中标注不可达信息，不影响整体日报生成。",
-      "files": []
+      "expected_output": "单个来源缺失、认证失败、Computer History paused/stopped 或远程 SSH 不可达时，记录 source_status 并继续处理，不把工具状态写进日报正文。",
+      "files": ["SKILL.md", "scripts/generate_daily.py", "scripts/collect_computer_history.py"]
+    },
+    {
+      "id": 7,
+      "eval_name": "compact-detail-policy",
+      "prompt": "总结今天的工作",
+      "expected_output": "同一目标的多次对话和同类事项先合并；只在投递集中日等高信息量场景保留少量数量、状态、截止时间、渠道等关键明细。",
+      "files": ["SKILL.md"]
+    },
+    {
+      "id": 8,
+      "eval_name": "single-subagent-dispatch-and-retry",
+      "prompt": "生成今日日报",
+      "expected_output": "固定并行使用两个 gpt-5.6-luna、high 推理强度的子代理：一个负责本地/云端来源，一个负责远程来源；校验失败时回发对应 agent_id，最多补交两次；总模型最终整理，代理不可用时不写飞书。",
+      "files": ["SKILL.md"]
+    },
+    {
+      "id": 9,
+      "eval_name": "strict-compactness-gate",
+      "prompt": "补写今天的日报",
+      "expected_output": "通过 --strict 要求 valid 为 true 且 warnings 为空；普通日报控制在 4-10 条，只有确实高信息量时才使用 --allow-detailed。",
+      "files": ["SKILL.md", "scripts/validate_daily_report.py"]
     }
   ]
 }

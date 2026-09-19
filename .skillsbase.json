@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 5,
   "skills": {
     "academic-research-suite": {
       "tags": [
@@ -9,32 +9,32 @@
     },
     "agent-acceptance-review": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "agently-mail": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "anysearch": {
       "tags": [
-        "tools/搜索"
+        "Tools/搜索"
       ]
     },
     "apinebula-gpt-image": {
       "tags": [
-        "tools/画图"
+        "Tools/画图"
       ]
     },
     "apinebula-nanobanana": {
       "tags": [
-        "tools/画图"
+        "Tools/画图"
       ]
     },
     "ask-questions-if-underspecified": {
       "tags": [
-        "system"
+        "System"
       ]
     },
     "avoid-ai-writing": {
@@ -54,7 +54,12 @@
     },
     "code-mode": {
       "tags": [
-        "code"
+        "Code"
+      ]
+    },
+    "code-mode-codex": {
+      "tags": [
+        "Code"
       ]
     },
     "computer-use": {
@@ -64,22 +69,22 @@
     },
     "context-manager": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "daily-summary": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "doc": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "doc-translator-zh": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "exa-search": {
@@ -89,7 +94,7 @@
     },
     "excalidraw-diagram": {
       "tags": [
-        "obsidian/draw"
+        "Obsidian/draw"
       ]
     },
     "figure-composer": {
@@ -104,7 +109,7 @@
     },
     "find-skills": {
       "tags": [
-        "system"
+        "System"
       ]
     },
     "frontend-ui-animator": {
@@ -114,17 +119,17 @@
     },
     "grill-me": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "guided-learning": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "guizang-ppt-skill": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "humanizer-zh": {
@@ -134,42 +139,42 @@
     },
     "knowledge-doc-writer": {
       "tags": [
-        "tools/写作"
+        "Tools/写作"
       ]
     },
     "lark-approval": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-apps": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-attendance": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-base": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-calendar": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-contact": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-doc": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-doc-in": {
@@ -184,102 +189,102 @@
     },
     "lark-drive": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-event": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-im": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-mail": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-markdown": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-minutes": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-okr": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-openapi-explorer": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-screenshot-to-doc": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "lark-shared": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-sheets": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-skill-maker": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-slides": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-task": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-vc": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-vc-agent": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-whiteboard": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-wiki": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-workflow-meeting-summary": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "lark-workflow-standup-report": {
       "tags": [
-        "lark"
+        "Lark"
       ]
     },
     "literature-review": {
@@ -289,27 +294,27 @@
     },
     "md-image-supplement": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "md-to-docx-template": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "mermaid-visualizer": {
       "tags": [
-        "obsidian/draw"
+        "Obsidian/draw"
       ]
     },
     "mimo-vision": {
       "tags": [
-        "tools/识图"
+        "Tools/识图"
       ]
     },
     "monthly-summary": {
       "tags": [
-        "write"
+        "Write"
       ]
     },
     "nature-academic-search": {
@@ -413,12 +418,12 @@
     },
     "obsidian-bases": {
       "tags": [
-        "obsidian/draw"
+        "Obsidian/draw"
       ]
     },
     "obsidian-canvas-creator": {
       "tags": [
-        "obsidian/draw"
+        "Obsidian/draw"
       ]
     },
     "orca-cli": {
@@ -448,17 +453,17 @@
     },
     "product-management": {
       "tags": [
-        "code"
+        "Code"
       ]
     },
     "readme-wiki": {
       "tags": [
-        "code"
+        "Code"
       ]
     },
     "remotion-best-practices": {
       "tags": [
-        "video"
+        "Video"
       ]
     },
     "research-writing-skill": {
@@ -468,7 +473,7 @@
     },
     "save-solution": {
       "tags": [
-        "write"
+        "Write"
       ]
     },
     "sciverse": {
@@ -478,17 +483,17 @@
     },
     "screenshot": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "skill-vetter": {
       "tags": [
-        "system"
+        "System"
       ]
     },
     "slides": {
       "tags": [
-        "tools"
+        "Tools"
       ]
     },
     "taste-skill": {
@@ -503,12 +508,12 @@
     },
     "weekly-summary": {
       "tags": [
-        "write"
+        "Write"
       ]
     },
     "yearly-summary": {
       "tags": [
-        "write"
+        "Write"
       ]
     }
   },
@@ -522,29 +527,31 @@
     "论文/阅读",
     "论文/作图",
     "论文/nature-skill",
-    "code",
-    "lark",
+    "Code",
     "Lark",
     "Lark/doc",
-    "obsidian",
-    "obsidian/draw",
+    "Obsidian",
+    "Obsidian/draw",
     "Tools",
     "Tools/exa",
     "Tools/orca",
-    "system",
-    "tools",
-    "tools/画图",
-    "tools/识图",
-    "tools/搜索",
-    "tools/写作",
+    "System",
+    "Tools/画图",
+    "Tools/识图",
+    "Tools/搜索",
+    "Tools/写作",
     "UI&UX",
-    "video",
-    "write"
+    "Video",
+    "Write"
   ],
   "tag_styles": {
-    "论文/写作": {
+    "论文/文献综述": {
       "icon": "",
       "color": "#ef4444"
+    },
+    "论文写作": {
+      "icon": "",
+      "color": "#f97316"
     },
     "UI&UX": {
       "icon": "",
@@ -554,17 +561,17 @@
       "icon": "mdi:brush",
       "color": "#ef4444"
     },
-    "论文写作": {
-      "icon": "",
-      "color": "#f97316"
-    },
-    "论文/文献综述": {
-      "icon": "",
-      "color": "#ef4444"
-    },
-    "obsidian": {
+    "Obsidian": {
       "icon": "",
       "color": "#a855f7"
+    },
+    "Video": {
+      "icon": "mdi:tag",
+      "color": ""
+    },
+    "论文/写作": {
+      "icon": "",
+      "color": "#ef4444"
     }
   },
   "tool_order": [
@@ -580,13 +587,17 @@
     "kimi-work",
     "hermes",
     "trae",
-    "zcode"
+    "zcode",
+    "antigravity",
+    "dsh",
+    "qoder-cn"
   ],
   "visible_tools": [
-    "claude",
     "opencode",
     "codex",
-    "kimi-code",
-    "workbuddy"
+    "workbuddy",
+    "antigravity",
+    "dsh",
+    "qoder-cn"
   ]
 }

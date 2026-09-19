@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument("--history", default="~/.claude/history.jsonl", help="Path to history.jsonl")
     parser.add_argument("--sessions-dir", default="~/.claude/sessions", help="Path to sessions directory")
+    parser.add_argument("--output", help="Output JSON path (default: stdout)")
     return parser.parse_args()
 
 
@@ -206,13 +207,18 @@ def main():
     # Sort by first input time
     result.sort(key=lambda x: x["inputs"][0]["time"] if x["inputs"] else "")
 
-    print(json.dumps({
+    rendered = json.dumps({
         "date": args.date,
         "source": "claude_code_local",
         "session_count": len(result),
         "total_inputs": sum(len(s["inputs"]) for s in result),
         "sessions": result,
-    }, ensure_ascii=False, indent=2))
+    }, ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(f"Claude history written to: {args.output}")
+    else:
+        print(rendered)
 
 
 if __name__ == "__main__":
