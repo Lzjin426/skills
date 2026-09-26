@@ -5,3 +5,6 @@
 .skillsbase-local.json
 apinebula-gpt-image/.api_key
 mimo-vision/.api_key
+
+__pycache__/
+*.py[cod]
