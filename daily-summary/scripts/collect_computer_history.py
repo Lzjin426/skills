@@ -15,6 +15,7 @@ import re
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 try:
     from zoneinfo import ZoneInfo
@@ -34,6 +35,30 @@ TIME_KEYS = (
     "occurredAt",
     "event_time",
     "eventTime",
+)
+
+AX_OUTCOME_RE = re.compile(
+    r"(?:\binitial submission\b|\bsubmission overview\b|\bsubmission complete\b|"
+    r"\bsubmitted successfully\b|\bunder consideration\b|\bcannot be edited\b|"
+    r"\b(?:manuscript|submission).{0,120}(?:shared with|sent to|submitted to|under consideration)\b|"
+    r"\bsubmission id\b|\bmanuscript id\b|\bdownload reviewer pdf\b|"
+    r"\bupload (?:complete|successful)\b|"
+    r"\b(?:manuscript|submission|paper) (?:has been )?(?:accepted|rejected|published)\b|"
+    r"\b(?:submission|upload) failed\b|"
+    r"已提交|投稿成功|提交成功|正在审理|审理中|审核中|不可编辑|上传成功|"
+    r"(?:稿件|手稿|论文).{0,80}(?:正在与期刊编辑分享|已送交编辑部|已发送给编辑部|进入审理)|"
+    r"(?:稿件|论文|投稿)(?:已|正在|当前|目前)?(?:被)?(?:接收|接受|拒绝|发表|审理|审核)|"
+    r"投稿失败|上传失败)",
+    re.IGNORECASE,
+)
+MAX_AX_EVIDENCE_LINES = 8
+MAX_AX_EVIDENCE_LINE_CHARS = 360
+MAX_AX_EVIDENCE_CHARS = 1800
+URL_RE = re.compile(r"https?://[^\s|<>\"]+")
+SECRET_QUERY_RE = re.compile(
+    r"([?&](?:authToken|access_token|refresh_token|token|code|state|secret|signature|sig|ticket|"
+    r"complete_account_hint|form_hint|xsec_token)=)[^&#\s]+",
+    re.IGNORECASE,
 )
 
 
@@ -107,6 +132,55 @@ def pick(item: dict[str, Any], *keys: str) -> str:
     return ""
 
 
+def ax_text(item: dict[str, Any]) -> tuple[str, str]:
+    """Read the AX field used by the event stream, with legacy-key fallback."""
+    raw = item.get("ax") or item.get("ax_tree") or item.get("axTree") or item.get("ax_diff") or item.get("axDiff")
+    if isinstance(raw, dict):
+        return str(raw.get("mode") or ""), str(raw.get("text") or "")
+    if isinstance(raw, str):
+        return "", raw
+    return "", ""
+
+
+def ax_outcome_evidence(text: str) -> str:
+    """Keep short UI status lines, not whole accessibility trees or page bodies."""
+    kept: list[str] = []
+    seen: set[str] = set()
+    for raw_line in text.splitlines():
+        line = re.sub(r"^\s*[+~\-]*\s*\d+\s+", "", raw_line).strip()
+        if not line or not AX_OUTCOME_RE.search(line):
+            continue
+        line = line[:MAX_AX_EVIDENCE_LINE_CHARS]
+        key = line.casefold()
+        if key in seen:
+            continue
+        kept.append(line)
+        seen.add(key)
+        if len(kept) >= MAX_AX_EVIDENCE_LINES:
+            break
+    result = " | ".join(kept)
+    return result[:MAX_AX_EVIDENCE_CHARS]
+
+
+def sanitize_url(value: str) -> str:
+    """Keep URL identity while dropping query/fragment values that can contain credentials."""
+    try:
+        parsed = urlsplit(value.strip())
+        if not parsed.scheme:
+            return value.strip()
+        host = parsed.hostname or ""
+        if parsed.port:
+            host = f"{host}:{parsed.port}"
+        return urlunsplit((parsed.scheme, host, parsed.path, "", ""))
+    except ValueError:
+        return ""
+
+
+def sanitize_text(value: str) -> str:
+    text = SECRET_QUERY_RE.sub(r"\1[REDACTED]", value)
+    return URL_RE.sub(lambda match: sanitize_url(match.group(0)), text)
+
+
 def in_target(value: datetime | None, target_date: date) -> bool:
     return value is not None and value.date() == target_date
 
@@ -143,29 +217,73 @@ def event_record(item: dict[str, Any], segment: str, target_date: date) -> dict[
         return None
     app = pick(item, "app", "application", "app_name", "application_name", "bundle_id", "bundleID")
     window = pick(item, "window_title", "windowTitle", "title", "window")
+    window_info = item.get("window")
     url = pick(item, "url", "href", "web_url")
+    if not url and isinstance(window_info, dict):
+        url = str(window_info.get("url") or "").strip()
+    url = sanitize_url(url) if url else ""
     selected = pick(item, "selected_text", "selectedText", "selection")
     focused = pick(item, "focused_element", "focusedElement", "element")
     mouse = pick(item, "mouse_target", "mouseTarget", "target")
     keyboard = pick(item, "keyboard_target", "keyboardTarget")
-    ax = item.get("ax_tree") or item.get("axTree") or item.get("ax_diff") or item.get("axDiff")
+    ax_mode, raw_ax_text = ax_text(item)
+    ax_evidence = ax_outcome_evidence(raw_ax_text)
     summary = pick(item, "text", "summary", "description", "event")
+    has_explicit_text = bool(summary)
     if not summary:
         summary = " | ".join(value for value in (app, window, url, selected, focused) if value)
+    summary = sanitize_text(summary)[:1000]
+    if ax_evidence:
+        summary = " | ".join(part for part in (summary, f"AX outcome: {ax_evidence}") if part)
     return {
+        "id": item.get("id", ""),
         "time": timestamp.isoformat() if timestamp else "",
         "app": app,
         "window_title": window,
         "url": url,
-        "selected_text": selected,
-        "focused_element": focused,
-        "mouse_target": mouse,
-        "keyboard_target": keyboard,
-        "ax": ax,
+        "selected_text": sanitize_text(selected),
+        "focused_element": sanitize_text(focused),
+        "mouse_target": sanitize_text(mouse),
+        "keyboard_target": sanitize_text(keyboard),
+        "ax_mode": ax_mode,
+        "ax_evidence": ax_evidence,
         "summary": summary,
+        "has_explicit_text": has_explicit_text,
         "segment": segment,
-        "evidence_level": "observed_activity_only",
+        "evidence_level": "observed_ui_state" if ax_evidence else "observed_activity_only",
     }
+
+
+def compact_duplicate_observations(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep one sample of an identical UI snapshot; repeated captures add no new evidence."""
+    compacted: list[dict[str, Any]] = []
+    seen_states: set[tuple[str, ...]] = set()
+    for event in sorted(events, key=lambda item: item.get("time", "")):
+        context = tuple(str(event.get(field) or "") for field in ("app", "window_title", "url"))
+        evidence = str(event.get("ax_evidence") or "").strip()
+        if evidence:
+            key = (*context, "ui_state", evidence)
+        elif event.get("has_explicit_text") or any(
+            event.get(field) for field in ("selected_text", "focused_element", "mouse_target", "keyboard_target")
+        ):
+            key = (
+                *context,
+                "explicit_observation",
+                str(event.get("summary") or ""),
+                str(event.get("selected_text") or ""),
+                str(event.get("focused_element") or ""),
+                str(event.get("mouse_target") or ""),
+                str(event.get("keyboard_target") or ""),
+            )
+        else:
+            key = (*context, "view")
+        if not any(key[:3]):
+            key = (*key, str(event.get("summary") or ""))
+        if key in seen_states:
+            continue
+        seen_states.add(key)
+        compacted.append(event)
+    return compacted
 
 
 def read_json(path: Path) -> Any | None:
@@ -255,7 +373,7 @@ def main() -> None:
     target_date = datetime.strptime(args.date, "%Y-%m-%d").date()
     errors: list[str] = []
     root = Path(args.root).expanduser() if args.root else None
-    events = collect_segments(root, target_date, errors) if root else []
+    events = compact_duplicate_observations(collect_segments(root, target_date, errors)) if root else []
     if not root:
         errors.append("eventStreamRootPath was not supplied by computer_history_status")
     elif not root.exists():
@@ -267,7 +385,7 @@ def main() -> None:
         "source": "computer_history",
         "status": args.status,
         "available": bool(events or memories) and bool(root and root.exists()),
-        "evidence_quality": "observed_activity_only",
+        "evidence_quality": "observed_ui_state_and_activity" if any(event.get("ax_evidence") for event in events) else "observed_activity_only",
         "events": events,
         "memories": memories,
         "errors": errors,

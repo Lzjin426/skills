@@ -8,6 +8,7 @@ daily folder are treated as style references, not as new work output.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import subprocess
@@ -24,6 +25,7 @@ except Exception:  # pragma: no cover
 
 
 DAILY_NAME = re.compile(r"^\d{1,2}\.\d{1,2}-\d{2}$")
+MAX_SEARCH_PAGES = 50
 
 
 def parse_args() -> argparse.Namespace:
@@ -113,7 +115,10 @@ def run_lark(args: list[str]) -> Any:
     if result.returncode != 0:
         detail = (result.stderr or result.stdout).strip()
         raise RuntimeError(detail or f"lark-cli exited with {result.returncode}")
-    return extract_json(result.stdout)
+    payload = extract_json(result.stdout)
+    if isinstance(payload, dict) and payload.get("ok") is False:
+        raise RuntimeError(str(payload.get("error") or payload.get("message") or "lark-cli request failed"))
+    return payload
 
 
 def load_config(path: str) -> dict[str, Any]:
@@ -135,9 +140,35 @@ def files_from_payload(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
+def search_page(payload: Any) -> tuple[list[dict[str, Any]], bool, str]:
+    data = payload.get("data", payload) if isinstance(payload, dict) else {}
+    if not isinstance(data, dict):
+        raise ValueError("global search response has no data object")
+    if "results" not in data and "items" not in data:
+        raise ValueError("global search response has no results field")
+    results = data.get("results", data.get("items", []))
+    rows = [item for item in results if isinstance(item, dict)] if isinstance(results, list) else []
+    return rows, bool(data.get("has_more")), str(data.get("page_token") or "")
+
+
+def clean_highlight(value: Any) -> str:
+    text = str(value or "")
+    text = re.sub(r"</?h(?:b)?\s*>", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
+    return html.unescape(text).strip()
+
+
 def document_record(raw: dict[str, Any], folder_token: str, start: datetime, end: datetime) -> dict[str, Any]:
-    created = parse_time(raw.get("created_time") or raw.get("createdTime"))
-    modified = parse_time(raw.get("modified_time") or raw.get("modifiedTime"))
+    created = parse_time(
+        raw.get("created_time") or raw.get("createdTime") or raw.get("create_time_iso") or raw.get("create_time")
+    )
+    modified = parse_time(
+        raw.get("modified_time")
+        or raw.get("modifiedTime")
+        or raw.get("modified_at")
+        or raw.get("update_time_iso")
+        or raw.get("update_time")
+    )
     name = str(raw.get("name") or raw.get("title") or "").strip()
     return {
         "name": name,
@@ -154,10 +185,67 @@ def document_record(raw: dict[str, Any], folder_token: str, start: datetime, end
     }
 
 
-def fetch_content(token: str) -> str:
-    if not token:
+def search_document_record(raw: dict[str, Any], start: datetime, end: datetime) -> dict[str, Any]:
+    meta = raw.get("result_meta") if isinstance(raw.get("result_meta"), dict) else raw
+    item = dict(meta)
+    item["name"] = clean_highlight(raw.get("title_highlighted") or meta.get("name") or meta.get("title"))
+    item["url"] = str(meta.get("url") or raw.get("url") or "").strip()
+    doc_types = meta.get("doc_types") or raw.get("entity_type") or ""
+    item["type"] = ",".join(str(value) for value in doc_types) if isinstance(doc_types, list) else str(doc_types)
+    record = document_record(item, "", start, end)
+    record["summary"] = clean_highlight(raw.get("summary_highlighted"))
+    record["edit_user_name"] = str(meta.get("edit_user_name") or "")
+    record["container_id"] = str(meta.get("space_id") or meta.get("folder_token") or "")
+    record["source"] = "global_edit_search"
+    return record
+
+
+def collect_edited_documents(start: datetime, end: datetime) -> tuple[list[dict[str, Any]], list[str]]:
+    documents: list[dict[str, Any]] = []
+    errors: list[str] = []
+    page_token = ""
+    seen_tokens: set[str] = set()
+    for page_number in range(MAX_SEARCH_PAGES):
+        command = [
+            "drive",
+            "+search",
+            "--query",
+            "",
+            "--edited-since",
+            start.isoformat(),
+            "--edited-until",
+            end.isoformat(),
+            "--doc-types",
+            "doc,docx,wiki",
+            "--sort",
+            "edit_time",
+            "--page-size",
+            "20",
+        ]
+        if page_token:
+            command.extend(["--page-token", page_token])
+        try:
+            rows, has_more, next_token = search_page(run_lark(command))
+        except (RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+            errors.append(f"global edited-document search: {exc}")
+            break
+        documents.extend(search_document_record(row, start, end) for row in rows)
+        if not has_more:
+            break
+        if not next_token or next_token in seen_tokens:
+            errors.append("global edited-document search returned an invalid/repeated page token")
+            break
+        seen_tokens.add(next_token)
+        page_token = next_token
+    else:
+        errors.append(f"global edited-document search stopped after {MAX_SEARCH_PAGES} pages; results may be incomplete")
+    return documents, errors
+
+
+def fetch_content(doc_ref: str) -> str:
+    if not doc_ref:
         return ""
-    payload = run_lark(["docs", "+fetch", "--doc", token, "--doc-format", "markdown"])
+    payload = run_lark(["docs", "+fetch", "--doc", doc_ref, "--doc-format", "markdown"])
     data = payload.get("data", payload) if isinstance(payload, dict) else {}
     document = data.get("document", {}) if isinstance(data, dict) else {}
     return str(document.get("content") or "")
@@ -173,6 +261,7 @@ def main() -> None:
 
     errors: list[str] = []
     all_files: list[dict[str, Any]] = []
+    folder_queries_succeeded = 0
     for folder_token in folder_tokens:
         try:
             payload = run_lark(
@@ -193,12 +282,17 @@ def main() -> None:
                     "10",
                 ]
             )
+            folder_queries_succeeded += 1
             all_files.extend(
                 document_record(item, folder_token, start, end)
                 for item in files_from_payload(payload)
             )
         except (RuntimeError, ValueError, subprocess.SubprocessError) as exc:
             errors.append(f"folder {folder_token}: {exc}")
+
+    global_documents, search_errors = collect_edited_documents(start, end)
+    all_files.extend(global_documents)
+    errors.extend(search_errors)
 
     unique_files: dict[str, dict[str, Any]] = {}
     for item in all_files:
@@ -212,7 +306,7 @@ def main() -> None:
     target_reports.sort(key=lambda item: item["modified_at"] or item["created_at"], reverse=True)
     if len(target_reports) == 1:
         try:
-            target_reports[0]["content"] = fetch_content(target_reports[0]["token"])
+            target_reports[0]["content"] = fetch_content(target_reports[0]["url"] or target_reports[0]["token"])
         except (RuntimeError, ValueError, subprocess.SubprocessError) as exc:
             target_reports[0]["content_error"] = str(exc)
     elif len(target_reports) > 1:
@@ -230,7 +324,7 @@ def main() -> None:
     if args.fetch_content:
         for item in changed_documents:
             try:
-                item["content"] = fetch_content(item["token"])
+                item["content"] = fetch_content(item["url"] or item["token"])
             except (RuntimeError, ValueError, subprocess.SubprocessError) as exc:
                 item["content_error"] = str(exc)
 
@@ -244,7 +338,7 @@ def main() -> None:
     for item in style_candidates[: max(args.style_limit, 0)]:
         sample = dict(item)
         try:
-            sample["content"] = fetch_content(item["token"])
+            sample["content"] = fetch_content(item["url"] or item["token"])
         except (RuntimeError, ValueError, subprocess.SubprocessError) as exc:
             sample["content_error"] = str(exc)
         style_samples.append(sample)
@@ -253,7 +347,7 @@ def main() -> None:
         "date": args.date,
         "timezone": "Asia/Shanghai",
         "source": "lark_docs",
-        "available": bool(folder_tokens) and not errors,
+        "available": bool(folder_queries_succeeded or global_documents or not search_errors),
         "folder_tokens": folder_tokens,
         "target_name": target_name,
         "target_reports": target_reports,

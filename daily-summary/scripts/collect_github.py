@@ -111,6 +111,16 @@ def local_commit_events(repo_path: str, target_date: date, author: str | None) -
     if not path.exists():
         return [], f"repo path does not exist: {path}", ""
 
+    author_filter = author
+    if not author_filter:
+        for identity_key in ("user.email", "user.name"):
+            identity, _ = run_text(["git", "-C", str(path), "config", "--get", identity_key])
+            if identity:
+                author_filter = identity
+                break
+    if not author_filter:
+        return [], f"{path}: no configured git author identity; skipped commits", ""
+
     start = datetime.combine(target_date, datetime.min.time(), tzinfo=TZ).isoformat()
     end = (datetime.combine(target_date, datetime.min.time(), tzinfo=TZ) + timedelta(days=1)).isoformat()
     command = [
@@ -124,8 +134,7 @@ def local_commit_events(repo_path: str, target_date: date, author: str | None) -
         end,
         "--format=%H%x09%aI%x09%an%x09%ae%x09%s",
     ]
-    if author:
-        command.append(f"--author={author}")
+    command.append(f"--author={author_filter}")
     output, error = run_text(command)
     if error:
         return [], f"{path}: {error}", ""
@@ -155,67 +164,89 @@ def local_commit_events(repo_path: str, target_date: date, author: str | None) -
     return events, None, repo
 
 
-def notification_events(payload: Any, target_date: date) -> list[dict[str, Any]]:
-    if not isinstance(payload, list):
-        return []
-    events: list[dict[str, Any]] = []
-    for item in payload:
-        if not isinstance(item, dict) or not in_target(item.get("updated_at"), target_date):
-            continue
-        repository = item.get("repository") or {}
-        subject = item.get("subject") or {}
-        repo = repository.get("full_name", "") if isinstance(repository, dict) else str(repository)
-        events.append(
-            {
-                "id": item.get("id", ""),
-                "kind": str(subject.get("type") or "notification").lower(),
-                "repo": repo,
-                "timestamp": iso(item.get("updated_at")),
-                "title": subject.get("title", ""),
-                "summary": f"{item.get('reason', '')}: {subject.get('title', '')}".strip(": "),
-                "url": "",
-                "status": "notified",
-                "reason": item.get("reason", ""),
-            }
-        )
-    return events
+def action_event(item: dict[str, Any], repo: str, login: str, action: str, timestamp: Any, status: str) -> dict[str, Any]:
+    kind = "pull_request" if item.get("pull_request") or item.get("_is_pull_request") else "issue"
+    number = item.get("number") or item.get("id") or ""
+    verb = {"opened": "创建", "merged": "合并", "closed": "关闭"}.get(action, action)
+    return {
+        "id": f"{repo}#{number}:{action}:{iso(timestamp)}",
+        "kind": kind,
+        "action": action,
+        "repo": repo,
+        "number": number,
+        "timestamp": iso(timestamp),
+        "title": item.get("title", ""),
+        "summary": f"本人{verb}{' PR' if kind == 'pull_request' else ' issue'} #{number}",
+        "url": item.get("html_url", ""),
+        "status": status,
+        "author": login,
+    }
 
 
-def search_events(repo: str, target_date: date) -> tuple[list[dict[str, Any]], str | None]:
-    query = f"repo:{repo} updated:{target_date.isoformat()}..{target_date.isoformat()}"
+def search_events(repo: str, target_date: date, login: str) -> tuple[list[dict[str, Any]], list[str]]:
+    local_start = datetime.combine(target_date, datetime.min.time(), tzinfo=TZ)
+    local_end = local_start + timedelta(days=1)
+    utc_start_day = local_start.astimezone(timezone.utc).date()
+    utc_end_day = (local_end - timedelta(seconds=1)).astimezone(timezone.utc).date()
+    query = f"repo:{repo} updated:{utc_start_day.isoformat()}..{utc_end_day.isoformat()}"
     endpoint = f"search/issues?q={quote(query)}&per_page=100"
     payload, error = run_json(["gh", "api", endpoint])
     if error:
-        return [], f"{repo}: {error}"
+        return [], [f"{repo}: {error}"]
     items = payload.get("items", []) if isinstance(payload, dict) else []
     events: list[dict[str, Any]] = []
+    errors: list[str] = []
     for item in items:
-        if not isinstance(item, dict) or not in_target(item.get("updated_at"), target_date):
+        if not isinstance(item, dict):
             continue
-        kind = "pull_request" if item.get("pull_request") else "issue"
-        events.append(
-            {
-                "id": item.get("node_id") or item.get("id"),
-                "kind": kind,
-                "repo": repo,
-                "timestamp": iso(item.get("updated_at")),
-                "title": item.get("title", ""),
-                "summary": item.get("body", "")[:800] if isinstance(item.get("body"), str) else "",
-                "url": item.get("html_url", ""),
-                "status": "open" if item.get("state") == "open" else item.get("state", ""),
-                "author": (item.get("user") or {}).get("login", "") if isinstance(item.get("user"), dict) else "",
-            }
-        )
-    return events, None
+        is_pr = "pull_request" in item and item.get("pull_request") is not None
+        item["_is_pull_request"] = is_pr
+        author = item.get("user") or {}
+        if isinstance(author, dict) and str(author.get("login") or "").casefold() == login.casefold() and in_target(item.get("created_at"), target_date):
+            state = "open" if item.get("state") == "open" else item.get("state", "closed")
+            events.append(action_event(item, repo, login, "opened", item["created_at"], state))
+
+        if item.get("state") != "closed":
+            continue
+        number = item.get("number")
+        if not number:
+            continue
+        endpoint_kind = "pulls" if is_pr else "issues"
+        detail, detail_error = run_json(["gh", "api", f"repos/{repo}/{endpoint_kind}/{number}"])
+        if detail_error:
+            errors.append(f"{repo} #{number}: unable to verify personal close/merge action: {detail_error}")
+            continue
+        if not isinstance(detail, dict):
+            errors.append(f"{repo} #{number}: invalid close/merge details")
+            continue
+
+        if is_pr:
+            merged_by = detail.get("merged_by") or {}
+            merged_at = detail.get("merged_at")
+            if isinstance(merged_by, dict) and str(merged_by.get("login") or "").casefold() == login.casefold() and in_target(merged_at, target_date):
+                events.append(action_event(item, repo, login, "merged", merged_at, "merged"))
+                continue
+        closed_by = detail.get("closed_by") or {}
+        closed_at = detail.get("closed_at")
+        if isinstance(closed_by, dict) and str(closed_by.get("login") or "").casefold() == login.casefold() and in_target(closed_at, target_date):
+            events.append(action_event(item, repo, login, "closed", closed_at, "closed"))
+    return events, errors
 
 
-def release_events(repo: str, target_date: date) -> tuple[list[dict[str, Any]], str | None]:
+def release_events(repo: str, target_date: date, login: str) -> tuple[list[dict[str, Any]], str | None]:
     payload, error = run_json(["gh", "api", f"repos/{repo}/releases?per_page=100"])
     if error:
         return [], f"{repo} releases: {error}"
     events: list[dict[str, Any]] = []
     for item in payload if isinstance(payload, list) else []:
-        if not isinstance(item, dict) or not in_target(item.get("published_at"), target_date):
+        if not isinstance(item, dict):
+            continue
+        author = item.get("author") or {}
+        if (
+            not isinstance(author, dict)
+            or str(author.get("login") or "").casefold() != login.casefold()
+            or not in_target(item.get("published_at"), target_date)
+        ):
             continue
         events.append(
             {
@@ -243,16 +274,7 @@ def main() -> None:
     if error:
         errors.append(f"gh authentication unavailable: {error}")
 
-    notifications, error = run_json(["gh", "api", "notifications?all=true&per_page=100"])
-    if error:
-        errors.append(f"notifications: {error}")
-    else:
-        events.extend(notification_events(notifications, target_date))
-        for item in notifications if isinstance(notifications, list) else []:
-            if isinstance(item, dict) and isinstance(item.get("repository"), dict):
-                repo = item["repository"].get("full_name")
-                if repo:
-                    repos.add(repo)
+    login = str((user or {}).get("login") or "") if isinstance(user, dict) else ""
 
     for repo_path in args.repo_path:
         commit_events, commit_error, repo = local_commit_events(repo_path, target_date, args.author)
@@ -263,15 +285,17 @@ def main() -> None:
             repos.add(repo)
 
     if not args.skip_search:
-        for repo in sorted(repos):
-            found, search_error = search_events(repo, target_date)
-            events.extend(found)
-            if search_error:
-                errors.append(search_error)
-            found, release_error = release_events(repo, target_date)
-            events.extend(found)
-            if release_error:
-                errors.append(release_error)
+        if not login:
+            errors.append("authenticated GitHub user is unknown; skipped repository activity search")
+        else:
+            for repo in sorted(repos):
+                found, search_errors = search_events(repo, target_date, login)
+                events.extend(found)
+                errors.extend(search_errors)
+                found, release_error = release_events(repo, target_date, login)
+                events.extend(found)
+                if release_error:
+                    errors.append(release_error)
 
     unique: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     for event in events:
@@ -289,7 +313,7 @@ def main() -> None:
         "source": "github",
         "available": not (errors and not events),
         "repos": sorted(repos),
-        "authenticated_user": (user or {}).get("login", "") if isinstance(user, dict) else "",
+        "authenticated_user": login,
         "events": sorted(unique.values(), key=lambda item: item.get("timestamp", "")),
         "errors": errors,
     }

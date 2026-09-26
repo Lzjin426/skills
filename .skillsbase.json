@@ -137,6 +137,11 @@
         "论文/润色"
       ]
     },
+    "kisssoft-com-2024": {
+      "tags": [
+        "Tools"
+      ]
+    },
     "knowledge-doc-writer": {
       "tags": [
         "Tools/写作"
@@ -217,6 +222,11 @@
         "Lark"
       ]
     },
+    "lark-note": {
+      "tags": [
+        "Lark"
+      ]
+    },
     "lark-okr": {
       "tags": [
         "Lark"
@@ -287,6 +297,21 @@
         "Lark"
       ]
     },
+    "law-lark-wiki": {
+      "tags": [
+        "Law"
+      ]
+    },
+    "law-md-write": {
+      "tags": [
+        "Law"
+      ]
+    },
+    "libraries-dev": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
     "literature-review": {
       "tags": [
         "论文/文献综述"
@@ -312,9 +337,19 @@
         "Tools/识图"
       ]
     },
+    "monocode-ui": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
     "monthly-summary": {
       "tags": [
-        "Write"
+        "Tools"
+      ]
+    },
+    "multi-agent-decision-review": {
+      "tags": [
+        "Tools/review"
       ]
     },
     "nature-academic-search": {
@@ -426,6 +461,11 @@
         "Obsidian/draw"
       ]
     },
+    "oil-frontend": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
     "orca-cli": {
       "tags": [
         "Tools/orca"
@@ -463,7 +503,7 @@
     },
     "remotion-best-practices": {
       "tags": [
-        "Video"
+        "Tools/video"
       ]
     },
     "research-writing-skill": {
@@ -473,7 +513,7 @@
     },
     "save-solution": {
       "tags": [
-        "Write"
+        "Tools"
       ]
     },
     "sciverse": {
@@ -484,6 +524,11 @@
     "screenshot": {
       "tags": [
         "Tools"
+      ]
+    },
+    "shadcn": {
+      "tags": [
+        "UI&UX"
       ]
     },
     "skill-vetter": {
@@ -501,6 +546,11 @@
         "UI&UX"
       ]
     },
+    "team-mode": {
+      "tags": [
+        "Code/codex"
+      ]
+    },
     "ui-animation": {
       "tags": [
         "UI&UX"
@@ -508,12 +558,17 @@
     },
     "weekly-summary": {
       "tags": [
-        "Write"
+        "Tools"
       ]
     },
     "yearly-summary": {
       "tags": [
-        "Write"
+        "Tools"
+      ]
+    },
+    "zh-tech-writing": {
+      "tags": [
+        "Tools/写作"
       ]
     }
   },
@@ -535,14 +590,14 @@
     "Tools",
     "Tools/exa",
     "Tools/orca",
-    "System",
     "Tools/画图",
     "Tools/识图",
     "Tools/搜索",
     "Tools/写作",
+    "Tools/video",
+    "System",
     "UI&UX",
-    "Video",
-    "Write"
+    "Law"
   ],
   "tag_styles": {
     "论文/文献综述": {
@@ -553,10 +608,6 @@
       "icon": "",
       "color": "#f97316"
     },
-    "UI&UX": {
-      "icon": "",
-      "color": "#10b981"
-    },
     "Nature-skill": {
       "icon": "mdi:brush",
       "color": "#ef4444"
@@ -565,13 +616,17 @@
       "icon": "",
       "color": "#a855f7"
     },
-    "Video": {
-      "icon": "mdi:tag",
-      "color": ""
+    "UI&UX": {
+      "icon": "",
+      "color": "#10b981"
     },
     "论文/写作": {
       "icon": "",
       "color": "#ef4444"
+    },
+    "Video": {
+      "icon": "mdi:tag",
+      "color": ""
     }
   },
   "tool_order": [

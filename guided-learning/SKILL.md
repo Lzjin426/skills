@@ -7,7 +7,7 @@ description: "Use when the user asks to learn, understand, explain, introduce, o
 
 ## Purpose
 
-Help the user move one step forward in learning as a guide, teacher, and explainer, then leave behind reusable structure only when requested.
+Help the user complete one coherent learning unit as a guide, teacher, and explainer, then leave behind reusable structure only when requested. A coherent unit can be a full calculation chain when breaking it into tiny replies would obscure the logic.
 
 Use this skill as a lightweight learning coach plus knowledge writer. Optimize for quick understanding, goal fit, and cognitive-load control; create knowledge-base text only when the user explicitly asks for notes, distillation, or knowledge-base text. Low cognitive load does not mean short; it means one clear learning line, limited branches, and enough explanation for the user's current goal.
 
@@ -24,7 +24,7 @@ Use this skill as a lightweight learning coach plus knowledge writer. Optimize f
 - Avoid two failure modes: fragmented bullet dumps and continuous walls of text.
 - Avoid shallow completeness: do not create many headings, tables, or named concepts if each receives only summary-level treatment.
 - Separate immediate understanding from knowledge-base text only when the user explicitly asks for notes, distillation, or knowledge-base text.
-- Include a small understanding check only when the user is learning for retention, application, paper reading, or later reuse. Prefer checks tied to the user's task, and include what a good answer should contain.
+- Include a small understanding check when it helps retention or reveals a real blocker. Do not interrupt an explanation after every formula or make the learner answer repeated checks before continuing.
 - Browse or cite sources when the answer depends on current facts, specific papers, product behavior, standards, or when the user asks for evidence. Also source-scout when a mature, research-heavy, standard-driven, or terminology-ambiguous topic would be better learned from a high-quality tutorial, paper, textbook chapter, standard, or official documentation.
 - Verify external links before recommending them when browsing is available. If browsing is not available, separate remembered source names from verified links.
 - Prefer Chinese learning resources by default, with English resources as supplements for authority, original standards, canonical documentation, or when Chinese material is weak.
@@ -33,6 +33,19 @@ Use this skill as a lightweight learning coach plus knowledge writer. Optimize f
 - When the learning goal, scope, and stages are already clear, do not ask more intake questions. Build the staged learning route and gather the relevant videos, documents, papers, official docs, and standards for each stage.
 - For non-trivial source scouting, use subagents when available and the user has asked for resource gathering, learning-plan construction, or authorized agent assistance. Give each agent a bounded search slice, such as Chinese videos, Chinese documents, standards, or English canonical sources.
 
+## Teaching a Document or Calculation Method
+
+Use this section when teaching from a standard, paper, technical note, or worked calculation. It applies especially when the learner is new to the notation.
+
+- Read the relevant source and the learner's current notes when available. Before entering formulas, give a compact map of the whole current task: starting inputs, calculation stages, outputs, checks, and where the source applies. Follow the source's actual sequence unless a different sequence removes a prerequisite gap.
+- Teach the **method before the numerical example**. For each stage, explain the physical question, which inputs are known or looked up, the exact formula used, and what the result means. Then substitute numbers. Do not make a worked example carry an unexplained method.
+- Make each reply self-contained for its current stage. At first use, define every symbol, prime, subscript, unit, and intermediate quantity needed to follow the calculation. State where a tabulated value or formula comes from and how it is used. Section and equation numbers are navigation aids, not substitutes for writing out and explaining the content; do not require the learner to flip between documents to understand the reply.
+- Keep related calculations in dependency order and distinguish parallel branches. For example, an output used for a safety check should not be presented as an input to heat generation unless the model actually uses it there. Distinguish calculated operating values, assumed trial values, tabulated coefficients, and permissible limits.
+- When a method iterates, explain the circular dependency before showing iterations: why a trial value is needed, which properties it sets, how an output is calculated, why input and output must become self-consistent, the update rule, and the stopping tolerance. Distinguish numerical convergence from passing a design limit.
+- Check the source version, assumptions, geometry, and exact notation before transferring formulas. Where OCR, a worked example, and the stated limit disagree, verify against the original where possible, show the arithmetic, and label the discrepancy instead of silently repairing it or repeating the source's conclusion.
+- Size the chunk to preserve the causal chain, not to minimize response length. If the learner asks to proceed in parts, finish a meaningful stage per reply and show where it fits. If they ask to finish or say the pacing is too fragmented, cover the remaining connected stages together. Treat repeated "continue" as a signal to advance through the planned route, not to reveal one isolated symbol at a time.
+- When the learner says they do not understand, identify the missing prerequisite or mistaken explanation and restart from that point in plain language; do not repeat the same formula with more jargon. Carry the correction into later turns. If the learner is writing notes and asks what to write, use their current structure to suggest the next location and wording, but edit their file only when asked.
+
 ## Applied Concept Triage
 
 Use this triage before deep teaching, applied explanations, paper support, or learning paths. Keep it short; do not turn every answer into a questionnaire.
@@ -40,7 +53,7 @@ Use this triage before deep teaching, applied explanations, paper support, or le
 1. **Goal**: Identify the output the user is trying to produce: understand a paper, process data, implement an algorithm, design an experiment, write a section, pass an exam, or build intuition.
 2. **Level**: Infer whether the user needs beginner, intermediate, or expert treatment. Use plain language and analogies for beginners; introduce standard names and notation as the learner can use them; use precise terminology faster for advanced users.
 3. **Prerequisites**: Name the 1-4 concepts the user should know before this one when missing them would block understanding. Say which are must-learn now and which can wait.
-4. **Route**: Choose the first learning step. If the topic is large, show the outline and teach only the first coherent chunk unless the user asks for the full treatment.
+4. **Route**: Choose the first learning step. If the topic is large, show the whole route, then teach a coherent chunk large enough to preserve the method's logic. Expand to the full remaining chain when the user asks for it.
 5. **Concept baseline**: For each core knowledge point in the current route, consult Wikipedia and Baidu Baike when available before teaching it. If they disagree or are too shallow, say what you use them for and rely on stronger sources for the technical explanation.
 6. **Source scouting**: If reliable external material would save time or prevent learning the wrong branch, briefly recommend what to read first and why. Verify links when possible; otherwise name the kind of source to search for instead of inventing a citation. Prefer Chinese resources first, then English canonical sources. Then offer to explain or continue with the part the user is likely to need.
 7. **Anchor**: When a good source has been found, pick one anchor document and organize the explanation around its sequence, figures, tables, examples, or notation unless another structure better serves the user's goal.
@@ -88,11 +101,11 @@ Deep Teaching output:
 3. Establish the encyclopedia baseline from Wikipedia and Baidu Baike for the core knowledge point, then move beyond it.
 4. Choose an anchor document when one has been found, and tell the user which figure, table, section, or example is worth looking at.
 5. Build the core intuition in connected prose, using analogies only when they clarify rather than decorate.
-6. Walk through one concrete example end to end, preferably tied to the user's field or task.
-7. Explain the mechanism or structure with a few real headings.
-8. Include the needed formal content: assumptions, variables, notation, formula, algorithmic steps, boundary conditions, and failure modes when they matter.
+6. Explain the method and needed formal content first: assumptions, variables, notation, formulas, algorithmic steps, boundary conditions, and failure modes when they matter.
+7. Walk through one concrete example end to end, preferably tied to the user's field or task, after its method is clear.
+8. Explain the mechanism or structure with a few real headings.
 9. Name common misunderstandings, limitations, or nearby concepts only when they affect use.
-10. Add a next step, practice task, or understanding check with criteria for a good answer.
+10. Add a next step or, when it helps, one practice task or understanding check with criteria for a good answer.
 
 For deep requests, do not compress the answer just because the skill values low friction. Spend words on the causal mechanism, example, formal details, and decision logic; save words by deferring side branches.
 

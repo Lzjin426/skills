@@ -36,6 +36,8 @@ validate_report = load_module(
     "daily_summary_validate", ROOT / "scripts/validate_daily_report.py"
 )
 collect_lark = load_module("daily_summary_lark", ROOT / "scripts/collect_lark_docs.py")
+collect_github = load_module("daily_summary_github", ROOT / "scripts/collect_github.py")
+collect_dida = load_module("daily_summary_dida", ROOT / "scripts/collect_dida.py")
 
 
 def namespace_for(**paths: str | None) -> argparse.Namespace:
@@ -129,9 +131,39 @@ class GenerateDailyTests(unittest.TestCase):
             self.assertEqual({"claude", "lark_docs", "github", "computer_history"}, sources)
             self.assertIn("提交 PR #12", texts)
             self.assertEqual(packet["timezone"], "Asia/Shanghai")
-            self.assertEqual(packet["source_status"]["ticktick"]["status"], "not_requested")
+            self.assertEqual(packet["source_status"]["dida"]["status"], "not_requested")
             self.assertIn("Two low-cost subagents", packet["_instructions"])
             self.assertIn("main model", packet["_instructions"])
+            self.assertIn("login troubleshooting", packet["_instructions"])
+
+    def test_dida_completed_time_is_normalized_as_a_completed_task(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            dida = self.write_json(
+                Path(temp),
+                "dida.json",
+                {
+                    "source": "dida",
+                    "tasks": [
+                        {
+                            "id": "task-1",
+                            "title": "第一篇论文重新投稿",
+                            "completedTime": "2026-09-14T01:19:23Z",
+                        }
+                    ],
+                },
+            )
+            packet = generate_daily.build_packet(namespace_for(dida=dida))
+        self.assertEqual(len(packet["events"]), 1)
+        event = packet["events"][0]
+        self.assertEqual(event["source"], "dida")
+        self.assertEqual(event["status"], "completed")
+        self.assertEqual(event["time"], "2026-09-14T09:19:23+08:00")
+
+    def test_summary_contract_prioritizes_outcomes_and_omits_routine_process(self) -> None:
+        policy = " ".join(generate_daily.SUMMARY_CONTRACT["selection_policy"])
+        self.assertIn("稿件进入审理", policy)
+        self.assertIn("登录/权限/网页故障排查", policy)
+        self.assertIn("归因有冲突", policy)
 
     def test_bad_optional_json_is_reported_not_fatal(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -322,6 +354,46 @@ class ComputerHistoryCollectorTests(unittest.TestCase):
             )
             self.assertEqual(memories, [])
 
+    def test_extracts_compact_ax_submission_state_and_normalizes_it(self) -> None:
+        raw = {
+            "id": "submission-status",
+            "timestamp": "2026-09-14T09:00:00+08:00",
+            "app": "Chrome",
+            "window": {"title": "Wiley Authors", "url": "https://submission.example/review?authToken=secret123"},
+            "ax": {
+                "mode": "fullTree",
+                "text": "1 Initial Submission\n2 This submission is under consideration and cannot be edited.\n3 Network error unrelated to the submission\n4 文本 已完成库存比对\n5 您的手稿正在与期刊编辑分享，您将收到投稿确认邮件",
+            },
+        }
+        record = collect_computer.event_record(raw, "segment-1", date(2026, 9, 14))
+        self.assertIsNotNone(record)
+        self.assertIn("under consideration", record["ax_evidence"])
+        self.assertIn("手稿正在与期刊编辑分享", record["ax_evidence"])
+        self.assertNotIn("Network error", record["ax_evidence"])
+        self.assertNotIn("库存比对", record["ax_evidence"])
+        self.assertEqual(record["url"], "https://submission.example/review")
+        self.assertNotIn("secret123", record["summary"])
+        self.assertEqual(record["evidence_level"], "observed_ui_state")
+        normalized = generate_daily.computer_history_events(
+            {"events": [record]}, date(2026, 9, 14)
+        )
+        self.assertEqual(len(normalized), 1)
+        self.assertIn("under consideration", normalized[0]["text"])
+        self.assertEqual(normalized[0]["evidence_level"], "observed_ui_state")
+
+    def test_compacts_repeated_identical_status_snapshots(self) -> None:
+        repeated = {
+            "time": "2026-09-14T09:00:00+08:00",
+            "app": "Safari",
+            "window_title": "Final Review",
+            "url": "https://submission.example/final",
+            "ax_evidence": "This submission is under consideration",
+        }
+        events = [dict(repeated), {**repeated, "time": "2026-09-14T12:00:00+08:00"}]
+        compacted = collect_computer.compact_duplicate_observations(events)
+        self.assertEqual(len(compacted), 1)
+        self.assertEqual(compacted[0]["time"], "2026-09-14T09:00:00+08:00")
+
 
 class LarkCollectorTests(unittest.TestCase):
     def test_extracts_json_after_pagination_progress(self) -> None:
@@ -342,6 +414,142 @@ class LarkCollectorTests(unittest.TestCase):
         )
         self.assertTrue(record["changed_on_target_date"])
         self.assertEqual(record["token"], "doc-1")
+
+    def test_search_result_supports_global_wiki_documents_and_highlights(self) -> None:
+        start, end = collect_lark.target_window(date(2026, 9, 14))
+        page = {
+            "data": {
+                "has_more": True,
+                "page_token": "next-page",
+                "results": [
+                    {
+                        "entity_type": "wiki",
+                        "result_meta": {
+                            "token": "wiki-token",
+                            "url": "https://my.feishu.cn/wiki/wikcn123",
+                            "doc_types": ["wiki"],
+                            "create_time_iso": "2026-09-13T12:00:00+08:00",
+                            "update_time_iso": "2026-09-14T09:00:00+08:00",
+                            "edit_user_name": "Fullstop",
+                        },
+                        "title_highlighted": "<h>讲座心得</h>",
+                        "summary_highlighted": "补入<hb>几何精确结构</hb>心得",
+                    }
+                ],
+            }
+        }
+        rows, has_more, token = collect_lark.search_page(page)
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(has_more)
+        self.assertEqual(token, "next-page")
+        record = collect_lark.search_document_record(rows[0], start, end)
+        self.assertEqual(record["name"], "讲座心得")
+        self.assertEqual(record["type"], "wiki")
+        self.assertTrue(record["changed_on_target_date"])
+        self.assertEqual(record["summary"], "补入几何精确结构心得")
+
+    def test_global_document_search_paginates(self) -> None:
+        first = {
+            "data": {
+                "has_more": True,
+                "page_token": "page-2",
+                "results": [{"result_meta": {"token": "one", "update_time_iso": "2026-09-14T09:00:00+08:00"}, "title_highlighted": "一"}],
+            }
+        }
+        second = {
+            "data": {
+                "has_more": False,
+                "page_token": "",
+                "results": [{"result_meta": {"token": "two", "update_time_iso": "2026-09-14T10:00:00+08:00"}, "title_highlighted": "二"}],
+            }
+        }
+        with mock.patch.object(collect_lark, "run_lark", side_effect=[first, second]) as run:
+            docs, errors = collect_lark.collect_edited_documents(
+                *collect_lark.target_window(date(2026, 9, 14))
+            )
+        self.assertEqual([item["token"] for item in docs], ["one", "two"])
+        self.assertEqual(errors, [])
+        self.assertEqual(run.call_count, 2)
+        self.assertIn("page-2", run.call_args_list[1].args[0])
+
+
+class DidaCollectorTests(unittest.TestCase):
+    def test_uses_shanghai_day_as_utc_window_and_filters_completion_time(self) -> None:
+        start, end = collect_dida.target_window(date(2026, 9, 22))
+        self.assertEqual(collect_dida.cli_time(start), "2026-09-21T16:00:00Z")
+        self.assertEqual(collect_dida.cli_time(end), "2026-09-22T16:00:00Z")
+        inside = collect_dida.normalize_task(
+            {"id": "task-1", "title": "已完成任务", "projectId": "project-1", "completedTime": "2026-09-21T16:00:00Z"},
+            {"project-1": "论文"},
+            start,
+            end,
+        )
+        outside = collect_dida.normalize_task(
+            {"id": "task-2", "title": "次日任务", "completedTime": "2026-09-22T16:00:00Z"},
+            {},
+            start,
+            end,
+        )
+        self.assertEqual(inside["project"], "论文")
+        self.assertEqual(inside["timestamp"], "2026-09-22T00:00:00+08:00")
+        self.assertIsNone(outside)
+
+    def test_accepts_dida_cli_offset_without_colon(self) -> None:
+        parsed = collect_dida.parse_time("2026-09-23T05:19:23.000+0000")
+        self.assertEqual(parsed.isoformat(), "2026-09-23T13:19:23+08:00")
+        start, end = collect_dida.target_window(date(2026, 9, 23))
+        task = collect_dida.normalize_task(
+            {"id": "paper", "title": "第一篇论文重新投稿", "completedTime": "2026-09-23T05:19:23.000+0000"},
+            {},
+            start,
+            end,
+        )
+        self.assertEqual(task["title"], "第一篇论文重新投稿")
+
+    def test_collect_reads_projects_then_completed_tasks(self) -> None:
+        projects = {"data": {"projects": [{"id": "p1", "name": "论文"}]}}
+        tasks = {"data": {"tasks": [{"id": "t1", "title": "重新投稿", "projectId": "p1", "completedTime": "2026-09-22T02:00:00Z"}]}}
+        with mock.patch.object(collect_dida, "run_json", side_effect=[(projects, None), (tasks, None)]) as run:
+            result = collect_dida.collect(date(2026, 9, 22))
+        self.assertTrue(result["available"])
+        self.assertEqual(result["source"], "dida")
+        self.assertEqual(result["tasks"][0]["project"], "论文")
+        task_command = run.call_args_list[1].args[0]
+        self.assertIn("--projects", task_command)
+        self.assertIn("2026-09-21T16:00:00Z", task_command)
+        self.assertIn("2026-09-22T16:00:00Z", task_command)
+
+    def test_unavailable_cli_is_not_reported_as_an_empty_success(self) -> None:
+        with mock.patch.object(collect_dida, "run_json", side_effect=[(None, "not logged in"), (None, "API unavailable")]):
+            result = collect_dida.collect(date(2026, 9, 22))
+        self.assertFalse(result["available"])
+        self.assertEqual(result["tasks"], [])
+        self.assertEqual(len(result["errors"]), 2)
+
+
+class GithubCollectorTests(unittest.TestCase):
+    def test_search_keeps_only_authenticated_users_actions_on_action_date(self) -> None:
+        search_result = {
+            "items": [
+                {"number": 1, "title": "本人创建", "html_url": "u/1", "created_at": "2026-09-14T01:00:00Z", "updated_at": "2026-09-14T10:00:00Z", "state": "open", "user": {"login": "me"}},
+                {"number": 2, "title": "他人合并", "html_url": "u/2", "created_at": "2026-09-13T10:00:00Z", "updated_at": "2026-09-14T10:00:00Z", "state": "closed", "user": {"login": "other"}, "pull_request": {}},
+                {"number": 3, "title": "旧合并被更新", "html_url": "u/3", "created_at": "2026-09-13T10:00:00Z", "updated_at": "2026-09-14T10:00:00Z", "state": "closed", "user": {"login": "other"}, "pull_request": {}},
+                {"number": 4, "title": "本人合并", "html_url": "u/4", "created_at": "2026-09-13T10:00:00Z", "updated_at": "2026-09-14T10:00:00Z", "state": "closed", "user": {"login": "other"}, "pull_request": {}},
+                {"number": 5, "title": "本人关闭", "html_url": "u/5", "created_at": "2026-09-13T10:00:00Z", "updated_at": "2026-09-14T10:00:00Z", "state": "closed", "user": {"login": "other"}},
+            ]
+        }
+        details = [
+            ({"merged_at": "2026-09-14T02:00:00Z", "merged_by": {"login": "other"}}, None),
+            ({"merged_at": "2026-09-13T10:00:00Z", "merged_by": {"login": "me"}}, None),
+            ({"merged_at": "2026-09-14T03:00:00Z", "merged_by": {"login": "me"}}, None),
+            ({"closed_at": "2026-09-14T04:00:00Z", "closed_by": {"login": "me"}}, None),
+        ]
+        with mock.patch.object(collect_github, "run_json", side_effect=[(search_result, None), *details]) as run:
+            events, errors = collect_github.search_events("owner/repo", date(2026, 9, 14), "me")
+        self.assertEqual(errors, [])
+        self.assertEqual([(event["number"], event["action"]) for event in events], [(1, "opened"), (4, "merged"), (5, "closed")])
+        self.assertEqual(events[0]["timestamp"], "2026-09-14T09:00:00+08:00")
+        self.assertIn("2026-09-13..2026-09-14", run.call_args_list[0].args[0][2])
 
 
 class ReportValidationTests(unittest.TestCase):

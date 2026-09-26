@@ -37,7 +37,7 @@ SOURCE_OPTIONS = (
     "computer_history",
     "remote",
     "linear",
-    "ticktick",
+    "dida",
 )
 
 
@@ -61,7 +61,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--remote", help="Remote agent history JSON")
     parser.add_argument("--linear", help="Linear issues JSON")
-    parser.add_argument("--ticktick", help="TickTick tasks JSON")
+    parser.add_argument(
+        "--dida", "--ticktick", dest="dida", help="Domestic Dida365 completed tasks JSON"
+    )
     parser.add_argument(
         "--existing-report",
         help="Existing report Markdown or JSON wrapper to include in the packet",
@@ -299,6 +301,8 @@ def make_event(
         item.get("createdAt"),
         item.get("published_at"),
         item.get("merged_at"),
+        item.get("completedTime"),
+        item.get("completed_time"),
         (session or {}).get("timestamp"),
         (session or {}).get("updated_at"),
         (session or {}).get("started_at"),
@@ -507,8 +511,8 @@ def task_events(source: str, data: Any, target_date: date, key: str, kind: str) 
             kind=kind,
             index=index,
             target_date=target_date,
-            default_status="completed" if source == "ticktick" else "observed",
-            evidence_level="task_record" if source == "ticktick" else "issue_record",
+            default_status="completed" if source == "dida" else "observed",
+            evidence_level="task_record" if source == "dida" else "issue_record",
         )
         if event:
             events.append(event)
@@ -525,7 +529,9 @@ def computer_history_events(data: Any, target_date: date) -> list[dict[str, Any]
         if not isinstance(raw, dict):
             raw = {"text": text_value(raw)}
         item = dict(raw)
-        item["text"] = first_nonempty(
+        ax_evidence = str(item.get("ax_evidence") or "").strip()
+        observed_text = first_nonempty(
+            item.get("summary"),
             item.get("text"),
             item.get("selected_text"),
             item.get("focused_element"),
@@ -534,6 +540,12 @@ def computer_history_events(data: Any, target_date: date) -> list[dict[str, Any]
             item.get("app"),
             "",
         )
+        if ax_evidence and ax_evidence not in str(observed_text):
+            observed_text = " | ".join(
+                part for part in (str(observed_text), f"AX outcome: {ax_evidence}") if part
+            )
+        item["text"] = str(observed_text)[:2200]
+        evidence_level = "observed_ui_state" if ax_evidence else "observed_activity_only"
         event = make_event(
             "computer_history",
             item,
@@ -541,7 +553,7 @@ def computer_history_events(data: Any, target_date: date) -> list[dict[str, Any]
             index=index,
             target_date=target_date,
             default_status="observed",
-            evidence_level="observed_activity_only",
+            evidence_level=evidence_level,
         )
         if event:
             events.append(event)
@@ -638,14 +650,22 @@ SUMMARY_CONTRACT = {
     ],
     "retain": ["事实", "结果", "数量", "截止时间", "状态", "地点", "渠道", "下一步", "真实感受"],
     "merge": ["同一目标的多次对话", "同类投递/沟通", "没有独立结果的零散操作"],
+    "selection_policy": [
+        "先找已落地的结果和状态变化，例如论文投稿、稿件进入审理、代码合并、任务完成；不要让过程细节盖过结果",
+        "每条主要内容必须对应明确项目/目标，并有可定位证据；优先用最终文档、平台状态或完成任务记录，Computer History 的明确页面状态可作状态证据",
+        "普通浏览、重复查询、登录/权限/网页故障排查、读指南、工具安装过程默认省略；只有形成重要决定、真实阻塞或明确下一步时才保留结果",
+        "面试企业等归因有冲突或尚未核实的内容不写成事实；无后续行动价值的待核实线索不进入日报",
+        "用滴答清单（国内版）的完成任务核对当天工作，并与文档、会话或 Computer History 证据关联；不能把计划任务说成已完成",
+    ],
     "avoid": [
         "按数据源分栏",
         "逐条复制 Agent 用户输入",
         "凭空补写完成结论",
         "项目背景、工具层状态、采集过程",
+        "不痛不痒的中间操作、没有结果的搜索和浏览、纯故障排查记录",
         "全面推进、取得阶段性成果等报告腔",
     ],
-    "completion_policy": "只有提交、文档产出、GitHub/任务状态等证据支持时才写完成；Computer History 和用户提问本身只能作为活动线索。",
+    "completion_policy": "只有最终产物、权威平台状态、本人 GitHub 动作或已完成任务记录支持时才写确定结果；普通 Computer History 活动和用户提问只是活动线索，明确的界面终态可作为状态证据并尽量交叉核对。",
 }
 
 
@@ -673,7 +693,7 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
         events.extend(session_events(source, loaded.get(source), target_date))
     events.extend(session_events("remote", loaded.get("remote"), target_date, remote=True))
     events.extend(task_events("linear", loaded.get("linear"), target_date, "issues", "linear_issue"))
-    events.extend(task_events("ticktick", loaded.get("ticktick"), target_date, "tasks", "task"))
+    events.extend(task_events("dida", loaded.get("dida"), target_date, "tasks", "task"))
     events.extend(computer_history_events(loaded.get("computer_history"), target_date))
     events = exact_dedupe(events)
     events.sort(key=lambda item: (item.get("time", ""), item.get("source", ""), item.get("event_id", "")))
@@ -696,13 +716,15 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
         "summary_contract": SUMMARY_CONTRACT,
         "_instructions": (
             "This is one unified evidence packet. Two low-cost subagents must read the same packet in parallel: "
-            "the local-scope agent summarizes every non-remote source, and the remote-scope agent summarizes only "
+            "the local-scope agent extracts material outcomes from every non-remote source, and the remote-scope agent summarizes only "
             "remote activity. They must output structured evidence digests, not a final report. The main model "
             "then reads both digests, the existing report, and personal style samples before drafting one concise "
             "Chinese daily note. Do not create a separate paragraph for each source. Treat observed "
-            "Computer History activity and user requests as evidence of activity only, not proof of "
+            "routine Computer History activity and user requests as evidence of activity only, not proof of "
             "completion. Keep missing/failed sources out of the prose unless they materially affect "
-            "confidence. The main model owns the final wording, while the two subagents own source aggregation."
+            "confidence. Prefer outcomes and actionable next steps; omit routine browsing, login troubleshooting, "
+            "unresolved attribution, and intermediate process detail. The main model owns cross-source selection "
+            "and final wording; the two subagents only prepare scoped evidence digests."
         ),
     }
 
