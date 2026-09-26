@@ -136,6 +136,8 @@ lark-cli drive +export \
 - `--only-schema` 只支持 `bitable` 导出为 `.base`，用于仅导出表结构
 - 如果格式不匹配，CLI 会返回 typed validation error，并在 `hint` 中给出可重试的 `--file-extension` 建议；例如 `docx + csv` 会提示改用 `docx/pdf/markdown`，或改传 sheet/bitable URL
 - shortcut 内部固定有限轮询：最多 10 次，每次间隔 5 秒
+- 创建导出任务时收到 `rate_limit` / `99991400` 不会生成 `ticket`；至少等待 1 分钟后重跑原 `drive +export`，持续限频时从 1 分钟开始指数退避
+- 状态轮询一旦收到 `rate_limit` / `99991400` 会立即停止，不会继续消耗剩余轮询次数；错误会保留原始 typed metadata，并在 `hint` 中提供已有 `ticket` 的续查命令
 - 轮询超时不是失败；会返回 `ticket`、`timed_out=true` 和 `next_command`，供后续继续查询
 
 ## 错误码处理

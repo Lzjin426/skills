@@ -52,7 +52,7 @@ metadata:
 - `drive +inspect` / `drive +upload` 遇到 `not found`、`permission denied`、`missing scope` 时，默认停止重试；只有 `rate limit` 或临时网络错误才适合有限重试。
 
 ## 修改标题
-- 使用 `drive files patch` 命令，通过new_title字段可以修改标题，支持 docx、sheet、bitable、file、wiki、folder 类型
+- 用户要**重命名 / 改标题 / 改文件名**，使用 `lark-cli drive +update-title`，用法见 [`references/lark-drive-update-title.md`](references/lark-drive-update-title.md)。
 
 ## 核心概念
 

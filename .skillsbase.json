@@ -39,12 +39,14 @@
     },
     "avoid-ai-writing": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "论文"
       ]
     },
     "avoid-ai-writing-zh": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "论文"
       ]
     },
     "build-with-exa": {
@@ -134,7 +136,8 @@
     },
     "humanizer-zh": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "Write"
       ]
     },
     "kisssoft-com-2024": {
@@ -344,7 +347,8 @@
     },
     "monthly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "multi-agent-decision-review": {
@@ -453,7 +457,8 @@
     },
     "obsidian-bases": {
       "tags": [
-        "Obsidian/draw"
+        "Obsidian/draw",
+        "Obsidian"
       ]
     },
     "obsidian-canvas-creator": {
@@ -503,7 +508,8 @@
     },
     "remotion-best-practices": {
       "tags": [
-        "Tools/video"
+        "Tools/video",
+        "Video"
       ]
     },
     "research-writing-skill": {
@@ -513,7 +519,8 @@
     },
     "save-solution": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "sciverse": {
@@ -538,7 +545,8 @@
     },
     "slides": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Work"
       ]
     },
     "taste-skill": {
@@ -558,21 +566,121 @@
     },
     "weekly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "yearly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "zh-tech-writing": {
       "tags": [
         "Tools/写作"
       ]
+    },
+    "academic-writing": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "better-md-writer": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "dev-env-sync": {
+      "tags": [
+        "Tools"
+      ]
+    },
+    "frontend-design": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
+    "multi-agent-deliberation-skill": {
+      "tags": [
+        "Create"
+      ]
+    },
+    "research-paper-writing": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "zh-engineering-paper": {
+      "tags": [
+        "论文"
+      ]
     }
   },
-  "skill_order": [],
+  "skill_order": [
+    "academic-research-suite",
+    "agent-acceptance-review",
+    "agently-mail",
+    "anysearch",
+    "apinebula-gpt-image",
+    "apinebula-nanobanana",
+    "build-with-exa",
+    "code-mode",
+    "code-mode-codex",
+    "computer-use",
+    "context-manager",
+    "daily-summary",
+    "dida-task-planning",
+    "doc-translator-zh",
+    "exa-search",
+    "feishu-daily-note-automation",
+    "figure-composer",
+    "figure-style",
+    "grill-me",
+    "guided-learning",
+    "guizang-ppt-skill",
+    "install-clawhub-skill",
+    "kimi-webbridge",
+    "kisssoft-com-2024",
+    "knowledge-doc-writer",
+    "lark-doc-in",
+    "lark-doc-tidy",
+    "literature-review",
+    "md-image-supplement",
+    "md-to-docx-template",
+    "mimo-vision",
+    "multi-agent-decision-review",
+    "nature-academic-search",
+    "nature-citation",
+    "nature-data",
+    "nature-downloader",
+    "nature-experiment-log",
+    "nature-figure",
+    "nature-literature-pipeline",
+    "nature-paper-card",
+    "nature-paper-to-patent",
+    "nature-paper2ppt",
+    "nature-polishing",
+    "nature-proposal-writer",
+    "nature-reader",
+    "nature-ref-verifier",
+    "nature-response",
+    "nature-reviewer",
+    "nature-shared",
+    "nature-statistics",
+    "nature-writing",
+    "orca-cli",
+    "orca-linear",
+    "orchestration",
+    "paper-humanizer-skill",
+    "paper-narrative",
+    "paperbanana",
+    "product-management",
+    "readme-wiki",
+    "research-writing-skill",
+    "sciverse",
+    "windows-screenshot"
+  ],
   "tag_order": [
     "论文",
     "论文/润色",
@@ -582,21 +690,23 @@
     "论文/阅读",
     "论文/作图",
     "论文/nature-skill",
-    "Code",
-    "Lark",
+    "code",
+    "lark",
     "Lark/doc",
-    "Obsidian",
-    "Obsidian/draw",
+    "obsidian",
+    "obsidian/draw",
     "Tools",
     "Tools/exa",
     "Tools/orca",
-    "Tools/画图",
-    "Tools/识图",
-    "Tools/搜索",
-    "Tools/写作",
-    "Tools/video",
-    "System",
+    "system",
+    "tools/画图",
+    "tools/识图",
+    "tools/搜索",
+    "tools/写作",
     "UI&UX",
+    "video",
+    "write",
+    "Tools/video",
     "Law"
   ],
   "tag_styles": {
@@ -627,17 +737,45 @@
     "Video": {
       "icon": "mdi:tag",
       "color": ""
+    },
+    "Draw": {
+      "icon": "material-symbols:draw",
+      "color": ""
+    },
+    "System": {
+      "icon": "tdesign:system-3",
+      "color": "#a855f7"
+    },
+    "论文": {
+      "icon": "lets-icons:paper-light",
+      "color": ""
+    },
+    "UI": {
+      "icon": "",
+      "color": "#ef4444"
+    },
+    "Create": {
+      "icon": "",
+      "color": ""
+    },
+    "Tools": {
+      "icon": "tabler:tool",
+      "color": ""
+    },
+    "Lark": {
+      "icon": "icon-park-outline:new-lark",
+      "color": ""
     }
   },
   "tool_order": [
     "claude",
     "codex",
-    "opencode",
-    "workbuddy",
-    "kimi-code",
     "gemini",
     "openclaw",
     "qclaw",
+    "opencode",
+    "workbuddy",
+    "kimi-code",
     "qoder",
     "kimi-work",
     "hermes",
@@ -648,8 +786,10 @@
     "qoder-cn"
   ],
   "visible_tools": [
+    "claude",
     "opencode",
     "codex",
+    "kimi-code",
     "workbuddy",
     "antigravity",
     "dsh",

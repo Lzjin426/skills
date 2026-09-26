@@ -142,8 +142,10 @@ lark-cli base +dashboard-block-update \
 
 > [!CAUTION]
 > - 排列结果是**服务端智能推荐**，不一定完全符合用户预期
-> - 无法指定具体位置（如"第一排放 A，第二排放 B"），排列逻辑是**自适应**的
+> - Dashboard shortcut 无法指定 `x/y/w/h`、精确位置或尺寸（如"第一排放 A""图表撑满整行"），排列逻辑是**自适应**的
 > - **不建议**在已有仪表盘上自动调用，除非用户明确要求
+> - 用户只要求一般性重排/美化时，可执行一次 `+dashboard-arrange`；用户要求精确结果时，先说明限制并询问是否接受自适应布局，接受后才执行，不能静默替代或声称精确满足
+> - 执行一次 `+dashboard-arrange` 后即停止；不要继续探测 raw `lark-cli api`、源码或未公开布局参数
 
 ```bash
 # 第 1 步：列出仪表盘，定位到目标仪表盘
@@ -173,7 +175,10 @@ lark-cli base +dashboard-list --base-token xxx
 lark-cli base +dashboard-get --base-token xxx --dashboard-id blk_xxx
 
 # 方式 B：列出所有组件
-lark-cli base +dashboard-block-list --base-token xxx --dashboard-id blk_xxx
+lark-cli base +dashboard-block-list \
+  --base-token xxx \
+  --dashboard-id blk_xxx \
+  --page-size 100
 
 # 方式 C：查看某个组件的详细配置
 lark-cli base +dashboard-block-get --base-token xxx --dashboard-id blk_xxx --block-id chtxxxxxxxx
@@ -183,6 +188,8 @@ lark-cli base +dashboard-block-get-data --base-token xxx --block-id chtxxxxxxxx
 
 # 最后：把获取到的现状信息整理好告诉用户
 ```
+
+需要读取多个组件的计算结果时，先用方式 B 获取真实 `block_id`（使用 `--page-size 100`；若 `has_more=true`，继续把返回的 `page_token` 传给 `--page-token`，直到 `has_more=false`），再按 [lark-base-dashboard-block-get-data.md](lark-base-dashboard-block-get-data.md) 的多组件范式，在一个 shell 工具调用内串行读取；不要把每个 block 拆成独立模型轮次。文本组件没有计算结果，应跳过。
 
 ## 组件类型选择
 

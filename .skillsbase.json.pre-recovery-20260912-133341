@@ -1,0 +1,227 @@
+{
+  "version": 5,
+  "skills": {
+    "academic-writing": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "ask-questions-if-underspecified": {
+      "tags": [
+        "System"
+      ]
+    },
+    "avoid-ai-writing": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "avoid-ai-writing-zh": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "better-md-writer": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "dev-env-sync": {
+      "tags": [
+        "Tools"
+      ]
+    },
+    "doc": {
+      "tags": [
+        "Tools"
+      ]
+    },
+    "excalidraw-diagram": {
+      "tags": [
+        "Obsidian/draw"
+      ]
+    },
+    "find-skills": {
+      "tags": [
+        "System"
+      ]
+    },
+    "frontend-design": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
+    "frontend-ui-animator": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
+    "humanizer-zh": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "lark-approval": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-attendance": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-base": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-calendar": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-contact": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-doc": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "lark-drive": {
+      "tags": [
+        "Lark"
+      ]
+    },
+    "mermaid-visualizer": {
+      "tags": [
+        "Obsidian/draw"
+      ]
+    },
+    "monthly-summary": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "multi-agent-deliberation-skill": {
+      "tags": [
+        "Create"
+      ]
+    },
+    "obsidian-bases": {
+      "tags": [
+        "Obsidian"
+      ]
+    },
+    "obsidian-canvas-creator": {
+      "tags": [
+        "Obsidian/draw"
+      ]
+    },
+    "remotion-best-practices": {
+      "tags": [
+        "Video"
+      ]
+    },
+    "research-paper-writing": {
+      "tags": [
+        "论文"
+      ]
+    },
+    "save-solution": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "screenshot": {
+      "tags": [
+        "Tools"
+      ]
+    },
+    "skill-vetter": {
+      "tags": [
+        "System"
+      ]
+    },
+    "slides": {
+      "tags": [
+        "Work"
+      ]
+    },
+    "taste-skill": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
+    "ui-animation": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
+    "weekly-summary": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "yearly-summary": {
+      "tags": [
+        "Write"
+      ]
+    },
+    "zh-engineering-paper": {
+      "tags": [
+        "论文"
+      ]
+    }
+  },
+  "skill_order": [],
+  "tag_styles": {
+    "Obsidian": {
+      "icon": "simple-icons:obsidian",
+      "color": ""
+    },
+    "Draw": {
+      "icon": "material-symbols:draw",
+      "color": ""
+    },
+    "System": {
+      "icon": "tdesign:system-3",
+      "color": "#a855f7"
+    },
+    "Video": {
+      "icon": "",
+      "color": "#eab308"
+    },
+    "论文": {
+      "icon": "lets-icons:paper-light",
+      "color": ""
+    },
+    "UI": {
+      "icon": "",
+      "color": "#ef4444"
+    },
+    "Create": {
+      "icon": "",
+      "color": ""
+    },
+    "Tools": {
+      "icon": "tabler:tool",
+      "color": ""
+    },
+    "Lark": {
+      "icon": "icon-park-outline:new-lark",
+      "color": ""
+    }
+  },
+  "tool_order": [
+    "claude",
+    "codex",
+    "gemini",
+    "openclaw",
+    "qclaw",
+    "opencode"
+  ]
+}

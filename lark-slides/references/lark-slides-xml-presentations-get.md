@@ -1,6 +1,6 @@
-# lark-slides xml_presentations get
+# lark-slides xml_presentations get（兼容入口）
 
-## 用途
+本文档已迁移至 [`cli/lark-slides-xml-presentations-get.md`](cli/lark-slides-xml-presentations-get.md)。
 
 读取飞书幻灯片（PPT）演示文稿的完整 XML 内容信息。
 

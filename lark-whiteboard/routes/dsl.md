@@ -75,6 +75,13 @@ Step 3: 渲染 & 审查 → 交付
 | 流程图      | `scenes/flowchart.md`    | 业务流、状态机、带条件判断的链路       |
 | 图片展示    | `scenes/photo-showcase.md` | 用户显式要求图片/配图/插图时（需先完成 `elements/image.md` 的图片准备） |
 
+### 插入 @用户提及 / 图片
+
+| 当前内容包含 | 必读指南 |
+|---|---|
+| @用户提及 | [`../scenes/mention.md`](../scenes/mention.md) |
+| 图片 / 配图 | [`../scenes/photo-showcase.md`](../scenes/photo-showcase.md) |
+
 ## 渲染前自查
 
 - [ ] 不同分组用了不同颜色？同组节点样式完全一致？

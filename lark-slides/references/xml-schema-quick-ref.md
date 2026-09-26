@@ -1,4 +1,4 @@
-# XML Schema 快速参考
+# XML Schema 快速参考（兼容入口）
 
 本文档是 [slides_xml_schema_definition.xml](slides_xml_schema_definition.xml) 的精简版摘要，并合并了常用 XML 格式写法；如果两者不一致，以 XSD 原文为准。
 

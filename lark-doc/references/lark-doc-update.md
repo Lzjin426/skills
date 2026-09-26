@@ -1,4 +1,3 @@
-
 # docs +update（更新飞书云文档）
 
 > **前置条件（MUST READ）：** 生成文档内容前，必须先用 Read 工具读取以下文件，缺一不可：
@@ -15,6 +14,27 @@
 > - **整段写入**（`append` / `overwrite`）：XML 和 Markdown 都可以。用户提供 `.md` 本地文件或明确要求 Markdown 时直接用 Markdown；否则默认 XML。
 >
 > **Markdown 局限 & block ID 前提：** Markdown 不携带 block ID，也无样式（颜色、对齐、callout 等）。需要按 block ID 定位（`block_*` 指令的 `--block-id`）时，先 `docs +fetch --detail with-ids` **配合 `--scope`（`outline` / `range` / `keyword` / `section`）局部获取**目标段落，不要全量 fetch。拿到 block ID 后 `--content` 仍可用 Markdown，只是写入内容不带样式。
+
+## 推荐流程
+
+1. **Observe（读取现状）**：先 `docs +fetch` 读取当前文档状态，并按意图选择最小范围。
+   - 改某一节或大文档：先 `--scope outline --max-depth 2` 找章节，再 `--scope section --start-block-id <标题id> --detail with-ids`
+   - 精确跨节区间：用 `--scope range --start-block-id xxx --end-block-id yyy`
+   - 只有模糊关键词：用 `--scope keyword --keyword "key1|key2" --context-before 1 --context-after 1 --detail with-ids`
+   - 明确整篇重构才读 `--detail with-ids` 全文；只读摘要或确认事实时用更轻的 fetch
+2. **Diagnose（诊断问题）**：判断用户目标、当前结构、语气、重复、断流、事实口径和需要保留的资源；识别哪些 block 必须原样保留。
+3. **Patch Plan（制定局部计划）**：把修改拆成最小安全操作：简单行内文本替换用 `str_replace`，但它不支持资源替换，涉及多个 block 时优先使用 `block_replace`；整段/整块重写用 `block_replace`；增补章节用 `block_insert_after`；删冗余用 `block_delete`；调整顺序用 `block_move_after`。
+4. **Patch（精确修改）**：按 block / section 执行局部命令。保护 `<cite>`、`<img>`、`<source>`、`<whiteboard>`、`<sheet>`、`<bitable>`、`<synced_reference>` 等 token 化内容，不要改成纯文本或占位符。同一 block 的多处修改合并成一次 `block_replace`。
+5. **Verify（fetch 验证）**：每轮写操作后按影响范围重新 fetch，检查用户要求、结构、语气、事实、资源块和 block ID 是否符合预期；不满足就基于最新 fetch 结果继续 Diagnose / Patch，不要沿用上一轮 block ID。
+
+除非用户明确要求完全重建，或原文已无保留价值，否则不要使用 `overwrite`；它可能丢失评论和暂不支持的资源。
+
+## 生成 block 直达链接
+
+用户需要某个 block 的直达链接时，只定位 block，不执行文档写操作：
+
+1. 使用局部 `docs +fetch --detail with-ids` 获取目标 `block_id`。
+2. 返回 `文档基础 URL#block_id`；没有 `block_id` 时不得猜测。
 
 ## 参数
 

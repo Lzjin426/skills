@@ -1,5 +1,6 @@
+# docs +fetch（读取飞书云文档）
 
-# docs +fetch（获取飞书云文档）
+读取整篇文档，或按目录、章节、区间和关键词获取局部内容。
 
 ## 命令
 
@@ -129,6 +130,7 @@ lark-cli docs +fetch --doc Z1Fj...tnAc \
 <source token="..." url="https://..." name="skills.zip"/>
 <whiteboard token="..."/>
 ```
+`content` 的格式由 `--doc-format` 决定。`reference_map` 是正文引用数据的结构化 sidecar：一级键 `block_type` 表示引用所在的块类型，二级键 `ref` 对应正文中的临时引用；每个引用的值是由 `real-attr-key` 和 `real-attr-value` 组成的真实属性映射，具体属性由块类型决定。没有提取数据时，`reference_map` 可能为空。`content` 和 `reference_map` 属于同一份响应，保留或回放内容时应配套处理。`tips` 给出安全回放或降级提示。`im-markdown` 仅用于获取内容后在 `lark-im` 场景下使用。设置 `--scope` 时会被 `<fragment>` 包裹，详见上文"局部读取的输出结构"。
 
 - `<img>` / `<source>` 带 `url` 时，直接用该 URL 下载即可（普通 HTTP GET），无需走 shortcut。
 - 没有 `url`、或只想预览 → `docs +media-preview --token <token> --output ./preview_media`
@@ -141,8 +143,6 @@ lark-cli docs +fetch --doc Z1Fj...tnAc \
 
 ## 参考
 
-- [lark-doc-create](lark-doc-create.md) — 创建文档
-- [lark-doc-update](lark-doc-update.md) — 更新文档
 - [lark-doc-media-preview](lark-doc-media-preview.md) — 预览素材
 - [lark-doc-media-download](lark-doc-media-download.md) — 下载素材/画板缩略图
 - [lark-doc-resource-cover](lark-doc-resource-cover.md) — 读取、更新、删除文档封面图

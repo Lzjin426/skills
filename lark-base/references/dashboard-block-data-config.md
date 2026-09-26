@@ -34,6 +34,8 @@ checkbox: is (value: true/false)
 user / created_by / updated_by: is, isNot, isEmpty, isNotEmpty
 ```
 
+`isGreaterEqual` / `isLessEqual` 不是全局不支持：它们可用于 `number`，但不能用于 `datetime` / `created_at` / `updated_at`。日期范围必须用 `isGreater` / `isLess` 配合 `ExactDate`；不要把数字字段的操作符集合套到日期字段上。
+
 ## data_config 通用结构
 
 | 字段 | 类型 | 说明 |
@@ -161,7 +163,37 @@ user / created_by / updated_by: is, isNot, isEmpty, isNotEmpty
 | `user` / `created_by` / `updated_by` | string 或 string[]（用户 ID，格式 `ou_xxx`）。不知道 `open_id` 时先用 `lark-cli contact +search-user --query "<姓名/邮箱/手机号>" --as user` 查 id。 | is, isNot, isEmpty, isNotEmpty | `{"field_name":"负责人","operator":"is","value":"ou_xxxxxxxxxxxxxxxx"}` |
 | 所有类型（为空/不为空） | 不需要 value | isEmpty, isNotEmpty | `{"field_name":"备注","operator":"isEmpty"}` |
 
-> `value` 类型为 `string | number | boolean | string[]`，需根据字段类型匹配正确格式
+> `value` 类型因字段而异，可为 `string | number | boolean | string[] | ["ExactDate", number]`，需按上表构造。
+
+### 日期筛选
+
+图表 `data_config.filter` 筛选 `datetime` / `created_at` / `updated_at` 字段时：
+
+- 有值条件只能使用 `is`、`isGreater` 或 `isLess`，不得使用 `isGreaterEqual` 或 `isLessEqual`。
+- `value` 必须写成 `["ExactDate", <Unix 毫秒时间戳>]`，不得直接传裸时间戳。
+- `isEmpty` / `isNotEmpty` 不传 `value`。
+
+日期区间示例：
+
+```json
+{
+  "filter": {
+    "conjunction": "and",
+    "conditions": [
+      {
+        "field_name": "派单日期",
+        "operator": "isGreater",
+        "value": ["ExactDate", 1785686400000]
+      },
+      {
+        "field_name": "派单日期",
+        "operator": "isLess",
+        "value": ["ExactDate", 1786032000000]
+      }
+    ]
+  }
+}
+```
 
 ## 约束与本地校验
 

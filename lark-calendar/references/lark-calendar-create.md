@@ -49,7 +49,8 @@ lark-cli calendar +create --summary "..." --start "..." --end "..." \
 
 ## 高级用法（完整 API 命令）
 
-如需配置 `location`（地理位置，不含会议室位置）、`visibility`（日程公开范围）、自定义 `reminders`（提醒设置）、自定义 `attendee_ability`（参与人权限）、自定义 `free_busy_status`（日程忙闲状态）、参与人可选参加状态或全天日程等高级参数，请使用完整的 API 命令：
+> 优先策略：创建日程优先走 `+create`。遇到 `+create` 不支持的高级参数（如 `location`（地理位置，不含会议室位置）、`visibility`（日程公开范围）、自定义 `reminders`（提醒设置）、自定义 `attendee_ability`（参与人权限）、自定义 `free_busy_status`（日程忙闲状态）、参与人可选参加状态或全天日程等），**优先先用 `+create` 创建成功，再用完整 API update 对这些字段做编辑补齐**，而非整体改用完整 API 从零创建。
+
 **注意**：
 - 全天日程的开始日期和结束日期必须分别是日程开始的第一天和结束的最后一天。如果只有一天的话，开始日期和结束日期是相同。
 

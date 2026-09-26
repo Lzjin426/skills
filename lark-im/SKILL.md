@@ -111,8 +111,8 @@ Shortcut 是对常用操作的高级封装（`lark-cli im +<verb> [flags]`）。
 | [`+chat-update`](references/lark-im-chat-update.md) | Update group chat name or description; user/bot; updates a chat's name or description |
 | [`+messages-mget`](references/lark-im-messages-mget.md) | Batch get messages by IDs; user/bot; fetches up to 50 om_ message IDs, formats sender names, expands thread replies |
 | [`+messages-reply`](references/lark-im-messages-reply.md) | Reply to a message (supports thread replies); user/bot; supports text/markdown/post/media replies, reply-in-thread, idempotency key |
-| [`+messages-resources-download`](references/lark-im-messages-resources-download.md) | Download images/files from a message; user/bot; supports automatic chunked download for large files (8MB chunks), auto-detects file extension from Content-Type |
-| [`+messages-search`](references/lark-im-messages-search.md) | Search messages across chats (supports keyword, sender, time range filters) with user identity; user-only; filters by chat/sender/attachment/time, supports auto-pagination via `--page-all` / `--page-limit`, enriches results via batched mget and chats batch_query |
+| [`+messages-resources-download`](references/lark-im-messages-resources-download.md) | Download an image or file attached to a message; user/bot |
+| [`+messages-search`](references/lark-im-messages-search.md) | Search messages across chats (supports keyword, sender, time range filters) with user or bot identity; filters by chat/sender/attachment/time, supports auto-pagination via `--page-all` / `--page-limit`, enriches results via batched mget and chats batch_query |
 | [`+messages-send`](references/lark-im-messages-send.md) | Send a message to a chat or direct message; user/bot; sends to chat-id or user-id with text/markdown/post/media, supports idempotency key |
 | [`+threads-messages-list`](references/lark-im-threads-messages-list.md) | List messages in a thread; user/bot; accepts om_/omt_ input, resolves message IDs to thread_id, supports sort/pagination |
 | [`+flag-create`](references/lark-im-flag-create.md) | Create a bookmark on a message; user-only; defaults to message-layer flag; use --flag-type feed for feed-layer flag (item_type auto-detected from chat mode) |
@@ -190,7 +190,11 @@ lark-cli im <resource> <method> [flags] # 调用 API
 
 ### images
 
-  - `create` — 上传图片。Identity: `bot` only (`tenant_access_token`).
+  - `create` — 上传图片。Identity: supports `user` and `bot`; user identity requires `im:resource` scope on the UAT.
+
+### files
+
+  - `create` — 上传文件。Identity: supports `user` and `bot`; user identity requires `im:resource` scope on the UAT.
 
 ### pins
 
@@ -238,6 +242,7 @@ lark-cli im <resource> <method> [flags] # 调用 API
 | `reactions.list` | `im:message.reactions:read` |
 | `threads.forward` | `im:message` |
 | `images.create` | `im:resource` |
+| `files.create` | `im:resource` |
 | `pins.create` | `im:message.pins:write_only` |
 | `pins.delete` | `im:message.pins:write_only` |
 | `pins.list` | `im:message.pins:read` |
