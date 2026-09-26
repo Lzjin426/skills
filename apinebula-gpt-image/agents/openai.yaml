@@ -1,0 +1,4 @@
+interface:
+  display_name: "APINebula GPT Image"
+  short_description: "通过 APINebula 异步并发生成并下载多张图片"
+  default_prompt: "Use $apinebula-gpt-image to generate several images concurrently from a prompt."

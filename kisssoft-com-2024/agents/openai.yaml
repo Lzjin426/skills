@@ -1,0 +1,4 @@
+interface:
+  display_name: "KISSsoft COM 2024"
+  short_description: "使用 KISSsoft 2024 COM 接口自动化齿轮计算"
+  default_prompt: "帮我用 KISSsoft 2024 COM 接口加载 Z012 示例并读取安全系数"

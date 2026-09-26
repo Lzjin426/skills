@@ -1,9 +1,9 @@
 
-# base +data-query
+# Base data-query DSL SSOT
 
-> **前置条件：** 先阅读 [`../lark-shared/SKILL.md`](../../lark-shared/SKILL.md) 了解认证、全局参数和安全规则。
+> **入口指南**: [lark-base-data-query-guide.md](lark-base-data-query-guide.md) | **认证或授权问题**: [`../lark-shared/SKILL.md`](../../lark-shared/SKILL.md)
 
-对多维表格数据进行聚合查询（分组、过滤、排序、聚合计算），基于以下语法的 JSON DSL：
+本文档是 `+data-query` JSON DSL 的单一事实来源（SSOT），用于说明完整字段、操作符、限制、返回和错误恢复。数据表查询与分析先由 [data analysis SOP](lark-base-data-analysis-sop.md) 选路；Cloud SOP 选定 `+data-query` 后先读 [data-query guide](lark-base-data-query-guide.md)，guide 未覆盖需求或用户明确要求完整 DSL/API reference 时再读本文。
 
 ## 限制
 
@@ -51,6 +51,23 @@ lark-cli base +data-query \
     "measures": [{"field_name": "金额", "aggregation": "sum", "alias": "total"}],
     "shaper": {"format": "flat"}
   }'
+
+# 聚合或维度查询后如需读取逐条记录，先让 data-query 返回可回查的业务 key
+lark-cli base +data-query \
+  --base-token MAGObxxxxx \
+  --dsl '{
+    "datasource": {"type": "table", "table": {"tableId": "tblxxxxxxxx"}},
+    "dimensions": [{"field_name": "业务编号", "alias": "biz_key"}],
+    "measures": [{"field_name": "指标值", "aggregation": "max", "alias": "max_value"}],
+    "filters": {
+      "type": 1,
+      "conjunction": "and",
+      "conditions": [{"field_name": "状态", "operator": "is", "value": ["有效"]}]
+    },
+    "sort": [{"field_name": "max_value", "order": "desc"}],
+    "pagination": {"limit": 10},
+    "shaper": {"format": "flat"}
+  }'
 ```
 
 ## 参数
@@ -60,16 +77,23 @@ lark-cli base +data-query \
 | `--base-token <token>` | 是 | Base Token（base_token） |
 | `--dsl <json>`         | 是 | LiteQuery Protocol JSON DSL 查询语句 |
 
-## 如何从链接中提取参数
+## 如何从链接中解析参数
 
 用户通常会提供如下 URL：
 
-```
-https://example.feishu.cn/base/<base_token>?table=<table_id>
+```text
+https://example.feishu.cn/base/<base_token>?table=<block_id>
 ```
 
-- `--base-token`：取 `/base/` 后面的字符串
-- DSL 中的 `tableId`：取 `table=` 后面的值
+不要直接把 URL 中的 `table=` 当成数据表 ID。它表示当前选中的 Base 顶层块，可能是数据表、仪表盘、工作流、文件夹或文档。先解析链接：
+
+```bash
+lark-cli base +url-resolve --url "<url>" --as user
+```
+
+- `--base-token`：使用返回的 `base_token`
+- 仅当返回的 `block_type` 为 `table` 时，DSL 中的 `tableId` 才使用返回的 `table_id`
+- 如果返回的是其他块类型，按 `hint.next_step` 继续处理；如果只返回中性的 `block_id`，先用 `+base-block-list` 确认块类型，再选择实际要查询的数据表
 
 ## API 入参详情
 
@@ -258,6 +282,7 @@ POST /open-apis/base/v3/bases/:base_token/data/query
 | `isEmpty` / `isNotEmpty` | `[]` | 0 个 | `[]` |
 
 > **不支持** `isGreater` / `isGreaterEqual` / `isLess` / `isLessEqual`：地理位置无自然顺序。
+> location 按 `full_address` 字符串筛选，不支持经纬度空间筛选；查城市/片区时优先用 `contains`，避免用 `is` 匹配短地址词。
 
 *`checkbox`*
 
@@ -327,28 +352,30 @@ value 使用预定义关键字机制，第一个元素为字符串常量名称�
 |------|------|------|------|
 | `format` | string | 是 | 固定为 `"flat"`，表示返回扁平化的对象数组 |
 
-## API 出参详情
+## CLI 出参详情
+
+CLI 输出标准信封 `{ok, identity, data}`（失败时为 `{ok:false, identity, error}`）。
 
 **成功时：**
 
 ```json
-{"code": 0, "data": {"main_data": [{"dim_city": {"value": "北京"}, "total_amount": {"value": 12345.00}}, ...]}, "msg": ""}
+{"ok": true, "identity": "user", "data": {"main_data": [{"dim_city": {"value": "北京"}, "total_amount": {"value": 12345.00}}, ...]}}
 ```
 
 **失败时：**
 
 ```json
-{"code": 800004006, "data": {"error": {"code": 800004006, ...}}, "msg": "DSL validation failed"}
+{"ok": false, "identity": "user", "error": {"type": "api", "subtype": "unknown", "code": 800004006, "message": "...does not exist in table schema", "hint": "...", "log_id": "..."}}
 ```
 
 **Response 字段：**
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| `code` | int | 状态码，0 为成功 |
-| `msg` | string | 错误信息 |
-| `data.main_data` | []object | 查询结果数组，每个元素为一行数据 |
-| `data.error` | object | 失败时的错误详情 |
+| `ok` | bool | 是否成功 |
+| `identity` | string | 执行身份：`user` / `bot` |
+| `data.main_data` | []object | 查询结果数组，每个元素为一行数据（成功时） |
+| `error` | object | 失败时的 typed 错误，含 `type` / `subtype` / `code` / `message` / `hint` / `log_id` |
 
 每行数据的字段值封装在 CellValue 中：
 
@@ -397,6 +424,19 @@ value 使用预定义关键字机制，第一个元素为字符串常量名称�
    - 每个 value 是 CellValue 对象，实际值在 `value` 字段中，如 `{"value": "北京"}` 或 `{"value": 12345.00}`
    - 失败时结果在 `data.error` 中，包含具体错误码和信息
 
+## 与记录读取组合
+
+`+data-query` 可返回聚合结果，也可在只传 `dimensions` 时返回维度字段行；这些维度行按字段组合去重，不包含 `record_id`，不能等同于逐条原始记录。需要输出聚合结果对应的原始记录字段、展示值、记录定位信息或关联表字段时，按以下方式组合：
+
+1. 用 `+data-query` 在 Base 云端查询服务中完成全局筛选、分组、聚合、排序和 TopN，得到业务 key、分组值或候选字段组合。
+2. 如果已经拿到候选记录的 `record_id`，用 `+record-get` 读取逐条记录字段。
+3. 如果拿到的是结构化业务 key（例如编号、状态、日期、金额等），用 `+record-list --filter-json` 做精确过滤后读取；`+record-search` 用于文本展示值关键词。
+4. 只有候选条件本身是文本展示值关键词时，才使用 `+record-search`，并用 `search_fields` 限定范围、`select_fields` 做投影。
+5. 若候选记录包含 link 字段，提取关联 `record_id` 后到关联表用 `+record-get` 批量读取展示字段。
+6. 最终回答展示真实业务字段；内部 `record_id` 用于连接或定位。
+
+不要把 `data-query pagination.limit` 理解为分页扫描；它只限制 Base 云端查询服务返回的聚合结果行数，不支持 offset。需要逐条原始记录时按 Cloud SOP 的 `+record-list` / `+record-search` 回查规则处理。
+
 ## 坑点
 
 - ⚠️ **必须先查表结构**：DSL 的 `field_name` 必须与表中字段名称精确匹配（区分大小写），不能凭猜测构造。先用 `lark-cli base +field-list --base-token <base_token> --table-id <table_id>` 获取真实字段名
@@ -413,5 +453,6 @@ value 使用预定义关键字机制，第一个元素为字符串常量名称�
 
 - [lark-base](../SKILL.md) — 多维表格全部命令
 - [lark-shared](../../lark-shared/SKILL.md) — 认证和全局参数
+- [lark-base-data-analysis-cloud.md](lark-base-data-analysis-cloud.md) — Cloud 路径的查询范围、下推、分页、`+record-list` / `+record-search` 回查和关系查询 SOP
 - [lark-base-cell-value.md](lark-base-cell-value.md) — CellValue 格式规范
-- [lark-base-shortcut-field-properties.md](lark-base-shortcut-field-properties.md) — shortcut 字段类型与 JSON 结构
+- [lark-base-field-json.md](lark-base-field-json.md) — 字段类型与 JSON 结构

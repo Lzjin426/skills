@@ -1,0 +1,53 @@
+{
+  "skill_name": "md-image-supplement",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把 /tmp/md-image-supplement-test-fixtures/reports 下的报告补充完整，要求用 agent team 并行处理，把每个 full.md 同级 images/ 目录里的截图 OCR 后合并成 full_complete.md。",
+      "expected_output": "在 report-a、report-b、report-c 的 'md 文档/第一级' 目录下各生成一个 full_complete.md，原 full.md 不变；full_complete.md 包含原 markdown 内容和图片补充信息章节。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "三个报告均生成 complete 文件",
+          "description": "report-a、report-b、report-c 都应有 full_complete.md"
+        },
+        {
+          "name": "complete 文件保留原文",
+          "description": "每个 full_complete.md 必须包含对应 full.md 的原始标题与正文"
+        },
+        {
+          "name": "complete 文件包含图片补充章节",
+          "description": "每个 full_complete.md 必须包含 '图片补充信息' 章节"
+        },
+        {
+          "name": "complete 文件引用到图片文件名",
+          "description": "每个 full_complete.md 必须出现 'test.jpg' 或 'test'"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "只处理 /tmp/md-image-supplement-test-fixtures/reports/report-b 下的报告，把图片 OCR 内容补充到 markdown 里。",
+      "expected_output": "仅在 report-b/md 文档/第一级 下生成 full_complete.md，report-a 和 report-c 不应生成新的 complete 文件。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "仅 report-b 生成 complete 文件",
+          "description": "只有 report-b 出现 full_complete.md"
+        },
+        {
+          "name": "report-a 未生成 complete 文件",
+          "description": "report-a 下不存在 full_complete.md"
+        },
+        {
+          "name": "report-c 未生成 complete 文件",
+          "description": "report-c 下不存在 full_complete.md"
+        },
+        {
+          "name": "report-b complete 文件结构正确",
+          "description": "report-b 的 full_complete.md 包含原文和图片补充章节"
+        }
+      ]
+    }
+  ]
+}

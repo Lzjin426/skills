@@ -1,0 +1,40 @@
+{
+  "skill_name": "daily-summary",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "generate-today-summary",
+      "prompt": "帮我写今天的日报",
+      "expected_output": "从 Claude Code、Codex、Linear、嘀嗒清单等数据源收集今天的工作内容，生成符合用户模板的 Markdown 日报，并写入飞书 daily 文件夹。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "generate-specific-date-summary",
+      "prompt": "帮我补一下 2026-05-25 的日报",
+      "expected_output": "收集指定日期（2026-05-25）的所有数据源信息，生成日报。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "cross-source-verification",
+      "prompt": "今天做了什么？帮我总结一下",
+      "expected_output": "日报应体现跨数据源的信息交叉验证，例如 Linear issue 状态与 Agent 对话中的相关讨论应相互印证。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "eval_name": "filter-insignificant-inputs",
+      "prompt": "写日报",
+      "expected_output": "日报中不应包含纯闲聊、问候、重复提问、纯斜杠命令（如 /memory、/plugins）等无意义内容。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "eval_name": "remote-collection-fallback",
+      "prompt": "生成今日日报",
+      "expected_output": "当远程电脑 SSH 不可达时，应优雅跳过远程数据源，在 # 记录 中标注不可达信息，不影响整体日报生成。",
+      "files": []
+    }
+  ]
+}

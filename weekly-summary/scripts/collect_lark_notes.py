@@ -14,6 +14,8 @@ Cross-year aware: filenames carry a `-YY` suffix, so a window spanning Dec/Jan
 matches files with both year suffixes.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
@@ -87,7 +89,8 @@ def lark_list_folder(folder_token: str) -> list[dict]:
             payload = json.loads(result.stdout)
         except json.JSONDecodeError as e:
             raise SystemExit(f"failed to parse lark-cli output: {e}\n{result.stdout[:500]}")
-        if payload.get("code") != 0:
+        code = payload.get("code")
+        if code is not None and code != 0:
             raise SystemExit(f"lark-cli returned error: {payload}")
         data = payload.get("data") or {}
         files.extend(data.get("files") or [])

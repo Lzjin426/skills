@@ -1,0 +1,118 @@
+{
+  "model": "gpt-image-2",
+  "prompt": "Create a complex, professional, publication-ready vector flowchart explaining a Genetic Algorithm optimization workflow. White background, landscape composition, crisp thin dark-navy connectors with directional arrowheads, modern flat technical infographic style, blue/teal/violet/orange accent colors, ample whitespace, highly legible English sans-serif labels. Structure: Start -> Define objective function and constraints -> Encode candidate chromosome -> Initialize diverse population -> Evaluate fitness. Then a decision diamond labeled \"Termination criterion met?\". If Yes: Select best solution -> Validate constraints -> End. If No: Selection (tournament + elitism) -> Crossover -> Mutation -> Repair infeasible offspring -> Evaluate offspring fitness -> Replacement / next generation -> loop back to the termination decision. Include a side feedback branch from fitness evaluation labeled \"Diversity monitor\" feeding into an \"Adaptive mutation rate\" module, then into Mutation. Add a small bottom legend for chromosome, population, fitness, and elite archive. Use concise exact labels only; no paragraphs, no logos, no watermark, no decorative illustrations.",
+  "quality": "medium",
+  "requested_count": 3,
+  "submissions": [
+    {
+      "index": 3,
+      "task_id": "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe",
+      "submission": {
+        "created_at": 1785936759,
+        "id": "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe",
+        "model": "gpt-image-2",
+        "object": "image.task",
+        "status": "queued",
+        "task_id": "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe"
+      }
+    },
+    {
+      "index": 2,
+      "task_id": "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR",
+      "submission": {
+        "created_at": 1785936759,
+        "id": "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR",
+        "model": "gpt-image-2",
+        "object": "image.task",
+        "status": "queued",
+        "task_id": "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR"
+      }
+    },
+    {
+      "index": 1,
+      "task_id": "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf",
+      "submission": {
+        "created_at": 1785936759,
+        "id": "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf",
+        "model": "gpt-image-2",
+        "object": "image.task",
+        "status": "queued",
+        "task_id": "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf"
+      }
+    }
+  ],
+  "tasks": {
+    "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf": {
+      "completed_at": 1785936769,
+      "created_at": 1785936760,
+      "detail": {
+        "files_length": 0,
+        "n": 1,
+        "prompt": "Create a complex, professional, publication-ready vector flowchart explaining a Genetic Algorithm optimization workflow. White background, landscape composition, crisp thin dark-navy connectors with directional arrowheads, modern flat technical infographic style, blue/teal/violet/orange accent colors, ample whitespace, highly legible English sans-serif labels. Structure: Start -> Define objective function and constraints -> Encode candidate chromosome -> Initialize diverse population -> Evaluate fitness. Then a decision diamond labeled \"Termination criterion met?\". If Yes: Select best solution -> Validate constraints -> End. If No: Selection (tournament + elitism) -> Crossover -> Mutation -> Repair infeasible offspring -> Evaluate offspring fitness -> Replacement / next generation -> loop back to the termination decision. Include a side feedback branch from fitness evaluation labeled \"Diversity monitor\" feeding into an \"Adaptive mutation rate\" module, then into Mutation. Add a small bottom legend for chromosome, population, fitness, and elite archive. Use concise exact labels only; no paragraphs, no logos, no watermark, no decorative illustrations.",
+        "quality": "medium",
+        "response_format": "url",
+        "size": "auto"
+      },
+      "error": {
+        "message": "Our systems have detected unusual activity coming from your system. Please try again later."
+      },
+      "id": "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf",
+      "model": "gpt-image-2",
+      "object": "image",
+      "size": "auto",
+      "status": "failed"
+    },
+    "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR": {
+      "completed_at": 1785936812,
+      "created_at": 1785936759,
+      "detail": {
+        "data": [
+          {
+            "download_url": "https://cdnimage2.fapinebula.vip/chatgpt/156ce80b-2733-4794-8edf-b3961215a02a.png"
+          }
+        ],
+        "response_format": "url"
+      },
+      "id": "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR",
+      "model": "gpt-image-2",
+      "object": "image",
+      "status": "completed"
+    },
+    "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe": {
+      "completed_at": 1785936824,
+      "created_at": 1785936759,
+      "detail": {
+        "data": [
+          {
+            "download_url": "https://cdnimage2.fapinebula.vip/chatgpt/14a5d114-b482-4885-8358-a758803d32e8.png"
+          }
+        ],
+        "response_format": "url"
+      },
+      "id": "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe",
+      "model": "gpt-image-2",
+      "object": "image",
+      "status": "completed"
+    }
+  },
+  "downloads": [
+    {
+      "task_id": "task_vRAPh3InzZ4b4LhhQGucxiy2SBAArANR",
+      "url": "https://cdnimage2.fapinebula.vip/chatgpt/156ce80b-2733-4794-8edf-b3961215a02a.png",
+      "file": "/Users/fullstop/.agents/skills/apinebula-gpt-image/ga-flow.Jx4Udt/images/image-02-01.png"
+    },
+    {
+      "task_id": "task_w9mzAs90yiIiPGyXyJAu2uDovfqlYEWe",
+      "url": "https://cdnimage2.fapinebula.vip/chatgpt/14a5d114-b482-4885-8358-a758803d32e8.png",
+      "file": "/Users/fullstop/.agents/skills/apinebula-gpt-image/ga-flow.Jx4Udt/images/image-03-01.png"
+    }
+  ],
+  "errors": [
+    {
+      "stage": "task",
+      "task_id": "task_Os2Vo89tPwzj35kdWsLay67EMBOdlkKf",
+      "status": "failed",
+      "error": "{'message': 'Our systems have detected unusual activity coming from your system. Please try again later.'}"
+    }
+  ]
+}

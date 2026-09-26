@@ -1,0 +1,7 @@
+interface:
+  display_name: "APINebula Nano Banana"
+  short_description: "Use Gemini Nano Banana to generate images"
+  default_prompt: "Use $apinebula-nanobanana to generate an image with Gemini Nano Banana."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,74 @@
+{
+  "skill_name": "doc-translator-zh",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "simple-md-translation",
+      "prompt": "Translate the Markdown file at /Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/en_doc.md into Chinese. Keep the images and formulas intact. Do not upload to Feishu.",
+      "expected_output": "A Chinese translation of the Markdown with proper heading hierarchy, preserved image reference, and correctly formatted formula. The workspace should contain input/, output/, and script/ folders.",
+      "files": [
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/en_doc.md",
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/images/ml_diagram.png"
+      ],
+      "expectations": [
+        "A final Chinese Markdown file exists in the output directory.",
+        "The Markdown contains Chinese text translating the original English content.",
+        "The image reference is preserved and resolves to an existing file.",
+        "The formula is preserved using standard Markdown math syntax ($ or $$).",
+        "The workspace contains input/, output/, and script/ folders."
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "ocr-cleanup-and-formulas",
+      "prompt": "Translate the Markdown file at /Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/ocr/bad_doc.md into Chinese. Fix any OCR errors you find, especially missing formula numbers, heading levels, and noise. Do not upload to Feishu.",
+      "expected_output": "A Chinese translation with equation numbering fixed, heading levels normalized, page-number/separator noise removed, and image reference preserved. The review script should report zero issues after fixes.",
+      "files": [
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/ocr/bad_doc.md",
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/ocr/images/fig1.png"
+      ],
+      "expectations": [
+        "A final Chinese Markdown file exists in the output directory.",
+        "Heading hierarchy is normalized with no skipped levels.",
+        "Formula numbering is continuous with no missing numbers.",
+        "OCR noise such as isolated page numbers, separator lines, and copyright footers is removed.",
+        "The image reference resolves to an existing file."
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "long-doc-agent-team",
+      "prompt": "Translate the Markdown file at /Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/long/long_doc.md into Chinese. This is a longer technical survey with multiple sections, formulas, and images. Use an agent team if appropriate. Do not upload to Feishu.",
+      "expected_output": "A complete Chinese translation of the long document with consistent terminology, correct heading hierarchy, all images preserved, and formulas in standard Markdown math syntax. The output should show evidence of coordinated translation across sections.",
+      "files": [
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/long/long_doc.md",
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/long/images/transformer.png",
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/long/images/rlhf.png"
+      ],
+      "expectations": [
+        "A final Chinese Markdown file exists and contains a substantially complete translation.",
+        "All major sections of the original document are translated into Chinese.",
+        "All image references resolve to existing files.",
+        "Heading hierarchy has no skipped levels.",
+        "Formulas use standard Markdown math syntax ($ or $$)."
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "feishu-formatting",
+      "prompt": "Translate the Markdown file at /Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/en_doc.md into Chinese and prepare it as a Feishu document. Do not actually create the Feishu doc; just produce the Feishu-ready output (numbered headings, proper lists, centered images).",
+      "expected_output": "A Chinese translation prepared for Feishu with explicit heading numbering, preserved image and formula, and a Feishu-ready folder containing the markdown and images.",
+      "files": [
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/en_doc.md",
+        "/Users/fullstop/.agents/skills/doc-translator-zh-workspace/eval-inputs/simple/images/ml_diagram.png"
+      ],
+      "expectations": [
+        "A final Chinese Markdown file exists.",
+        "Section headings have explicit numbering (e.g., '## 1 引言').",
+        "The document title is the only top-level heading and is unnumbered.",
+        "The image reference is preserved and resolves to an existing file.",
+        "A Feishu-ready folder with markdown and images is produced."
+      ]
+    }
+  ]
+}

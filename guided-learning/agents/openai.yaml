@@ -1,0 +1,4 @@
+interface:
+  display_name: "Guided Learning"
+  short_description: "Guide, teach, and explain concepts"
+  default_prompt: "Use $guided-learning to help me learn this at the right depth; infer my goal and level, check Wikipedia/Baidu Baike baselines, teach from an anchor document, and gather staged Chinese-first resources when the goal is clear."

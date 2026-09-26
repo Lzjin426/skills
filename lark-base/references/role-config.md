@@ -1,13 +1,14 @@
-# 飞书多维表格角色权限配置详解
+# Base role permission JSON SSOT
 
-> **返回**: [SKILL.md](../SKILL.md) | **相关**: [role-create](lark-base-role-create.md) · [role-update](lark-base-role-update.md) · [role-get](lark-base-role-get.md)
+> **入口指南**: [lark-base-role-guide.md](lark-base-role-guide.md) | **相关命令**: `+role-create` · `+role-update` · `+role-get`
 
-本文档详细说明角色权限（AdvPermBaseRoleConfig）的完整 JSON 结构，供 `+role-create` 和 `+role-update` 构造 `--json` 参数时参考。
+本文档是角色权限 JSON（AdvPermBaseRoleConfig）的单一事实来源（SSOT），供 `+role-create` 和 `+role-update` 构造 `--json` 参数时参考。
 
 ## 📋 目录
 
 - [顶层结构 (AdvPermBaseRoleConfig)](#顶层结构-advpermbaseroleconfig)
 - [角色类型 (RoleType)](#角色类型-roletype)
+- [读取与更新角色](#读取与更新角色)
 - [Base 级权限 (BaseRuleMap)](#base-级权限-baserulemap)
 - [仪表盘权限 (DashboardRule)](#仪表盘权限-dashboardrule)
 - [文档权限 (DocxRule)](#文档权限-docxrule)
@@ -61,6 +62,15 @@
 **注意**:
 - 创建接口（`+role-create`）仅支持 `custom_role`
 - 更新接口（`+role-update`）支持  `editor` / `reader` / `custom_role`
+
+---
+
+## 读取与更新角色
+
+- `+role-list` 用于定位角色，返回角色摘要；系统角色和自定义角色都可能出现在列表中。
+- `+role-get` 返回完整权限配置。更新前先用它确认当前 `role_name`、`role_type` 和已有权限结构。
+- `+role-update` 是 delta merge，只提交需要变更的字段；但 `role_name` 和 `role_type` 仍要带当前值，避免误改角色身份信息。
+- `+role-delete` 仅适用于自定义角色；系统角色可以在权限上限内调整配置，但不可删除。
 
 ---
 
@@ -144,12 +154,34 @@
   "table_rule_map": {
     "订单表": {
       "perm": "edit",
-      "view_rule": { "..." : "..." },
-      "record_rule": { "..." : "..." },
-      "field_rule": { "..." : "..." }
+      "view_rule": {
+        "allow_edit": true,
+        "visibility": { "all_visible": true }
+      },
+      "record_rule": {
+        "record_operations": ["add", "delete"],
+        "other_record_all_read": true
+      },
+      "field_rule": {
+        "field_perm_mode": "all_edit"
+      }
     },
     "用户表": {
-      "perm": "read_only"
+      "perm": "read_only",
+      "view_rule": {
+        "allow_edit": false,
+        "visibility": { "all_visible": true }
+      },
+      "record_rule": {
+        "record_operations": [],
+        "other_record_all_read": true
+      },
+      "field_rule": {
+        "field_perm_mode": "all_read"
+      }
+    },
+    "内部表": {
+      "perm": "no_perm"
     }
   }
 }
@@ -162,7 +194,11 @@
 | `record_rule` | RecordRule | 记录权限配置 |
 | `field_rule` | FieldRule | 字段权限配置 |
 
-**注意**: 当 `perm` 为 `no_perm` 时，`view_rule`、`record_rule`、`field_rule` 均无须再设置。
+**`+role-create` 硬约束**:
+
+- 当 `perm` 为 `no_perm` 时，不要设置 `view_rule`、`record_rule`、`field_rule`。
+- 当 `perm` 为其他值时，必须同时提供完整的 `view_rule`、`record_rule`、`field_rule`，缺少任意一项都会导致创建失败。
+- `+role-update` 是 delta merge，只提交要修改的字段；不要为局部更新补造未变更配置。
 
 ---
 
@@ -505,7 +541,7 @@
 **`user` / `created_by` 类型字段：**
 - 仅允许使用 `contains` 算子
 - 不允许使用 `is`、`isNot` 等精确匹配算子
-- 筛选条件中无需填写具体值（由系统自动匹配当前成员）
+- 这是当前成员匹配模式，筛选条件中无需填写具体成员值；不要在 `filter_values` 中写入姓名或用户 ID
 
 **`select` (`multiple=false`) 类型字段：**
 - `is` 与 `isNot` 算子仅允许用于匹配**单一选项**，不得用于多个值
