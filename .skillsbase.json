@@ -1,10 +1,15 @@
 {
-  "skill_order": [],
+  "version": 5,
   "skills": {
     "academic-research-suite": {
       "tags": [
         "论文/文献综述",
         "论文/写作"
+      ]
+    },
+    "academic-writing": {
+      "tags": [
+        "论文"
       ]
     },
     "agent-acceptance-review": {
@@ -39,12 +44,19 @@
     },
     "avoid-ai-writing": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "论文"
       ]
     },
     "avoid-ai-writing-zh": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "论文"
+      ]
+    },
+    "better-md-writer": {
+      "tags": [
+        "Write"
       ]
     },
     "build-with-exa": {
@@ -78,6 +90,11 @@
       ]
     },
     "daily-summary": {
+      "tags": [
+        "Tools"
+      ]
+    },
+    "dev-env-sync": {
       "tags": [
         "Tools"
       ]
@@ -117,6 +134,11 @@
         "System"
       ]
     },
+    "frontend-design": {
+      "tags": [
+        "UI&UX"
+      ]
+    },
     "frontend-ui-animator": {
       "tags": [
         "UI&UX"
@@ -139,7 +161,8 @@
     },
     "humanizer-zh": {
       "tags": [
-        "论文/润色"
+        "论文/润色",
+        "Write"
       ]
     },
     "kisssoft-com-2024": {
@@ -344,12 +367,18 @@
     },
     "monthly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "multi-agent-decision-review": {
       "tags": [
         "Tools/review"
+      ]
+    },
+    "multi-agent-deliberation-skill": {
+      "tags": [
+        "Create"
       ]
     },
     "nature-academic-search": {
@@ -453,7 +482,8 @@
     },
     "obsidian-bases": {
       "tags": [
-        "Obsidian/draw"
+        "Obsidian/draw",
+        "Obsidian"
       ]
     },
     "obsidian-canvas-creator": {
@@ -503,7 +533,13 @@
     },
     "remotion-best-practices": {
       "tags": [
-        "Tools/video"
+        "Tools/video",
+        "Video"
+      ]
+    },
+    "research-paper-writing": {
+      "tags": [
+        "论文"
       ]
     },
     "research-writing-skill": {
@@ -513,7 +549,8 @@
     },
     "save-solution": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "sciverse": {
@@ -538,7 +575,8 @@
     },
     "slides": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Work"
       ]
     },
     "taste-skill": {
@@ -558,12 +596,19 @@
     },
     "weekly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
       ]
     },
     "yearly-summary": {
       "tags": [
-        "Tools"
+        "Tools",
+        "Write"
+      ]
+    },
+    "zh-engineering-paper": {
+      "tags": [
+        "论文"
       ]
     },
     "zh-tech-writing": {
@@ -572,6 +617,69 @@
       ]
     }
   },
+  "skill_order": [
+    "academic-research-suite",
+    "agent-acceptance-review",
+    "agently-mail",
+    "anysearch",
+    "apinebula-gpt-image",
+    "apinebula-nanobanana",
+    "build-with-exa",
+    "code-mode",
+    "code-mode-codex",
+    "computer-use",
+    "context-manager",
+    "daily-summary",
+    "dida-task-planning",
+    "doc-translator-zh",
+    "exa-search",
+    "feishu-daily-note-automation",
+    "figure-composer",
+    "figure-style",
+    "grill-me",
+    "guided-learning",
+    "guizang-ppt-skill",
+    "install-clawhub-skill",
+    "kimi-webbridge",
+    "kisssoft-com-2024",
+    "knowledge-doc-writer",
+    "lark-doc-in",
+    "lark-doc-tidy",
+    "literature-review",
+    "md-image-supplement",
+    "md-to-docx-template",
+    "multi-agent-decision-review",
+    "nature-academic-search",
+    "nature-citation",
+    "nature-data",
+    "nature-downloader",
+    "nature-experiment-log",
+    "nature-figure",
+    "nature-literature-pipeline",
+    "nature-paper-card",
+    "nature-paper-to-patent",
+    "nature-paper2ppt",
+    "nature-polishing",
+    "nature-proposal-writer",
+    "nature-reader",
+    "nature-ref-verifier",
+    "nature-response",
+    "nature-reviewer",
+    "nature-shared",
+    "nature-statistics",
+    "nature-writing",
+    "orca-cli",
+    "orca-linear",
+    "orchestration",
+    "paper-humanizer-skill",
+    "paper-narrative",
+    "paperbanana",
+    "product-management",
+    "readme-wiki",
+    "research-writing-skill",
+    "sciverse",
+    "windows-screenshot"
+  ],
   "tag_order": [
     "论文",
     "论文/润色",
@@ -596,36 +704,66 @@
     "Tools/video",
     "System",
     "UI&UX",
-    "Law"
+    "Law",
+    "Video",
+    "Write"
   ],
   "tag_styles": {
+    "Create": {
+      "icon": "",
+      "color": ""
+    },
+    "Draw": {
+      "icon": "material-symbols:draw",
+      "color": ""
+    },
+    "Lark": {
+      "icon": "icon-park-outline:new-lark",
+      "color": ""
+    },
     "Nature-skill": {
-      "color": "#ef4444",
-      "icon": "mdi:brush"
+      "icon": "mdi:brush",
+      "color": "#ef4444"
     },
     "Obsidian": {
-      "color": "#a855f7",
-      "icon": ""
+      "icon": "",
+      "color": "#a855f7"
+    },
+    "System": {
+      "icon": "tdesign:system-3",
+      "color": "#a855f7"
+    },
+    "Tools": {
+      "icon": "tabler:tool",
+      "color": ""
+    },
+    "UI": {
+      "icon": "",
+      "color": "#ef4444"
     },
     "UI&UX": {
-      "color": "#10b981",
-      "icon": ""
+      "icon": "",
+      "color": "#10b981"
     },
     "Video": {
-      "color": "",
-      "icon": "mdi:tag"
+      "icon": "mdi:tag",
+      "color": ""
+    },
+    "论文": {
+      "icon": "lets-icons:paper-light",
+      "color": ""
     },
     "论文/写作": {
-      "color": "#ef4444",
-      "icon": ""
+      "icon": "",
+      "color": "#ef4444"
     },
     "论文/文献综述": {
-      "color": "#ef4444",
-      "icon": ""
+      "icon": "",
+      "color": "#ef4444"
     },
     "论文写作": {
-      "color": "#f97316",
-      "icon": ""
+      "icon": "",
+      "color": "#f97316"
     }
   },
   "tool_order": [
@@ -646,13 +784,14 @@
     "dsh",
     "qoder-cn"
   ],
-  "version": 5,
   "visible_tools": [
     "opencode",
     "codex",
     "workbuddy",
     "antigravity",
     "dsh",
-    "qoder-cn"
+    "qoder-cn",
+    "claude",
+    "kimi-code"
   ]
 }

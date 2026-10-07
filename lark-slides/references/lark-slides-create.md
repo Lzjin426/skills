@@ -1,5 +1,6 @@
+# slides +create（创建飞书幻灯片）（兼容入口）
 
-# slides +create（创建飞书幻灯片）
+本文档已迁移至 [`cli/lark-slides-create.md`](cli/lark-slides-create.md)。
 
 创建一个新的飞书幻灯片演示文稿，可选一步添加页面内容。
 

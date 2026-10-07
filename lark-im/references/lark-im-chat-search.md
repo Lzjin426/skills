@@ -33,6 +33,9 @@ lark-cli im +chat-search --query "project" --page-size 10
 # Pagination
 lark-cli im +chat-search --query "project" --page-token "xxx"
 
+# Fetch multiple pages automatically, up to 10 pages by default
+lark-cli im +chat-search --query "project" --page-all
+
 # JSON output
 lark-cli im +chat-search --query "project" --format json
 
@@ -121,7 +124,7 @@ lark-cli im +messages-send --chat-id "$CHAT_ID" --text "Today's progress update"
 |---------|---------|---------|
 | `--query and --member-ids cannot both be empty` | Both were omitted | Provide at least `--query` or `--member-ids` |
 | Empty results | No visible chats matched the keyword or filters | Relax the keyword or filters and try again |
-| `--page-size must be an integer between 1 and 100` | page-size is out of range or not an integer | Use an integer between 1 and 100 |
+| `invalid --page-size 101: must be between 1 and 100` | page-size is out of range | Use an integer between 1 and 100 |
 | Permission denied (99991672) | The bot app does not have `im:chat:read` TAT permission enabled | Enable the permission for the app in the Open Platform console |
 | Permission denied (99991679) with `--as user` | UAT is not authorized for `im:chat:read` | Run `lark-cli auth login --scope "im:chat:read"` |
 | `Bot ability is not activated` (232025) | The app does not have bot capability enabled | Enable bot capability in the Open Platform console |

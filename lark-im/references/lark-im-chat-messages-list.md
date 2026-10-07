@@ -29,6 +29,9 @@ lark-cli im +chat-messages-list --chat-id oc_xxx --order asc --page-size 20
 # Pagination
 lark-cli im +chat-messages-list --chat-id oc_xxx --page-token "xxx"
 
+# Fetch multiple pages automatically, up to 10 pages by default
+lark-cli im +chat-messages-list --chat-id oc_xxx --page-all
+
 # JSON output
 lark-cli im +chat-messages-list --chat-id oc_xxx --format json
 ```
@@ -106,11 +109,13 @@ Each message contains:
 
 ## Pagination (`has_more` / `page_token`)
 
-`im +chat-messages-list` returns `has_more` and `page_token` when more data is available. Use `--page-token` to continue:
+By default, `im +chat-messages-list` fetches one page. It returns `has_more` and `page_token` when more data is available. Use `--page-token` to continue:
 
 ```bash
 lark-cli im +chat-messages-list --chat-id oc_xxx --page-token <PAGE_TOKEN>
 ```
+
+With `--page-all`, `--page-token` sets the starting cursor. If `meta.pagination.complete=false`, resume from `meta.pagination.next_token` or raise `--page-limit`.
 
 You can also fall back to the generic API:
 

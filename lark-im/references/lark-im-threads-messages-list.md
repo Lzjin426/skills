@@ -23,6 +23,9 @@ lark-cli im +threads-messages-list --thread omt_xxx --page-size 20
 # Pagination
 lark-cli im +threads-messages-list --thread omt_xxx --page-token <PAGE_TOKEN>
 
+# Fetch multiple pages automatically, up to 10 pages by default
+lark-cli im +threads-messages-list --thread omt_xxx --page-all
+
 # Output format options
 lark-cli im +threads-messages-list --thread omt_xxx --format pretty
 lark-cli im +threads-messages-list --thread omt_xxx --format table
@@ -61,8 +64,7 @@ Thread messages do not support `start_time` / `end_time` filtering because of Fe
 
 ### 3. Pagination (`has_more` / `page_token`)
 
-- When the result includes `has_more=true`, use `page_token` to fetch the next page
-- If you need the complete thread, keep paginating; if you only need an overview, the first page is often enough
+Default is one page. With `--page-all`, `--page-token` sets the starting cursor; if `meta.pagination.complete=false`, resume from `meta.pagination.next_token` or raise `--page-limit`.
 
 ### 4. Recommended expansion strategy
 

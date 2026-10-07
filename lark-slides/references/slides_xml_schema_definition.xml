@@ -1,20 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns:sml="http://www.larkoffice.com/sml/2.0"
-        targetNamespace="http://www.larkoffice.com/sml/2.0"
-        elementFormDefault="qualified"
-        attributeFormDefault="unqualified">
-    <xs:annotation>
-        <xs:documentation xml:lang="zh-CN">
-            飞书 Slides 结构化标记语言 (Structured Markup Language, SML) 2.0
+# Slides XML Schema 定义（兼容入口）
 
-            版本信息：
-            - Schema 版本: 2.0.0
-            - 命名空间: http://www.larkoffice.com/sml/2.0
-            - 发布日期: 2025-11-03
-        </xs:documentation>
-    </xs:annotation>
+本文档已迁移至 [`xml/slides_xml_schema_definition.xml`](xml/slides_xml_schema_definition.xml)。
 
     <!-- ==================== 命名规范说明 ==================== -->
     <!--

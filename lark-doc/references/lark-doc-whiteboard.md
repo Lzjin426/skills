@@ -1,7 +1,5 @@
 # lark-doc 画板处理指南
 
-> **前置条件：** 先阅读 [`../../lark-shared/SKILL.md`](../../lark-shared/SKILL.md) 了解认证、全局参数和安全规则。
-
 ## 两个 Skill 的职责边界
 
 | Skill             | 核心职责                                                      | 约束                              |

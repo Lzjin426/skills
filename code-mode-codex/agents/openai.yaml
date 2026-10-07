@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Mode Codex"
+  short_description: "从产品调研、HTML 原型到 Luna Max 执行与验收"
+  default_prompt: "使用 $code-mode-codex：先完成同类产品调研与产品方案，再按需用 Luna Max 执行已定实现。"

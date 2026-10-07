@@ -3,8 +3,17 @@
 .obsidian/
 .skillsbase-cache/
 .skillsbase-local.json
-apinebula-gpt-image/.api_key
-mimo-vision/.api_key
+# 任何位置的密钥/凭据一律不入库（原为逐条列举，漏过 apinebula-nanobanana）
+.api_key
+**/.api_key
+.env
+.env.*
+!.env.example
+**/*.pem
+**/credentials.json
+
+__pycache__/
+*.py[cod]
 
 # macOS 与本机生成物
 .DS_Store
