@@ -73,7 +73,7 @@ metadata:
 - 从配置读取文件夹 token，不在 Skill 中硬编码：
 
   ```text
-  ~/.claude/skills/summary-shared/lark_folders.json
+  ../summary-shared/lark_folders.json
   ```
 
 - 读取 `daily_folder_token`，列出 daily 文件夹，精确匹配目标文件名。若存在多个同名文档，按修改时间确认目标并在写入前停止歧义操作。
@@ -93,7 +93,6 @@ RUN_DIR="$(mktemp -d /tmp/daily-summary.XXXXXX)"
 ```bash
 python3 scripts/collect_lark_docs.py \
   --date YYYY-MM-DD \
-  --config ~/.claude/skills/summary-shared/lark_folders.json \
   --style-limit 6 \
   --fetch-content \
   --output /tmp/daily_lark_docs.json
@@ -317,4 +316,4 @@ lark-cli docs +update \
 - `scripts/generate_daily.py`：统一证据包，不负责写作
 - `scripts/validate_daily_report.py`：结构校验
 - `../lark-doc/SKILL.md`：飞书文档读取和写入规则
-- `~/.claude/skills/summary-shared/lark_folders.json`：文件夹 token 配置
+- `../summary-shared/lark_folders.json`：文件夹 token 配置

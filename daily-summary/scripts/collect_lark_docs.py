@@ -35,7 +35,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--date", required=True, help="Target date YYYY-MM-DD")
     parser.add_argument(
         "--config",
-        default="~/.claude/skills/summary-shared/lark_folders.json",
+        default=str(
+            (Path(__file__).parent / ".." / ".." / "summary-shared" / "lark_folders.json").resolve()
+        ),
         help="Folder-token JSON configuration",
     )
     parser.add_argument(
