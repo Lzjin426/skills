@@ -1,7 +1,0 @@
-interface:
-  display_name: "MiMo Vision 看图"
-  short_description: "Use Xiaomi MiMo V2.5 vision model to describe images for DeepSeek"
-  default_prompt: "Use $mimo-vision to describe this image in detail."
-
-policy:
-  allow_implicit_invocation: true

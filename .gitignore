@@ -5,3 +5,7 @@
 .skillsbase-local.json
 apinebula-gpt-image/.api_key
 mimo-vision/.api_key
+
+# macOS 与本机生成物
+.DS_Store
+.skillsbase-local.json.*

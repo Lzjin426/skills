@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "skill_order": [],
   "skills": {
     "academic-research-suite": {
       "tags": [
@@ -50,6 +50,11 @@
     "build-with-exa": {
       "tags": [
         "Tools/exa"
+      ]
+    },
+    "code-init": {
+      "tags": [
+        "Code"
       ]
     },
     "code-mode": {
@@ -332,11 +337,6 @@
         "Obsidian/draw"
       ]
     },
-    "mimo-vision": {
-      "tags": [
-        "Tools/识图"
-      ]
-    },
     "monocode-ui": {
       "tags": [
         "UI&UX"
@@ -572,7 +572,6 @@
       ]
     }
   },
-  "skill_order": [],
   "tag_order": [
     "论文",
     "论文/润色",
@@ -600,33 +599,33 @@
     "Law"
   ],
   "tag_styles": {
-    "论文/文献综述": {
-      "icon": "",
-      "color": "#ef4444"
-    },
-    "论文写作": {
-      "icon": "",
-      "color": "#f97316"
-    },
     "Nature-skill": {
-      "icon": "mdi:brush",
-      "color": "#ef4444"
+      "color": "#ef4444",
+      "icon": "mdi:brush"
     },
     "Obsidian": {
-      "icon": "",
-      "color": "#a855f7"
+      "color": "#a855f7",
+      "icon": ""
     },
     "UI&UX": {
-      "icon": "",
-      "color": "#10b981"
-    },
-    "论文/写作": {
-      "icon": "",
-      "color": "#ef4444"
+      "color": "#10b981",
+      "icon": ""
     },
     "Video": {
-      "icon": "mdi:tag",
-      "color": ""
+      "color": "",
+      "icon": "mdi:tag"
+    },
+    "论文/写作": {
+      "color": "#ef4444",
+      "icon": ""
+    },
+    "论文/文献综述": {
+      "color": "#ef4444",
+      "icon": ""
+    },
+    "论文写作": {
+      "color": "#f97316",
+      "icon": ""
     }
   },
   "tool_order": [
@@ -647,6 +646,7 @@
     "dsh",
     "qoder-cn"
   ],
+  "version": 5,
   "visible_tools": [
     "opencode",
     "codex",
