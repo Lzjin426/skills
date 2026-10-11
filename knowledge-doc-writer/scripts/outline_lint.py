@@ -58,10 +58,16 @@ def lint(text: str) -> dict:
     h3 = [title for level, title in headings if level == 3]
     max_depth = max([level for level, _ in headings], default=0)
 
-    if len(h1) > 1:
-        issues.append(Issue("warn", "multiple_h1", f"Found {len(h1)} H1 headings; knowledge docs usually need one title."))
-    if len(h2) > 9:
-        issues.append(Issue("warn", "too_many_h2", f"Found {len(h2)} H2 headings; consider merging shallow sections."))
+    # Numbered H1 chapters are the established vault style. Judge actual
+    # hierarchy and shallow sections rather than imposing heading-count quotas.
+    previous_level = 0
+    skipped_levels = []
+    for level, title in headings:
+        if level > previous_level + 1:
+            skipped_levels.append(f"H{previous_level} to H{level}: {title}")
+        previous_level = level
+    if skipped_levels:
+        issues.append(Issue("warn", "skipped_heading_level", "Heading levels skipped: " + "; ".join(skipped_levels[:8])))
     if max_depth > 4:
         issues.append(Issue("warn", "deep_heading_tree", f"Heading depth reaches H{max_depth}; deep trees often become fragmented."))
 

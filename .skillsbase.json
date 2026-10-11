@@ -1,5 +1,63 @@
 {
-  "version": 5,
+  "skill_order": [
+    "academic-research-suite",
+    "agent-acceptance-review",
+    "agently-mail",
+    "anysearch",
+    "apinebula-gpt-image",
+    "apinebula-nanobanana",
+    "build-with-exa",
+    "code-mode",
+    "code-mode-codex",
+    "computer-use",
+    "context-manager",
+    "daily-summary",
+    "doc-translator-zh",
+    "exa-search",
+    "figure-composer",
+    "figure-style",
+    "grill-me",
+    "guided-learning",
+    "guizang-ppt-skill",
+    "kimi-webbridge",
+    "kisssoft-com-2024",
+    "knowledge-doc-writer",
+    "lark-doc-in",
+    "lark-doc-tidy",
+    "literature-review",
+    "md-image-supplement",
+    "md-to-docx-template",
+    "multi-agent-decision-review",
+    "nature-academic-search",
+    "nature-citation",
+    "nature-data",
+    "nature-downloader",
+    "nature-experiment-log",
+    "nature-figure",
+    "nature-literature-pipeline",
+    "nature-paper-card",
+    "nature-paper-to-patent",
+    "nature-paper2ppt",
+    "nature-polishing",
+    "nature-proposal-writer",
+    "nature-reader",
+    "nature-ref-verifier",
+    "nature-response",
+    "nature-reviewer",
+    "nature-shared",
+    "nature-statistics",
+    "nature-writing",
+    "orca-cli",
+    "orca-linear",
+    "orchestration",
+    "paper-humanizer-skill",
+    "paper-narrative",
+    "product-management",
+    "readme-wiki",
+    "research-writing-skill",
+    "sciverse",
+    "windows-screenshot"
+  ],
   "skills": {
     "academic-research-suite": {
       "tags": [
@@ -90,11 +148,6 @@
       ]
     },
     "daily-summary": {
-      "tags": [
-        "Tools"
-      ]
-    },
-    "dev-env-sync": {
       "tags": [
         "Tools"
       ]
@@ -617,69 +670,6 @@
       ]
     }
   },
-  "skill_order": [
-    "academic-research-suite",
-    "agent-acceptance-review",
-    "agently-mail",
-    "anysearch",
-    "apinebula-gpt-image",
-    "apinebula-nanobanana",
-    "build-with-exa",
-    "code-mode",
-    "code-mode-codex",
-    "computer-use",
-    "context-manager",
-    "daily-summary",
-    "dida-task-planning",
-    "doc-translator-zh",
-    "exa-search",
-    "feishu-daily-note-automation",
-    "figure-composer",
-    "figure-style",
-    "grill-me",
-    "guided-learning",
-    "guizang-ppt-skill",
-    "install-clawhub-skill",
-    "kimi-webbridge",
-    "kisssoft-com-2024",
-    "knowledge-doc-writer",
-    "lark-doc-in",
-    "lark-doc-tidy",
-    "literature-review",
-    "md-image-supplement",
-    "md-to-docx-template",
-    "multi-agent-decision-review",
-    "nature-academic-search",
-    "nature-citation",
-    "nature-data",
-    "nature-downloader",
-    "nature-experiment-log",
-    "nature-figure",
-    "nature-literature-pipeline",
-    "nature-paper-card",
-    "nature-paper-to-patent",
-    "nature-paper2ppt",
-    "nature-polishing",
-    "nature-proposal-writer",
-    "nature-reader",
-    "nature-ref-verifier",
-    "nature-response",
-    "nature-reviewer",
-    "nature-shared",
-    "nature-statistics",
-    "nature-writing",
-    "orca-cli",
-    "orca-linear",
-    "orchestration",
-    "paper-humanizer-skill",
-    "paper-narrative",
-    "paperbanana",
-    "product-management",
-    "readme-wiki",
-    "research-writing-skill",
-    "sciverse",
-    "windows-screenshot"
-  ],
   "tag_order": [
     "论文",
     "论文/润色",
@@ -710,60 +700,60 @@
   ],
   "tag_styles": {
     "Create": {
-      "icon": "",
-      "color": ""
+      "color": "",
+      "icon": ""
     },
     "Draw": {
-      "icon": "material-symbols:draw",
-      "color": ""
+      "color": "",
+      "icon": "material-symbols:draw"
     },
     "Lark": {
-      "icon": "icon-park-outline:new-lark",
-      "color": ""
+      "color": "",
+      "icon": "icon-park-outline:new-lark"
     },
     "Nature-skill": {
-      "icon": "mdi:brush",
-      "color": "#ef4444"
+      "color": "#ef4444",
+      "icon": "mdi:brush"
     },
     "Obsidian": {
-      "icon": "",
-      "color": "#a855f7"
+      "color": "#a855f7",
+      "icon": ""
     },
     "System": {
-      "icon": "tdesign:system-3",
-      "color": "#a855f7"
+      "color": "#a855f7",
+      "icon": "tdesign:system-3"
     },
     "Tools": {
-      "icon": "tabler:tool",
-      "color": ""
+      "color": "",
+      "icon": "tabler:tool"
     },
     "UI": {
-      "icon": "",
-      "color": "#ef4444"
+      "color": "#ef4444",
+      "icon": ""
     },
     "UI&UX": {
-      "icon": "",
-      "color": "#10b981"
+      "color": "#10b981",
+      "icon": ""
     },
     "Video": {
-      "icon": "mdi:tag",
-      "color": ""
+      "color": "",
+      "icon": "mdi:tag"
     },
     "论文": {
-      "icon": "lets-icons:paper-light",
-      "color": ""
+      "color": "",
+      "icon": "lets-icons:paper-light"
     },
     "论文/写作": {
-      "icon": "",
-      "color": "#ef4444"
+      "color": "#ef4444",
+      "icon": ""
     },
     "论文/文献综述": {
-      "icon": "",
-      "color": "#ef4444"
+      "color": "#ef4444",
+      "icon": ""
     },
     "论文写作": {
-      "icon": "",
-      "color": "#f97316"
+      "color": "#f97316",
+      "icon": ""
     }
   },
   "tool_order": [
@@ -784,6 +774,7 @@
     "dsh",
     "qoder-cn"
   ],
+  "version": 5,
   "visible_tools": [
     "opencode",
     "codex",

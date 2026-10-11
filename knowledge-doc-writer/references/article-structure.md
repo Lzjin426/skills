@@ -4,7 +4,7 @@ Use this file to design the document before drafting.
 
 ## Core Shape
 
-Prefer an "encyclopedia plus tutorial" shape:
+Use the following teaching moves to build a serious reference note. They describe the learning route, not mandatory section names:
 
 1. Lead: what it is, what problem it solves, where it is used.
 2. Context: why the concept exists and what older/simple approach fails.
@@ -34,11 +34,13 @@ Good lead: "X is a way to solve Y when Z breaks. Its key move is..."
 
 Each major section should teach one complete idea. A section is probably too shallow if:
 
-- It has fewer than two developed paragraphs and no example, formula, or visual.
+- It names an idea without explaining the relationship, operation or distinction needed for the learning task.
 - It only defines a term and immediately moves on.
 - It could be merged into the previous section without losing meaning.
 
-Use H2 for major learning steps. Use H3 only when a section genuinely has internal structure.
+For Fullstop's notes, use numbered H1 chapters, H2 subchapters, and H3 for deeper topics only when needed. Use the filename or page title as the document name. Keep heading levels continuous and numbering consistent. A different destination's explicit convention can override this default.
+
+Headings name the subject or purpose concisely; the paragraphs carry the explanation. Prefer “基本概念”, “更新原理”, “计算示例”, “学习率对比”, and “适用条件” to “从求导走到找一个更好的位置” or “自己做一次，再检查理解有没有断点”. Short headings are not evidence of shallow teaching.
 
 ## Structure Patterns
 
@@ -111,20 +113,14 @@ Skip or compress:
 
 ## Outline Test
 
-Before drafting, read only the headings. They should form a learning path, not a keyword list.
+Before drafting, check two things separately: whether the chapter order supports understanding, and whether the titles are short, formal, and easy to locate in an outline.
 
-Weak:
+For example, a gradient-descent note might use:
 
-- Definition
-- Features
-- Advantages
-- Applications
-- Summary
+- `# 1. 基本概念`, with `## 1.1 目标函数与梯度` and `## 1.2 更新规则`.
+- `# 2. 计算示例`.
+- `# 3. 学习率对比`, with subchapters for convergence and divergence where useful.
+- `# 4. 适用条件`.
+- `# 5. 练习与参考`.
 
-Stronger:
-
-- Why sequential models struggle with long-distance dependencies
-- Attention as direct information retrieval
-- Q, K, and V: three roles from one input
-- Why scaled dot-product attention needs normalization
-- What attention weights reveal and what they do not prove
+This is an example, not a required skeleton or chapter count. “概念、举例、对比” can be excellent headings when their contents form a connected explanation. A mechanically filled list of definitions and advantages remains weak regardless of how elaborate the titles sound.
