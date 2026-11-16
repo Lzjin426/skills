@@ -1,6 +1,6 @@
 ---
 name: push-code
-description: 主控式并行开发流程：主会话负责方向、拆分、委派、整合与交付，为每个独立功能开独立会话和 git worktree；先过模型门槛（入口清单、状态矩阵、不变量、单一命令），大功能先做开源调研；完成后按复杂度启动 1–4 个独立 review agent，并执行通用完成定义（真实入口、原型对照、异常/重启、soak/同步盘）；通过后合并、集中检查、交付并清理。只在用户明确说使用 push-code、要求主控开发、并行开 worktree 开发，或显式要求 multi-session/worktree review 时启用；不要用于普通开发或普通代码修改。Project facts and code/data constraints come from the repo AGENTS.md. Includes a model-first gate, autonomous open-source research for large features, complexity-scaled review teams, a shared completion definition, and clean worktrees/branches before pushing.
+description: 主控式并行开发流程：主会话负责方向、拆分、委派、整合与交付，为每个独立功能开独立会话和 git worktree；先过模型门槛（入口清单、状态矩阵、不变量、单一命令），大功能先做开源调研；完成后按复杂度启动 1–4 个独立 review agent，按改动范围设计场景并由独立 acceptance agent 黑盒验收（真实手势、可见结果、数据断言、异常/重启/soak）；通过后合并、集中检查、交付并清理。只在用户明确说使用 push-code、要求主控开发、并行开 worktree 开发，或显式要求 multi-session/worktree review 时启用；不要用于普通开发或普通代码修改。Project facts and code/data constraints come from the repo AGENTS.md. Includes a model-first gate, autonomous open-source research for large features, complexity-scaled review teams, a shared completion definition, scoped acceptance scenarios verified by an independent black-box acceptance agent, and clean worktrees/branches before pushing.
 ---
 
 # push-code
@@ -20,6 +20,7 @@ description: 主控式并行开发流程：主会话负责方向、拆分、委�
 - **主控（当前会话）**：方向讨论、任务拆分、文件归属、审阅方案与真实改动、合并、集中验证、交付、清理。
 - **执行会话**：一个独立功能一个会话、一个 worktree、一个分支；负责开发、定向测试、本地提交（不 push、不合并 main）。
 - **review agent**：每个 worktree 完成后，在执行会话内启动的**新 agent**，只读审查，不能由开发会话自审。
+- **acceptance agent**：黑盒验收者，只按用户场景、原型/契约和模型操作真实窗口/CLI，不先读实现；不能由开发会话自验收。
 
 具体开发会话和执行 agent 默认使用 Terra（gpt-6.1-terra），思考强度 high（高）；Fullstop 另有指定时按指定执行。
 
@@ -80,7 +81,7 @@ git worktree add -b qoder/<slug> "<worktrees-root>/<slug>/<repo>" main
 - 「Turn 完成」不等于工作被接受：读最终汇报并用 `git log` / `git status` 核对实际状态。
 - 会话执行失败时先读现场，工作通常已保留；让原会话从断点继续，不要另起重复实现。
 
-## 6. 完成定义（通用开发节奏）
+## 6. 完成定义与场景验收（通用开发节奏）
 
 代码 review 只证明 diff 层面；功能完成必须同时满足下面几条，任何一条没做都要在汇报里列为未验证，不能用测试数量代替用户可用结果。
 
@@ -92,6 +93,27 @@ git worktree add -b qoder/<slug> "<worktrees-root>/<slug>/<repo>" main
 - **未验证清单**：汇报写清哪些入口、状态、平台、组合没验；无法实测时明确说明，不把编译/单测通过写成功能可用。
 - **用户反馈优先**：用户报告的手感、布局、跳转、丢失问题按 P1 验收缺口处理，先归类（规则变更/未枚举组合/隐式状态/验证缺口），补矩阵和 E2E，不能只修当前症状或降为样式微调。
 - **主控亲自走**：合并和交付前，主控亲自从真实入口走黄金路径 + 至少一个异常态；只看 diff、汇报或截图不算验收。
+
+### 场景清单按改动范围定
+
+不维护固定场景库，也不按功能类型抄模板。每次根据本次开发内容，从模型的入口清单 × 状态矩阵推导：
+
+- **小修**（单点 bug、文案/样式、改法明确）：1–2 条，只覆盖改动的入口/状态 + 一个直接回归；不要求跑完整功能套件。
+- **常规功能**：覆盖新增/改变的入口和状态，至少黄金路径 + 一个异常态。
+- **新功能/跨模块/高风险**：入口 × 状态矩阵全量，加数据断言、异常、重启、soak/同步盘。
+- 用户报过的 bug：在任务记录里留一条最小回归场景；下次碰同一区域时重跑，不建常驻目录。
+- 场景写在委派 prompt / 任务记录里；开发会话先写草案，acceptance agent 独立再写一份，两份对比找缺口。
+
+每条场景写清：用户目标、入口、真实手势、预期可见结果、数据断言、异常/重启、证据。
+
+### 独立验收
+
+- 开发会话不能验收自己的功能；每个功能由**新的 acceptance agent** 黑盒验收。
+- acceptance agent 只看用户可见变更、原型/契约和模型，不先读实现；可加对抗场景。
+- 多 worktree 批次做 A/B 互验：A 的功能由 B 验，B 的功能由 A 验；单功能批次用独立 acceptance agent。
+- 验收必须用真实手势；`pdf-annotate`、直接调 Workspace 方法、脚本截图只能做前置或 soak，不能作为手势证据。
+- 证据：关键状态按顺序截图 PNG + 数据断言（文件/sidecar/JSON）+ “我实际运行/查看了什么”。
+- P1 场景失败阻断合并；小修只跑改动场景，但失败修复后要重跑该场景组。
 
 ## 7. Review（强制，按复杂度分档）
 
@@ -107,7 +129,7 @@ git worktree add -b qoder/<slug> "<worktrees-root>/<slug>/<repo>" main
 - 每个 reviewer 必须列出未覆盖的组合和建议补的 E2E，不能只给通过/不通过；L3 必须所有范围返回，任一 P1 阻断合并；L2 至少一个 reviewer 给出未覆盖清单；L1 只拦真实缺陷。
 - 开发会话汇总去重多个 reviewer 的结论，不把重复项当新发现；确认成立的问题**新增 commit**（不 amend、不 push），重跑受影响测试后再汇报。review 不通过不合并。
 - 修复必须说明根因分类（规则变更/未枚举组合/隐式状态/验证缺口），并带对应测试或文档更新，不能只打补丁。
-- **review 通过 ≠ 功能验收**：完成定义见第 6 节；review 通过后仍要做真机验收。
+- **review 与 acceptance 是两道门**：review 通过不等于功能验收；UI reviewer 看真实窗口和原型，但不能替代独立 acceptance agent。完成定义与场景验收见第 6 节。
 - 已合并的分支也补 review；有修复再合并一次。
 
 ## 8. 补丁分类（发现回归时）
@@ -124,6 +146,7 @@ git worktree add -b qoder/<slug> "<worktrees-root>/<slug>/<repo>" main
 ## 9. 整合与交付
 
 - 主控亲自看 diff（`git show`），不能只看汇报。
+- 合并前必须有 acceptance agent 的场景验收报告；P1 未通过不合并。主控再亲自走黄金路径 + 一个异常态。
 - main 前进后先 rebase 分支，再 `git merge --ff-only`；保持线性历史。
 - 每个整合后的代码状态集中跑一次仓库完整检查（有 `scripts/check.sh` 就跑它）；同一状态通过的结果直接复用，只对受影响部分补测。
 - 按约定构建和交付；用户窗口在运行时不要强制关闭，先准备新二进制或请用户关闭后重启。
@@ -160,6 +183,7 @@ git worktree remove "<worktree-path>" && git branch -d "qoder/<slug>"
 - 功能盘点与验收边界：`docs/BOARD_STATUS.md`。
 - 改了行为或规则，先找现有文档里的对应段落，再改代码；不要新增第三份规则。规则搬家时在原处留一句指针。
 - 合并/交付前检查 README、CONTRIBUTING、ARCHITECTURE、FORMAT、MOTION、BOARD_STATUS、CONTEXT 是否有与新行为冲突的表述；有冲突先修正再交付。
+- 用户报告的 bug 在任务记录或 `docs/CONTEXT.md` 里留一条最小回归场景；下次碰同一区域时重跑。不建常驻场景库。
 
 ## 测试门槛
 

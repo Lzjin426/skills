@@ -27,6 +27,7 @@ Review 的团队数和深度按开发复杂度定，不按 diff 行数机械定�
 - 必须实际运行或查看主控提供的真实窗口截图/录屏，并对照已通过的原型；只读 diff 不能关闭 UI 验收项。
 - 汇报写明“我实际运行/查看了什么”；没跑 UI 不能给 UI 通过。
 - review 通过不等于功能验收；合并前仍要按 SKILL.md 第 6 节做真实入口、原型对照、异常/重启和 soak。
+- review 不能替代 acceptance；UI reviewer 看真实窗口和原型，但验收由独立 acceptance agent 完成。
 
 ## 3. L3 的范围拆分
 
@@ -48,6 +49,7 @@ Review 的团队数和深度按开发复杂度定，不按 diff 行数机械定�
 - reviewer 必须列“未覆盖的组合”和建议补的 E2E/测试。
 - reviewer 必须写明“我实际运行/查看了什么”；没跑 UI 不能给 UI 通过。
 - review 通过不等于功能验收；合并前仍要按 SKILL.md 第 6 节做真实入口、原型对照、异常/重启和 soak。
+- review 不能替代 acceptance；UI reviewer 看真实窗口和原型，但验收由独立 acceptance agent 完成。
 - 团队规模按风险，不按提交数；超过 4 个通常说明拆分不清，先重划范围。
 - 时间盒：L1 快速一轮；L2/L3 并行跑，主控不无故等待非阻塞 review。
 
