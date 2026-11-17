@@ -1,10 +1,10 @@
-# Codex 分派模板
+# 分派模板
 
 仅在确需创建开发聊天或发送已授权的批次任务时读取。模板提供必要信息，不要求逐项制造审批。
 
 ## 创建独立开发聊天
 
-先用当前 `list_projects` 的真实返回值选择项目，再核对当前 `create_thread` schema。例如：
+先用宿主的工作区发现工具的真实返回值选择目标，再核对会话创建工具的 schema。Codex（`list_projects` + `create_thread`）示例：
 
 ```json
 {
@@ -22,19 +22,32 @@
     }
   },
   "prompt": "下面的自包含任务契约",
-  "model": "gpt-6.1-terra",
+  "model": "宿主可选的模型名",
   "thinking": "high"
 }
 ```
 
-分支名、模型和目标以项目及用户实际要求为准。startingState 选择基线，不是指令你切换或覆盖用户当前分支。宿主自动创建 worktree，开发者不要再手动创建第二份。
+分支名、模型和目标以项目及用户实际要求为准。startingState 选择基线，不是指令你切换或覆盖用户当前分支。Codex 宿主自动创建 worktree，开发者不要再手动创建第二份。
+
+Qoder Desktop 等价（`list_workspaces` + `create_chat_session`）。该宿主不创建 worktree，prompt 里必须要求开发聊天第一步自建：
+
+```json
+{
+  "workspaceId": "list_workspaces 返回的 workspaceId",
+  "prompt": "下面的自包含任务契约，含 worktree 创建、分支与路径要求",
+  "callbackMode": "supervise"
+}
+```
+
+model 需用设置接口 getModels 返回的 modelKey，不确定就省略以继承当前会话模型；agentId 按用户惯用 Agent，默认省略。宿主不提供 worktree 时，`create_chat_session` 返回的 sessionId 只代表已派发，不代表已在正确工作树里执行。
 
 开发 prompt 示例：
 
-> 在独立 Codex 聊天中实现本批功能。仓库与基线：给出真实路径、分支和 SHA；先核对宿主分配的 worktree、分支及 HEAD。
+> 在独立开发聊天中实现本批功能。仓库与基线：给出真实路径、分支和 SHA。宿主不自动创建 worktree 时，第一步自行 `git worktree add` 一份并核对路径、分支及 HEAD；宿主已创建时只核对，不建第二份。
 >
 > 本批用户结果：写出一项独立可交付结果。
 > 不做：列出本批明确排除的扩展。
+> 技术方案：主控已给出路线、关键取舍和影响面，按方案实现；实现中发现方案不可行，提出最小待决问题返回，不自行换方案。
 > 文件归属：列出允许修改与需要协调的共享文件。
 > 验收：写出核心真实入口、预期结果、主要失败场景与数据不变量。
 > 检查：引用仓库要求及本次必要的测试，不复制整套产品测试表。
@@ -47,11 +60,11 @@
 > 通过普通进度消息和最终答复汇报，不自行给主控或其他聊天发送消息。
 > 汇报实际路径、分支、改动、验证、未验证项、阻断及下一步。存在提交时提供 SHA；未获提交授权则保留可审查 diff。
 
-创建后确认真实 threadId / hostId 与 worktree，不以“工具已调用”当作任务已启动。仅返回 clientThreadId 时按宿主能力有界确认设置，仍未就绪就记录排队状态。保存任务标识和契约，提供聊天入口后结束本轮，不陪跑开发。
+创建后确认真实会话标识（Codex 的 threadId / hostId，Qoder 的 sessionId / SessionRef）与 worktree，不以“工具已调用”当作任务已启动。只返回临时 ID 时按宿主能力有界确认，仍未就绪就记录排队状态。保存任务标识和契约，提供聊天入口后结束本轮，不陪跑开发。
 
 ## 跟踪与纠偏
 
-用户要求查看进度、巡视或接收交付时，使用 `wait_threads` 的 `timeoutMs: 0` 获取一次快照；必要时再用 `read_thread`。查看后返回，不循环等到开发完成；用户明确要求持续跟进时例外。新需求可立即规划与分派，旧批继续独立执行。需要发送纠偏时，只向用户已授权协调的聊天用 `send_message_to_thread` 发送：
+用户要求查看进度、巡视或接收交付时：宿主提供完成/交互回调（如 Qoder 的 `callbackMode: "supervise"`）就依赖回调，到达再读；否则用等待接口（`wait_threads` / `wait_chat_sessions`）的 `timeoutMs: 0` 获取一次快照。必要时再读会话。查看后返回，不循环等到开发完成；用户明确要求持续跟进时例外。新需求可立即规划与分派，旧批继续独立执行。需要发送纠偏时，只向用户已授权协调的聊天用宿主的发送工具（`send_message_to_thread` / `send_message_to_chat_session`）发送：
 
 > 保持原交付范围和截止时间。本次只处理已确认的阻断问题：说明证据、预期结果与受影响检查。其余建议记录后续，不顺带重构。完成后给出实际 diff、检查结果和剩余限制。
 
